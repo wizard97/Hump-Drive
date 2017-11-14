@@ -30,4 +30,4 @@ val notify_peer : state -> peer -> event -> Crypto.key -> state
 
 
 (* periodically call this to notify your peer of state of files*)
-val notify_state : state -> peer -> Crpyto.key -> state
+val notify_state : state -> peer -> Crypto.key -> state
