@@ -1,6 +1,8 @@
 open Unix
 open Crypto
 
+(* This module will use UDP to communicate with other peers *)
+
 (* Used to store information about current connection *)
 type state
 
