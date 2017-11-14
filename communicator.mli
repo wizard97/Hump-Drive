@@ -7,6 +7,9 @@ type state
 (* Store info about a peer *)
 type peer
 
+(* Events you can send to notify peer *)
+type event
+
 (* Initial state of the communicator *)
 val init : state
 
@@ -14,7 +17,15 @@ val init : state
 val discover_peers : state -> peer list
 
 (* Return true if peer reachable *)
-val peer_reachable : peer -> bool
+val peer_reachable : state -> peer -> bool
+
+(* Pair with a peer who has key [key] *)
+val peer_pair : state -> peer -> Crypto.key -> state
 
 
-val peer_pair : peer -> key -> state
+(* Notfy the peer of an event such as an updated file *)
+val notify_peer : state -> peer -> event -> Crypto.key -> state
+
+
+(* periodically call this to notify your peer of state of files*)
+val notify_state : state -> peer -> Crpyto.key -> state
