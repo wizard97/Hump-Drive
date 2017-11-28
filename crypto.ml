@@ -8,6 +8,8 @@ open String
 
 (* Number base for the string form of the keys *)
 let b = 57
+let exp = 17 (* Encryption exponent *)
+
 (* max key size is 11 so find a 5 digit prime *)
 
 (***** HELPERS *****)
@@ -31,6 +33,21 @@ let is_prime n =
   let x2 = Random.int (n-1) + 1 in
   mod_exp x1 (n-1) n = 1 &&
   mod_exp x2 (n-1) n = 1
+
+
+(* Extended euclidean algorithm. Adapted from the wikibooks
+ page on the algorithm *)
+let rec egcd a b m=
+  if a = 0 then (b,0,1)
+  else let (g,y,x) = egcd (b mod a) a m in
+  (g,x - (b/a)*y, y)
+
+let modinv a m =
+  let (g,x,y) = egcd a m m in
+  if g <> 1 then failwith "No inverse"
+  else let x' = x mod m in
+  if x' < 0 then x' + m else x'
+
 
 let rec string_from_key' k s =
   if k = 0  && s = "" then "A" else
