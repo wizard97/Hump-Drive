@@ -10,7 +10,7 @@ open String
 let b = 57
 (* max key size is 11 so find a 5 digit prime *)
 
-(* Various helper functions *)
+(***** HELPERS *****)
 
 let last_char s =
   get s (length s - 1)
@@ -32,6 +32,17 @@ let is_prime n =
   mod_exp x1 (n-1) n = 1 &&
   mod_exp x2 (n-1) n = 1
 
+let rec string_from_key' k s =
+  if k = 0  && s = "" then "A" else
+  if k = 0 then s else
+  let r = k mod b in
+ string_from_key' ((k - r)/b) (Char.( r+65 |> chr |> escaped)^s)
+
+(* Convert the int key to a readable string *)
+let string_from_key k = string_from_key' k ""
+
+(***** END HELPERS *****)
+
 let rec key_from_string s =
   if length s = 0 then 0
   else (Char.code (last_char s) - 65)
@@ -48,6 +59,11 @@ let generate_key =
     let p = Random.int 612436557 in
     if is_prime p then p else loop ()
   in loop
+
+(* Returns tuple of pu*pr *)
+let generate_public_private ()=
+  let x = generate_key () in
+  (x*x |> string_from_key ,string_from_key x)
 
 let encrypt_line s k =
   failwith "Unimplemented"
