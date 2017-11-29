@@ -5,7 +5,7 @@ type dir_hash = string
 type dir_path = string
 type files_to_hash = (string * file_hash) list
 
-let compute_hash s = failwith "Unimplemented"
+let compute_hash s = "fill me in with something"
 
 (* NOTE: For now, just doing one directory to make things easier*)
 (* type state = Dir of state list * file_to_hash * dir_hash *)
@@ -45,7 +45,7 @@ let get_diff s1 s2 =
   match s1, s2 with
   | (_, files1, _), (_, files2, _) ->
     failwith "Unimplemented"
-    
+
 
 (* NOTE (for multi-dir hanling)
    how do we wanna handle multi-directory changes:
