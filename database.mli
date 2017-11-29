@@ -16,11 +16,11 @@ val remove_file: string -> state -> state
 (* Updates a file's representation in state if the file has been changed *)
 val update_file: filepath -> state -> state
 
-(* Computes a hash for a given file denoted by its filepath *)
-val compute_hash: filepath -> string
+(* Computes a hash for a given file *)
+val compute_hash: string -> string
 
 (* Compares two database states.*)
-val compare_states: state -> state -> int
+val states_equiv: state -> state -> bool
 
 (* Formats state to a human-readable string *)
 val to_string : state -> string
