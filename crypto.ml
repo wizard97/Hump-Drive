@@ -7,6 +7,8 @@
 open String
 
 (* Number base for the string form of the keys *)
+type key = int
+
 let b = 57
 let exp = 17 (* Encryption exponent *)
 
@@ -80,11 +82,13 @@ let generate_key =
 (* Returns tuple of pu*pr *)
 let generate_public_private ()=
   let x = generate_key () in
-  (x*x |> string_from_key ,string_from_key x)
+  (x*x ,x)
 
 let encrypt_line s k =
   failwith "Unimplemented"
 
 let decrypt_line s pu pr =
-  failwith "Unimplemented"
+  let k' = modinv exp pu in
+  let s' = key_from_string s in
+  mod_exp s' k' pu |> string_from_key
 
