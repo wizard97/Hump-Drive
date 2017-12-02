@@ -42,6 +42,10 @@ let client_read client fname =
 
 (* c is client instance, fname is file to read, saveloc is full path*)
 let client_get_file c fname saveloc =
+  File_writer.create saveloc >>= fun f ->
+  File_writer.write f "";
+  File_writer.close f in
+
   c >>= fun (res) ->
   match res with
   | Ok c -> let _ = (client_read c fname) in Async_extra.Import.return (FT_Success ())
