@@ -1,6 +1,9 @@
 open Async
 open Async.Tcp_file
 
+type 'a result = FT_Error of string | FT_Success of 'a
+
+
 let port = 12345
 
 let serve_auth addr =
@@ -16,7 +19,8 @@ let server_add_file f = Server.serve_existing_static_file f
 let server_run () =
   create_server () >>= fun s -> server_add_file "test.txt"
 
-let client_connect () = Client.connect ~host:("127.0.0.1") ~port:(port)
+
+let client_connect host = Client.connect ~host:(host) ~port:(port)
 
 
 let rec dq_str q =
@@ -36,9 +40,9 @@ let client_read client fname =
   in
   res
 
-
-let client_work () =
-  client_connect () >>=
-  fun res -> match (res) with
-  | Ok c -> let _ = (client_read c "test.txt") in Async_extra.Import.return ()
-  | Error r -> Async_extra.Import.return ()
+(* c is client instance, fname is file to read, saveloc is full path*)
+let client_get_file c fname saveloc =
+  c >>= fun (res) ->
+  match res with
+  | Ok c -> let _ = (client_read c fname) in Async_extra.Import.return (FT_Success ())
+  | Error r -> Async_extra.Import.return (FT_Error "Error transfering file")
