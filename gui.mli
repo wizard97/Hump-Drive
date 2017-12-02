@@ -1,4 +1,4 @@
-(* Representation for interactable objects in the GUI window *)
+(* Representation for interactable objects in the GUI window
 type window_obj
 
 (* Creates a new GUI window *)
@@ -18,3 +18,5 @@ val update : unit -> unit
 
 (* Exit GUI gracefully *)
 val quit : unit -> unit
+
+*)
