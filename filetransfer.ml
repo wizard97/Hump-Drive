@@ -7,6 +7,7 @@ type 'a result = FT_Error of string | FT_Success of 'a
 let port = 12345
 
 let serve_auth addr =
+  print_string "Got Client!";
   true
 
 let create_server () =
