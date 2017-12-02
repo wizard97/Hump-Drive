@@ -16,9 +16,6 @@ let create_server () =
 let server_add_file f = Server.serve_existing_static_file f
 
 
-let server_run () =
-  create_server () >>= fun s -> server_add_file "test.txt"
-
 
 let client_connect host = Client.connect ~host:(host) ~port:(port)
 
@@ -39,6 +36,7 @@ let client_read client fname =
     | `Ok q -> let () = dq_str q in Async_extra.Import.return ()
   in
   res
+
 
 (* c is client instance, fname is file to read, saveloc is full path*)
 let client_get_file c fname saveloc =
