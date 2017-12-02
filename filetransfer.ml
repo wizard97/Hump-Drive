@@ -19,12 +19,20 @@ let server_run () =
 let client_connect () = Client.connect ~host:("127.0.0.1") ~port:(port)
 
 
+let rec dq_str q =
+  match (Core_kernel.Std.Queue.dequeue q) with
+  | None -> ()
+  | Some resp ->
+    match (resp) with
+    | Error e -> ()
+    | Ok msg -> let () = print_string (Client.Message.to_string_exn msg) in dq_str q
+
 let client_read client fname =
   let cr = Client.read client fname in
-  let pr = cr >>= fun pipe -> Async_extra.Import.Pipe.read pipe in
+  let pr = cr >>= fun pipe -> Async_extra.Import.Pipe.read' pipe in
   let res = pr >>= fun rd -> match rd with
     | `Eof -> let () = print_string "EOF" in Async_extra.Import.return ()
-    | `Ok q -> let () = print_string "got data" in Async_extra.Import.return ()
+    | `Ok q -> let () = dq_str q in Async_extra.Import.return ()
   in
   res
 
