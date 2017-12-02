@@ -3,16 +3,24 @@ open Unix
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
 
-type file_hash = int64
+type file_hash = int
 type dir_path = string
 type update_queue = StringSet.t
 type last_modified = float (* NOTE - thats what Unix uses for stats *)
 type files_to_hash = file_hash FileMap.t
 
-let compute_hash s = Int64.zero
+(*
+let compute_hash s = Int64.zero *)
+
+let compute_hash s =
+  let hash = ref 0 in
+  let update_hash c =
+    let h = !hash in
+    let h' = ((h lsl 5) - h) + (Char.code c) in
+    hash := h' land h'
+  in String.iter (update_hash) s; !hash
 
 (* NOTE: For now, just doing one directory to make things easier*)
-(* type state = Dir of state list * file_to_hash * dir_hash *)
 type state = Dir of dir_path * files_to_hash * last_modified * update_queue
 
 let rec get_dir_contents acc h =
@@ -58,4 +66,4 @@ let state_for_dir dir_path =
 
 (* let update_state st =
   match st with
-  | dir_path, _ , _ -> state_for_dir dir_path *)
+   | dir_path, _ , _ -> state_for_dir dir_path *)
