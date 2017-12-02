@@ -1,4 +1,5 @@
 B _build
 PKG oUnit
 PKG react
+PKG async
 PKG lambda-term
