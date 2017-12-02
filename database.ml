@@ -54,6 +54,9 @@ let files_in_dir dir_path =
   List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f))
     dir_contents
 
+    (* NOTE Delete Isn't supported right now. Might want to think about adding some kind of purge function or something.*)
+
+    (* Init for a new state given a dir_path *)
 let state_for_dir dir_path =
   let filenames = files_in_dir dir_path in
   let filehashes = List.map (fun fil -> hash_file (dir_path^Filename.dir_sep^fil)) filenames in
@@ -70,6 +73,7 @@ let state_for_dir dir_path =
    last_modified = time;
    update_queue = update_queue}
 
+(* Updates a filemap and queue given current file info  *)
 let changed_files dir_path (file_map,queue) (fname, modtime) =
   try
     let stored_hash, stored_modtime = FileMap.find fname file_map in
@@ -77,26 +81,27 @@ let changed_files dir_path (file_map,queue) (fname, modtime) =
       let new_hash = hash_file (dir_path^Filename.dir_sep^fname) in
       (FileMap.add fname (new_hash, modtime) file_map, StringSet.add fname queue)
     else (file_map, queue)
-  with Not_found -> (file_map, queue)
+  with Not_found ->
+    let new_hash = hash_file (dir_path^Filename.dir_sep^fname) in
+    (FileMap.add fname (new_hash, modtime) file_map, StringSet.add fname queue)
 
-
+(* Given a st, returns an updated filebinding and queue. Helper for update_state  *)
 let update_file_info st =
   let dir_path = st.dir_path in
   let file_binds = st.files_to_info in
   let queue = st.update_queue in
   let curr_dir_contents = files_in_dir dir_path in
   let fnames_to_modtimes = List.map (fun fil ->
-      (fil,last_modtime (dir_path^Filename.dir_sep^fil))) curr_dir_contents in
+      (fil, last_modtime (dir_path^Filename.dir_sep^fil))) curr_dir_contents in
   List.fold_left (fun acc x -> changed_files dir_path acc x)
       (file_binds, queue) fnames_to_modtimes
 
-
-let change_state st =
+let update_state st =
   let dir_path = st.dir_path in
   let new_modtime = last_modtime dir_path in
   if new_modtime <> st.last_modified then
     let binds, queue = update_file_info st in
-    {st with files_to_info = binds; update_queue = queue}
+    {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
     else st
 
   (* let fnames_to_hash = List.combine f_names f_hashes in
