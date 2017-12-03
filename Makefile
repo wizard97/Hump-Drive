@@ -1,5 +1,6 @@
 compile:
-	ocamlbuild -use-ocamlfind communicator.cmo crypto.cmo gui.cmo filetransfer.ml
+	ocamlbuild -use-ocamlfind communicator.cmo crypto.cmo gui.cmo
+	corebuild -pkg async filetransfer.cmo communication.cmo
 crypto_test:
 	corebuild -pkg async crypto_test.byte && ./crypto_test.byte
 net_test_server:
