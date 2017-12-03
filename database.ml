@@ -9,9 +9,6 @@ type update_queue = StringSet.t
 type last_modified = float (* NOTE - thats what Unix uses for stats *)
 type files_to_info = (file_hash*last_modified) FileMap.t
 
-(*
-let compute_hash s = Int64.zero *)
-
 let compute_hash s =
   let hash = ref 0 in
   let update_hash c =
@@ -36,7 +33,7 @@ let hash_file fpath =
   let file = open_in fpath in
   let f_len = in_channel_length file in
   let f_contents = really_input_string file f_len in
-  compute_hash f_contents (* XOR every single byte *)
+  compute_hash f_contents
 
 let is_reg_file fpath =
   let fdesc = openfile fpath [O_RDONLY] 644 in
@@ -104,10 +101,6 @@ let update_state st =
     {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
     else st
 
-  (* let fnames_to_hash = List.combine f_names f_hashes in
-  let fhashes_mega_str = List.fold_left (fun acc x -> acc ^ x) "" f_hashes in
-  let d_hash = compute_hash fhashes_mega_str in *)
+let to_string (st : state_info) = Marshal.to_string st [];;
 
-(* let update_state st =
-  match st with
-   | dir_path, _ , _ -> state_for_dir dir_path *)
+let from_string (s : string) : state_info = Marshal.from_string s 0;;
