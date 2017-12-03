@@ -11,7 +11,7 @@ type peer = { ip:string; key:string;} (* Todo make crypto key *)
 val port : int
 
 
-val start_server : (message -> unit) -> (Socket.Address.Inet.t, int) Server.t Deferred.t
+val start_server : (peer -> message -> unit) -> (Socket.Address.Inet.t, int) Server.t Deferred.t
 
 
 val request_file : peer -> string -> (unit -> unit) -> unit Async.Deferred.t

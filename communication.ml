@@ -41,10 +41,11 @@ let process_cmd s hookup =
 let start_server hookup =
   let server_callback addr read _ =
     print_string "Got Client!";
-    Socket.Address.Inet.addr addr |> Unix.Inet_addr.to_string |> print_string;
+    let saddr = Socket.Address.Inet.addr addr |> Unix.Inet_addr.to_string in
+    saddr |> print_string;
     read_until read (`Char '\n') ~keep_delim:(false) >>= fun r ->
     match (r) with
-    | `Ok s -> process_cmd s hookup
+    | `Ok s -> process_cmd s (hookup {ip=saddr; key="NULL"})
     | `Eof_without_delim s ->
       print_endline ("Invalid command: "^s); Deferred.return ()
     | `Eof -> Deferred.return ()
