@@ -4,7 +4,7 @@ open Async
 
 let run_server () =
   let s = create_server () in
-    server_add_file "vid.mp4"
+    server_add_file "nl.txt"
 
 let _ = run_server ()
 let _ = Scheduler.go ()

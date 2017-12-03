@@ -28,15 +28,15 @@ let rec dq_str q saveloc =
   (* Why do we need to add a newline!!!*)
   let save_chunk = function
     | Client.Message.String s ->
-      File_writer.write saveloc s; File_writer.write saveloc "\n"
+      File_writer.write saveloc s
     | Client.Message.Bigstring bs ->
-      File_writer.write_bigstring saveloc bs; File_writer.write saveloc "\n"
+      File_writer.write_bigstring saveloc bs
   in
   match (Core_kernel.Std.Queue.dequeue q) with
-  | None -> ()
+  | None -> File_writer.write saveloc "\n"
   | Some resp ->
     match (resp) with
-    | Error e -> print_string (Client.Error.to_string e)
+    | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
     | Ok msg -> save_chunk msg; dq_str q saveloc
 
 
