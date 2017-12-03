@@ -20,4 +20,4 @@ val server_add_file : string -> unit Import.Deferred.t
 val client_connect :
   string -> ftclient
 
-val client_get_file : ftclient -> string -> string
+val client_get_file : ftclient -> string -> string -> ((unit result) Async_extra.Import.Deferred.t)

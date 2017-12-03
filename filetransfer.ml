@@ -3,6 +3,8 @@ open Async.Tcp_file
 
 type 'a result = FT_Error of string | FT_Success of 'a
 
+type ftclient =
+  (Tcp_file.Client.t, Base.Exn.t) Core.Result.t Async_extra.Import.Deferred.t
 
 let port = 12345
 
