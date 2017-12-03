@@ -32,12 +32,18 @@ let rec dq_str q saveloc =
     | Client.Message.Bigstring bs ->
       File_writer.write_bigstring saveloc bs
   in
+  match (q) with
+  | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
+  | Ok msg -> save_chunk msg; dq_str q saveloc
+
+
+      (*
   match (Core_kernel.Std.Queue.dequeue q) with
   | None -> ()
   | Some resp ->
     match (resp) with
     | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
-    | Ok msg -> save_chunk msg; dq_str q saveloc
+    | Ok msg -> save_chunk msg; dq_str q saveloc *)
 
 
 let client_read client fname sfile =
@@ -46,7 +52,8 @@ let client_read client fname sfile =
     pread >>= fun pq ->
     match (pq) with
     | `Eof -> File_writer.close sfile
-    | `Ok q -> File_writer.write sfile (Core_kernel.Result.ok_exn q); readentire pipe
+    | `Ok q -> dq_str q sfile; readentire pipe
+    (*File_writer.write sfile (Core_kernel.Result.ok_exn q); readentire pipe *)
 (*| `Ok q -> dq_str q sfile; readentire pipe *)
 
   in
