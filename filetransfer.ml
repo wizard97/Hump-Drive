@@ -34,7 +34,7 @@ let rec dq_str q saveloc =
   in
   match q with
     | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
-    | Ok msg -> save_chunk msg
+    | Ok msg -> save_chunk msg; File_writer.write saveloc "\n"
 
 
 (*
