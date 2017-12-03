@@ -19,8 +19,8 @@ let cmp_sub s cmd =
 
 
 let msg_to_string = function
-  | State s -> "state:"^s
-  | Filerequest s -> "freq:"^s
+  | State s -> "state:"^s^"\n"
+  | Filerequest s -> "freq:"^s^"\n"
 
 
 let process_cmd s hookup =
