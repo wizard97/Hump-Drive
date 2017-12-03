@@ -33,7 +33,7 @@ let rec dq_str q saveloc =
   | None -> ()
   | Some resp ->
     match (resp) with
-    | Error e -> print_string "Someone messed up"
+    | Error e -> print_string (Client.Error.to_string e)
     | Ok msg -> save_chunk msg; dq_str q saveloc
 
 
