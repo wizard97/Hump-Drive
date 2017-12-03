@@ -33,7 +33,7 @@ let rec dq_str q saveloc =
       File_writer.write_bigstring saveloc bs
   in
   match (Core_kernel.Std.Queue.dequeue q) with
-  | None -> File_writer.write saveloc "\n"
+  | None -> ()
   | Some resp ->
     match (resp) with
     | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
@@ -42,12 +42,13 @@ let rec dq_str q saveloc =
 
 let client_read client fname sfile =
   let rec readentire pipe =
-    let pread = Async_extra.Import.Pipe.read' pipe in
+    let pread = Async_extra.Import.Pipe.read pipe in
     pread >>= fun pq ->
-    print_string "pipe_read\n";
     match (pq) with
     | `Eof -> File_writer.close sfile
-    | `Ok q -> dq_str q sfile; readentire pipe
+    | `Ok q -> File_writer.write sfile (Core_kernel.Result.ok_exn q); readentire pipe
+(*| `Ok q -> dq_str q sfile; readentire pipe *)
+
   in
   let dpipe = Client.read client fname in
   dpipe >>= fun pipe -> readentire pipe
