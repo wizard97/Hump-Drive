@@ -41,6 +41,7 @@ let client_read client fname sfile =
   let rec readentire pipe =
     let pread = Async_extra.Import.Pipe.read' pipe in
     pread >>= fun pq ->
+    print_string "pipe_read\n";
     match (pq) with
     | `Eof -> File_writer.close sfile
     | `Ok q -> dq_str q sfile; readentire pipe
