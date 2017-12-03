@@ -1,7 +1,4 @@
-
 open Filetransfer
-
-
 
 let run_client () =
   let c = client_connect "127.0.0.1" in
@@ -12,5 +9,5 @@ let run_server () =
   let s = create_server () in
     server_add_file "test.txt"
 
-let _ = run_client ()
+let _ = run_server ()
 (* let _ = run_server () *)
