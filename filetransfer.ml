@@ -33,12 +33,17 @@ let rec dq_str q saveloc =
       File_writer.write_bigstring saveloc bs
   in
   match q with
+    | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
+    | Ok msg -> save_chunk msg; dq_str q saveloc
+
+
+(*
   | None -> ()
   | Some resp ->
     match (resp) with
     | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
-    | Ok msg -> save_chunk msg; dq_str q saveloc *)
-
+    | Ok msg -> save_chunk msg; dq_str q saveloc
+*)
 
 let client_read client fname sfile =
   let rec readentire pipe =
