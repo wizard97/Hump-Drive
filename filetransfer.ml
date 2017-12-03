@@ -25,9 +25,12 @@ let client_connect host = Client.connect ~host:(host) ~port:(port)
 
 
 let rec dq_str q saveloc =
+  (* Why do we need to add a newline!!!*)
   let save_chunk = function
-    | Client.Message.String s -> File_writer.write saveloc s; File_writer.write saveloc "\n"
-    | Client.Message.Bigstring bs -> File_writer.write_bigstring saveloc bs; File_writer.write saveloc "\n"
+    | Client.Message.String s ->
+      File_writer.write saveloc s; File_writer.write saveloc "\n"
+    | Client.Message.Bigstring bs ->
+      File_writer.write_bigstring saveloc bs; File_writer.write saveloc "\n"
   in
   match (Core_kernel.Std.Queue.dequeue q) with
   | None -> ()
