@@ -12,7 +12,7 @@ let port = 31100
 
 let cmp_sub s cmd =
   try (
-    let ss = String.sub s 0 (String.length s) in
+    let ss = String.sub s 0 (String.length cmd) in
     ss = cmd
   ) with
   _ -> false
@@ -59,7 +59,7 @@ let start_server hookup =
 
 let send_message peer msg onsucc =
   connect (to_host_and_port peer.ip port) >>= fun (sock, _, writer) ->
-  print_string "Connected to server to send notification!";
+  print_endline "Connected to server to send notification!";
   let smesg = msg_to_string msg in
   Writer.write writer smesg;
   Writer.flushed writer >>= fun () ->
