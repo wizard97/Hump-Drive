@@ -6,10 +6,7 @@ let run_client () =
   client_get_file c "test.txt" "result.txt"
   (* Reads first file, saved it locally as the second *)
 
-let run_server () =
-  let s = create_server () in
-    server_add_file "war_peace.txt"
 
-let _ = run_server ()
+let _ = run_client ()
 let _ = Scheduler.go ()
 (* let _ = run_server () *)
