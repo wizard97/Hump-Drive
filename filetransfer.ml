@@ -32,13 +32,7 @@ let rec dq_str q saveloc =
     | Client.Message.Bigstring bs ->
       File_writer.write_bigstring saveloc bs
   in
-  match (q) with
-  | Error e -> print_string "Error!"; print_string (Client.Error.to_string e)
-  | Ok msg -> save_chunk msg; dq_str q saveloc
-
-
-      (*
-  match (Core_kernel.Std.Queue.dequeue q) with
+  match q with
   | None -> ()
   | Some resp ->
     match (resp) with
