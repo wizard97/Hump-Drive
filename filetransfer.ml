@@ -13,6 +13,7 @@ let serve_auth addr =
   true
 
 let create_server () =
+  print_string "Starting!";
   Server.serve ~auth:(serve_auth) (Tcp.on_port port)
 
 
