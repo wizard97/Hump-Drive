@@ -7,5 +7,9 @@ net_test_server:
 	corebuild -pkg async net_test_server.byte && ./net_test_server.byte
 net_test_client:
 	corebuild -pkg async net_test_client.byte && ./net_test_client.byte
+peer_broadcast:
+	corebuild -pkg async discovery_test.byte && ./discovery_test.byte
+peer_listen:
+	corebuild -pkg async discover_listen.byte && ./discover_listen.byte
 clean:
 	ocamlbuild -clean
