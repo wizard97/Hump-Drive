@@ -107,12 +107,12 @@ let update_file_info st =
   List.fold_left (fun acc x -> changed_files dir_path acc x)
         (Deferred.return (file_binds, queue)) fnames_to_modtimes
 
-let update_state ?just_synced:(synced = false) st =
+let update_state st =
   let dir_path = st.dir_path in
   let new_modtime = last_modtime dir_path in
   if new_modtime <> st.last_modified then
     update_file_info st >>= fun (binds,queue) -> Deferred.return
-      {st with files_to_info = binds; update_queue = (if synced then StringSet.empty else queue); last_modified = new_modtime}
+      {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
     else Deferred.return st
 
 let lookup_file file st = FileMap.find file st.files_to_info
@@ -126,17 +126,18 @@ let files_to_request st_curr st_inc =
   let files_to_add = StringSet.diff st_inc.update_queue st_curr.update_queue in
   let conflict_files = (StringSet.inter st_curr.update_queue st_inc.update_queue) in
   let poss_ups = StringSet.filter (cmp_file_versions st_curr st_inc) conflict_files in
-      StringSet.union poss_ups files_to_add |> StringSet.elements
-  (* for all files in files_to_info check if their hashes are eq
-  *)
+  StringSet.union poss_ups files_to_add |> StringSet.elements
 
-(*let update_state st =
-  let dir_path = st.dir_path in
-  let new_modtime = last_modtime dir_path in
-  if new_modtime <> st.last_modified then
-    update_file_info st >>= fun (binds,queue) -> Deferred.return
-    {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
-    else Deferred.return st*)
+let acknowledge_file_recpt st fname =
+  let fpath = st.dir_path ^ Filename.dir_sep ^ fname in
+  let modtime = last_modtime fpath in
+  let q = StringSet.remove fname (st.update_queue) in
+  hash_file fpath >>= fun hash ->
+    let filemap = FileMap.add fname (hash, modtime) (st.files_to_info) in
+    let dir_lastmodtime = last_modtime st.dir_path in
+    Deferred.return {st with update_queue = q;
+                    files_to_info = filemap;
+                    last_modified = dir_lastmodtime}
 
 let to_string (st : state_info) = Marshal.to_string st []
 
