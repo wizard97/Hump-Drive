@@ -33,10 +33,36 @@ let notify_callback peer msg =
     let _ = Filetransfer.create_server f in
     ()
 
+
+(* Given an input string from the repl, handle the command *)
+let process_input = function
+| "about" -> print_endline "*****Version 1.0****"
+| "quit" -> print_endline "Done"; upon (exit 0) (fun _ -> ())
+|_ -> print_endline "Invalid Command!"
+
+
+
+(* Repl for *)
+let repl () =
+  (* let reader = Reader.stdin |> Lazy.force in *)
+  let rec loop () =
+    print_string " >>> ";
+    (Reader.stdin |> Lazy.force |> Reader.read_line |> upon) begin fun r ->
+      match r with
+      | `Ok s -> process_input s; loop ()
+      | `Eof -> print_endline "What happened"
+      ;
+    end
+  in loop ()
+
+
 let main () =
   let peer = {ip="127.0.0.1"; key="123abc"} in
   print_string "Testing123";
   Communication.start_server notify_callback
   let _ = Scheduler.go ()
 
-let () = main ()
+(* let () = main () *)
+
+let _ = repl ()
+let _ = Scheduler.go ()

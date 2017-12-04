@@ -12,6 +12,6 @@ peer_broadcast:
 peer_listen:
 	corebuild -pkg async discover_listen.byte && ./discover_listen.byte
 repl:
-	corebuild -pkg async ANSITerminal main.byte && ./main.byte
+	corebuild -pkg async main.byte && ./main.byte
 clean:
 	ocamlbuild -clean
