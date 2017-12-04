@@ -4,10 +4,7 @@
  *)
 
 open Async
-open Async_extra
 open Async_unix
-open Crypto
-open Communication
 
 
 type listen_state = Fd.t
@@ -26,7 +23,10 @@ let broadcast msg =
   Socket.setopt s Socket.Opt.broadcast true;
   Socket.connect s addr >>= fun s' ->
    let fd = Async_extra.Import.Socket.fd s in
-  (Udp.sendto () |> Core.Or_error.ok_exn) fd (Core.Iobuf.of_string msg) addr
+   (Udp.sendto () |> Core.Or_error.ok_exn) fd (Core.Iobuf.of_string msg) addr >>= fun _ ->
+   Socket.shutdown s Socket.(`Both);
+   Deferred.return ()
+
 
 
 (*

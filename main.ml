@@ -10,12 +10,11 @@ open Async_extra
 open Peer_discovery
 
 
+let bcast_interval = 5.
 
 
 (* Empty function for converting deferred to unit *)
 let to_unit d = upon d (fun _ -> ())
-
-
 
 
 
@@ -37,6 +36,13 @@ let comm_server () =
   Communication.start_server notify_callback
 
 
+let rec periodic_broadcast () =
+  Peer_discovery.broadcast "TODO,mypubkey" >>= fun _ ->
+  after (Core.sec bcast_interval) >>= fun _ ->
+  print_string "broadcasting";
+  periodic_broadcast ()
+
+
 
 let launch_synch () =
   print_endline "Scanning directory";
@@ -45,9 +51,8 @@ let launch_synch () =
   comm_server () >>= fun _ ->
   print_endline "Starting discovery";
   Peer_discovery.listen peer_discovered >>= fun _ ->
-  Deferred.return ()
-
-
+  print_endline "Starting discovery broadcaster";
+  periodic_broadcast ()
 
 
 let client () =
