@@ -13,5 +13,7 @@ peer_listen:
 	corebuild -pkg async discover_listen.byte && ./discover_listen.byte
 repl:
 	corebuild -pkg async main.byte && ./main.byte
+database:
+	corebuild -pkg async database.byte && ./database.byte
 clean:
 	ocamlbuild -clean

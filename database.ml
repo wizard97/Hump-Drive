@@ -2,10 +2,10 @@
 module OUnix = Unix
 open Async
 
-(*
+
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
-*)
+
 type file_hash = int
 type dir_path = string
 type update_queue = StringSet.t
