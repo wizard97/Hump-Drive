@@ -52,8 +52,8 @@ let broadcast () =
  * Only contains the public key of the device *)
 let listen adr =
   print_endline "Called listen";
-  let addr1 = Async_unix.Unix_syscalls.Inet_addr.of_string adr in
-  let adr_port = Async_extra.Import.Socket.Address.Inet.create addr1 12345 in
+  let addr1 = Async_unix.Unix_syscalls.Inet_addr.of_string "0.0.0.0" in
+  let adr_port = Async_extra.Import.Socket.Address.Inet.create_bind_any 12345 in
     print_endline "Listening...";
   Udp.bind adr_port >>= fun s ->
     print_endline "got socket";
