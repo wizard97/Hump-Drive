@@ -107,14 +107,21 @@ let update_file_info st =
   List.fold_left (fun acc x -> changed_files dir_path acc x)
         (Deferred.return (file_binds, queue)) fnames_to_modtimes
 
-let update_state st =
+let update_state ?just_synced:(synced = false) st =
+  let dir_path = st.dir_path in
+  let new_modtime = last_modtime dir_path in
+  if new_modtime <> st.last_modified then
+    update_file_info st >>= fun (binds,queue) -> Deferred.return
+      {st with files_to_info = binds; update_queue = (if synced then StringSet.empty else queue); last_modified = new_modtime}
+    else Deferred.return st
+
+(*let update_state st =
   let dir_path = st.dir_path in
   let new_modtime = last_modtime dir_path in
   if new_modtime <> st.last_modified then
     update_file_info st >>= fun (binds,queue) -> Deferred.return
     {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
-    else Deferred.return st
-
+    else Deferred.return st*)
 
 let to_string (st : state_info) = Marshal.to_string st []
 
