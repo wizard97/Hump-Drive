@@ -1,16 +1,14 @@
-open Filetransfer
 open Communication
 open Async
 
 
 
-let notify_callback peer msg =
+let notify_callback cstate peer msg =
   match msg with
-  | State s -> print_string "Got state update!"; ()
+  | State s -> print_string "Got state update!"; Async.Deferred.return ()
   | Filerequest f ->
     print_string "Got request for file!";
-    let _ = Filetransfer.create_server f in
-    ()
+    Communication.transfer_file f cstate
 
 
 let main () =

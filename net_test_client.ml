@@ -1,23 +1,21 @@
-open Filetransfer
 open Communication
 open Async
 
 
 
-let notify_callback peer msg =
+let notify_callback cstate peer msg =
   match msg with
-  | State s -> print_string "Got state update!"; ()
+  | State s -> print_string "Got state update!"; Async.Deferred.return ()
   | Filerequest f ->
     print_string "Got request for file!";
-    let _ = Filetransfer.create_server f in
-    ()
+    Communication.transfer_file f cstate
 
 let main () =
   let peer = {ip="127.0.0.1"; key="123abc"} in
   print_string "Testing123";
-  (* let _ = Communication.start_server notify_callback in *)
-  (* Send garbage state *)
-  let _ = Communication.send_state peer "Dummy" (fun () -> print_string "Success" ) in
+  let _ = Communication.request_file peer "test.txt" "recv.txt" >>= fun () ->
+    print_string "Success!"; Async.Deferred.return ()
+  in
   Scheduler.go ()
 
 
