@@ -3,20 +3,18 @@
 (* If differences on either this machine or the other, transfer handles updates *)
 (* GUI displays all stuff *)
 (* Crypto encrpyts files and user info/ connection-establishing processes *)
-open Filetransfer
 open Communication
 open Async
 open Async.Reader
+open Async_extra
+open Peer_discovery
 
-(*
-let main () =
-  ANSITerminal.(print_string [green]
-                  "\n\nWelcome to Hump Drive. \n");
-  loop () *)
+
 
 
 (* Empty function for converting deferred to unit *)
 let to_unit d = upon d (fun _ -> ())
+
 
 let notify_callback cstate _ msg =
   match msg with
@@ -26,10 +24,28 @@ let notify_callback cstate _ msg =
     Communication.transfer_file f cstate
 
 
-let server () =
+let peer_discovered addr msg =
+  print_endline addr;
+  print_string msg
+
+
+
+let comm_server () =
    (* let peer = {ip="127.0.0.1"; key="123abc"} in *)
   print_string "Running Server\n";
   Communication.start_server notify_callback
+
+
+let launch_synch () =
+  print_endline "Scanning directory";
+  (* TODO connect into directory scanner*)
+  print_endline "Starting comm server";
+  comm_server () >>= fun _ ->
+  print_endline "Starting discovery";
+  Peer_discovery.listen peer_discovered >>= fun _ ->
+  Deferred.return ()
+
+
 
 
 let client () =
@@ -42,9 +58,8 @@ let client () =
 let process_input = function
 | "about" -> print_endline "*****Version 1.0****"
 | "quit" -> print_endline "Done"; upon (exit 0) (fun _ -> ())
-| "run server" ->  server () |> to_unit
-| "run client" ->  client () |> to_unit
 |_ -> print_endline "Invalid Command!"
+
 
 (* Repl for filesyncing interface *)
 let repl () =
@@ -59,5 +74,10 @@ let repl () =
     end
   in loop ()
 
-let _ = repl ()
-let _ = Scheduler.go ()
+
+let main () =
+  let _ = launch_synch () in
+  let _ = repl () in
+  Scheduler.go ()
+
+let _ = main ()
