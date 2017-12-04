@@ -8,41 +8,45 @@ open Communication
 open Async
 open Async.Reader
 
-(* let tensec () =
-  upon (after (Core.sec 5.)) (fun _ -> print_endline "\n10 seconds have elapsed!\n")
-
-let rec loop () =
-  print_string  "> ";
-  upon (Reader.read_line (Lazy.force Reader.stdin))
-  (fun r ->
-    match r with
-    |`Eof -> ()
-    |`Ok s -> if s = "10sec" then (tensec (); loop ()) else loop ()
-  )
-
+(*
 let main () =
   ANSITerminal.(print_string [green]
                   "\n\nWelcome to Hump Drive. \n");
   loop () *)
 
-let notify_callback peer msg =
+
+(* Empty function for converting deferred to unit *)
+let to_unit d = upon d (fun _ -> ())
+
+let notify_callback cstate _ msg =
   match msg with
-  | State s -> print_string "Got state update!"; ()
+  | State _ -> print_string "Got state update!"; Async.Deferred.return ()
   | Filerequest f ->
     print_string "Got request for file!";
-    let _ = Filetransfer.create_server f in
-    ()
+    Communication.transfer_file f cstate
+
+
+let server () =
+   (* let peer = {ip="127.0.0.1"; key="123abc"} in *)
+  print_string "Running Server\n";
+  Communication.start_server notify_callback
+
+
+let client () =
+  let peer = {ip = "10.132.7.82"; key="hjga"} in
+  Communication.request_file peer "ydf.mp4" "recv.mp4" >>= fun () ->
+    print_string "Success!\n"; Async.Deferred.return ()
 
 
 (* Given an input string from the repl, handle the command *)
 let process_input = function
 | "about" -> print_endline "*****Version 1.0****"
 | "quit" -> print_endline "Done"; upon (exit 0) (fun _ -> ())
+| "run server" ->  server () |> to_unit
+| "run client" ->  client () |> to_unit
 |_ -> print_endline "Invalid Command!"
 
-
-
-(* Repl for *)
+(* Repl for filesyncing interface *)
 let repl () =
   (* let reader = Reader.stdin |> Lazy.force in *)
   let rec loop () =
@@ -54,15 +58,6 @@ let repl () =
       ;
     end
   in loop ()
-
-
-let main () =
-  let peer = {ip="127.0.0.1"; key="123abc"} in
-  print_string "Testing123";
-  Communication.start_server notify_callback
-  let _ = Scheduler.go ()
-
-(* let () = main () *)
 
 let _ = repl ()
 let _ = Scheduler.go ()
