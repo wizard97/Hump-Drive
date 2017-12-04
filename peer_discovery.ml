@@ -28,9 +28,10 @@ let add_user adr s =
 
 (* Send universal broadcast of this device's
  * Note: 255.255.255.255 triggers te device's broadcast address. *)
-let broadcast =
-  let addr1 = Unix_syscalls.Inet_addr.of_string "127.0.0.1" in
-  let addr = Async_extra.Import.Socket.Address.Inet.create addr1 12345 in
+let broadcast () =
+  print_endline "called broadcase";
+  let addr1 = Unix_syscalls.Inet_addr.of_string "255.255.255.255" in
+  let addr = Async_extra.Import.Socket.Address.Inet.create addr1 31100 in
   Udp.bind addr >>= fun s ->
     print_endline "got socket";
    let fd = Async_extra.Import.Socket.fd s in
@@ -49,6 +50,7 @@ let broadcast =
 (* Send out UDP packet to alert network of this device
  * Only contains the public key of the device *)
 let listen adr =
+  print_endline "Called listen";
   let addr1 = Async_unix.Unix_syscalls.Inet_addr.of_string adr in
   let adr_port = Async_extra.Import.Socket.Address.Inet.create addr1 12345 in
   print_endline "Listening...";
