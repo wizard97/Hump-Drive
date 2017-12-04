@@ -1,4 +1,5 @@
 open Unix
+open Async
 
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
@@ -23,15 +24,20 @@ type state_info = {dir_path : dir_path;
                    update_queue : update_queue}
 
 let rec get_dir_contents acc h =
-  match Unix.readdir h with
-  | s -> get_dir_contents (s::acc) h
-  | exception End_of_file -> Unix.closedir h; acc
+  Async.Unix.readdir_opt h >>=
+    (fun s ->
+      match s with
+      | Some s -> get_dir_contents (s::acc) h
+      | None -> Async.Unix.closedir h >>= (fun () -> Deferred.return (acc))
+    )
 
 let hash_file fpath =
-  let file = open_in fpath in
-  let f_len = in_channel_length file in
-  let f_contents = really_input_string file f_len in
-  compute_hash f_contents
+  Reader.open_file fpath >>= (fun rdr ->
+    Reader.pipe rdr |> Async_unix.Import.Pipe.read >>=
+    (fun x ->
+      match x with
+        | `Ok s -> Deferred.return (compute_hash s)
+        | `Eof -> failwith "Unsupported"))
 
 let is_reg_file fpath =
   let fdesc = openfile fpath [O_RDONLY] 644 in
@@ -99,6 +105,6 @@ let update_state st =
     {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
     else st
 
-let to_string (st : state_info) = Marshal.to_string st [];;
+let to_string (st : state_info) = Marshal.to_string st []
 
-let from_string (s : string) : state_info = Marshal.from_string s 0;;
+let from_string (s : string) : state_info = Marshal.from_string s 0
