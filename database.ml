@@ -115,6 +115,21 @@ let update_state ?just_synced:(synced = false) st =
       {st with files_to_info = binds; update_queue = (if synced then StringSet.empty else queue); last_modified = new_modtime}
     else Deferred.return st
 
+let lookup_file file st = FileMap.find file st.files_to_info
+
+let cmp_file_versions st1 st2 f =
+  let h1,t1 = lookup_file f st1 in
+  let h2,t2 = lookup_file f st2 in
+  (t2 > t1) && (h2 <> h1)
+
+let files_to_request st_curr st_inc =
+  let files_to_add = StringSet.diff st_inc.update_queue st_curr.update_queue in
+  let conflict_files = (StringSet.inter st_curr.update_queue st_inc.update_queue) in
+  let poss_ups = StringSet.filter (cmp_file_versions st_curr st_inc) conflict_files in
+      StringSet.union poss_ups files_to_add |> StringSet.elements
+  (* for all files in files_to_info check if their hashes are eq
+  *)
+
 (*let update_state st =
   let dir_path = st.dir_path in
   let new_modtime = last_modtime dir_path in
