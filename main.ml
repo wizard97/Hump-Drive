@@ -16,12 +16,7 @@ open Peer_discovery
 let to_unit d = upon d (fun _ -> ())
 
 
-let notify_callback cstate _ msg =
-  match msg with
-  | State _ -> print_string "Got state update!"; Async.Deferred.return ()
-  | Filerequest f ->
-    print_string "Got request for file!";
-    Communication.transfer_file f cstate
+
 
 
 let peer_discovered addr msg =
@@ -31,9 +26,16 @@ let peer_discovered addr msg =
 
 
 let comm_server () =
-   (* let peer = {ip="127.0.0.1"; key="123abc"} in *)
+  let notify_callback cstate _ msg =
+    match msg with
+    | State _ -> print_string "Got state update!"; Async.Deferred.return ()
+    | Filerequest f ->
+      print_string "Got request for file!";
+      Communication.transfer_file f cstate
+  in
   print_string "Running Server\n";
   Communication.start_server notify_callback
+
 
 
 let launch_synch () =
