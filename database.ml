@@ -17,12 +17,10 @@ let compute_hash s =
     hash := h' land h'
   in String.iter (update_hash) s; !hash
 
-(* NOTE: For now, just doing one directory to make things easier*)
 type state_info = {dir_path : dir_path;
                    files_to_info : files_to_info;
                    last_modified : last_modified;
                    update_queue : update_queue}
-type state = Dir of dir_path * files_to_info * last_modified * update_queue
 
 let rec get_dir_contents acc h =
   match Unix.readdir h with

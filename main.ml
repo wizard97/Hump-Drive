@@ -1,5 +1,3 @@
-(* NOTE main ties together all the parts of our system *)
-
 (* Uses communicator to discover other peers *)
 (* Establishes a connection via communicator *)
 (* If differences on either this machine or the other, transfer handles updates *)
@@ -8,8 +6,24 @@
 open Filetransfer
 open Communication
 open Async
+open Async.Reader
 
+(* let tensec () =
+  upon (after (Core.sec 5.)) (fun _ -> print_endline "\n10 seconds have elapsed!\n")
 
+let rec loop () =
+  print_string  "> ";
+  upon (Reader.read_line (Lazy.force Reader.stdin))
+  (fun r ->
+    match r with
+    |`Eof -> ()
+    |`Ok s -> if s = "10sec" then (tensec (); loop ()) else loop ()
+  )
+
+let main () =
+  ANSITerminal.(print_string [green]
+                  "\n\nWelcome to Hump Drive. \n");
+  loop () *)
 
 let notify_callback peer msg =
   match msg with
@@ -24,3 +38,5 @@ let main () =
   print_string "Testing123";
   Communication.start_server notify_callback
   let _ = Scheduler.go ()
+
+let () = main ()
