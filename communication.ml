@@ -78,8 +78,7 @@ let start_server hookup =
     | `Eof_without_delim s ->
       print_endline ("Invalid command: "^s);
       Writer.close write
-    | `Eof -> Deferred.return ()
-      >>= fun () ->
+    | `Eof ->
       print_string "Closed connection!";
       Writer.close write
   in
