@@ -11,9 +11,13 @@ let notify_callback cstate peer msg =
     Communication.transfer_file f cstate
 
 let main () =
-  let peer = {ip="127.0.0.1"; key="123abc"} in
-  print_string "Testing123";
+  let peer = {ip="10.132.6.253"; key="123abc"} in
+  (*
   let _ = Communication.request_file peer "test.txt" "recv.txt" >>= fun () ->
+    print_string "Success!"; Async.Deferred.return ()
+  in
+*)
+  let _ = Communication.send_state peer "['crap.txt', 'goto.crap', 'charles <3 Jackie']" >>= fun () ->
     print_string "Success!"; Async.Deferred.return ()
   in
   Scheduler.go ()
