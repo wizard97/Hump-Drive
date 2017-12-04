@@ -6,6 +6,7 @@
 open Async
 open Async_extra
 open Async_unix
+open Crypto
 
 (* Read public key from some stored file *)
 let read_public_key = 0
@@ -14,14 +15,13 @@ let read_public_key = 0
 
 (* Retrieve the public key as a string *)
 let packet =
-  "The packet has been sent"
+  "This packet has been received!"
+  (* Crypto.generate_public_private () |> fst |> string_of_int *)
+
 
 let add_user adr s =
   print_endline ("User from"^adr);
   print_endline ("With key"^s);
-
-
-
   failwith "Somebody do this"
 (* Read public key and ip address and the*)
 
