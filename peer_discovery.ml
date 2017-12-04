@@ -12,8 +12,6 @@ open Communication
 
 type listen_state = Fd.t
 
-(* Read public key from some stored file *)
-let read_public_key = 0
 
 let port = 30301
 
@@ -34,11 +32,10 @@ let add_user adr s =
  * Note: 255.255.255.255 triggers te device's broadcast address. *)
 let broadcast () =
   let addr1 = Unix_syscalls.Inet_addr.of_string "255.255.255.255" in
-  let addr_port = Async_extra.Import.Socket.Address.Inet.create addr1 port in
   let addr = Async_extra.Import.Socket.Address.Inet.create addr1 port in
   let s = Socket.create Socket.Type.udp in
   Socket.setopt s Socket.Opt.broadcast true;
-  Socket.connect s addr_port >>= fun s' ->
+  Socket.connect s addr >>= fun s' ->
     print_endline "got socket";
    let fd = Async_extra.Import.Socket.fd s in
   (Udp.sendto () |> Core.Or_error.ok_exn) fd (Core.Iobuf.of_string packet) addr
