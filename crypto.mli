@@ -40,3 +40,7 @@ val decrypt_line : string -> key -> key -> string
 val modinv : key -> key -> key
 
 val mod_exp : key -> key -> key -> key
+
+val large_int_to_string : key -> string
+
+val string_to_large_int : string -> key
