@@ -126,12 +126,12 @@ let init_cypher k =
 
 let rec big_random' acc n =
   if n = 0 then Big_int.big_int_of_string acc
-  else big_random' ((Random.int 1000000000 |> string_of_int)^acc) (n-1)
+  else big_random' ((Random.int 9 + 1 |> string_of_int)^acc) (n-1)
 
 
 (* Generate a random very large integer *)
 let big_random () =
-  big_random' "" 20
+  big_random' "" 200
 
 
 
