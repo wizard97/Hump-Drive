@@ -32,6 +32,7 @@ let test () =
   "After encryption: "^l1 |> print_endline;
   let l2 = decrypt_line l1 pu pr in
   "After Decryption: "^l2 |> print_endline
+(*
 
 let rec test_string_to_key n =
   if n = 10 then print_endline "NICE" else
@@ -52,6 +53,6 @@ let test_mods () =
   print_string "Value is: ";
   print_string (Big_int.string_of_big_int (mod_exp val1 val2 m));
   print_endline ""
-
+*)
 let _ = test ()
 
