@@ -38,6 +38,10 @@ let exp = of_int 17 (* Encryption exponent *)
 let last_char s =
   get s (length s - 1)
 
+let strip_last s =
+  String.sub s 0 (String.length s - 1)
+
+
 (* RequiresL ints a,b, and m *)
 (* Returns: a^b mod m while avoiding overflow *)
 let rec mod_exp a b m =
@@ -75,6 +79,27 @@ let modinv a m =
   else x'
 
 
+(* Given a string of any ascii characters return its
+ * big int representation *)
+let rec string_to_large_int s =
+  if s = "" then zero else
+  add_i (last_char s |> Char.code)
+    (mult_i 256 (string_to_large_int (strip_last s)) )
+
+
+
+(* Inverse of above *)
+
+let rec large_int_to_string' n s=
+  if eq n zero then s else
+  let r = bMod n (of_int 256) in
+  large_int_to_string'
+  (div (sub n r) (of_int 256)) ((to_int r |> Char.chr |> Char.escaped)^s)
+
+let large_int_to_string n = large_int_to_string' n ""
+
+
+
 let rec string_from_key' k s =
   if eq k zero  && s = "" then "" else
   if eq k zero then s else
@@ -84,7 +109,6 @@ let rec string_from_key' k s =
 (* Convert the int key to a readable string *)
 let string_from_key k = string_from_key' k ""
 
-(***** END HELPERS *****)
 
 let rec key_from_string s =
   if length s = 0 then zero
@@ -94,6 +118,8 @@ let rec key_from_string s =
 let s' = (String.sub s 0 (length s - 1)) in
 add_i (Char.code (last_char s) - 48) (mult b (key_from_string s'))
 
+
+(***** END HELPERS *****)
 
 let init_cypher k =
   failwith "Unimplemented"
@@ -124,9 +150,15 @@ let generate_public_private ()=
   (mult x x ,x)
 
 
-(* Convert to int, encrypt, convert back to string *)
+(* Convert to int, encrypt, convert back to string
+let encrypt_string k s =
+  mod_exp (string_to_large_int s) exp k |> large_int_to_string *)
+
 let encrypt_string k s =
   mod_exp (key_from_string s) exp k |> string_from_key
+
+
+
 
 let rec chunk' s acc n=
   if s = "" then acc else
@@ -148,6 +180,12 @@ let encrypt_line s pu =
     let lst = List.map (encrypt_string pu) (chunk s) in
      List.fold_right (fun e acc -> e^acc) lst ""
 *)
+
+(*
+let decrypt_line s pu pr =
+  let k' = modinv exp (mult pr (decr pr) ) in
+  let s' = string_to_large_int s in
+  mod_exp s' k' pu |> large_int_to_string *)
 
 
 let decrypt_line s pu pr =
