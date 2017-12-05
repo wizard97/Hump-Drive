@@ -1,6 +1,6 @@
 compile:
 	ocamlbuild -use-ocamlfind crypto.cmo gui.cmo
-	corebuild -pkg async filetransfer.cmo communication.cmo peer_discovery.cmo database.cmo crypto.cmo
+	corebuild -pkg async filetransfer.cmo communication.cmo peer_discovery.cmo state.cmo crypto.cmo
 crypto_test:
 	corebuild -pkg async crypto_test.byte && ./crypto_test.byte
 net_test_server:
@@ -13,7 +13,7 @@ peer_listen:
 	corebuild -pkg async discover_listen.byte && ./discover_listen.byte
 repl:
 	corebuild -pkg async main.byte && ./main.byte
-database:
-	corebuild -pkg async database.byte && ./database.byte
+state:
+	corebuild -pkg async state.byte && ./state.byte
 clean:
 	ocamlbuild -clean

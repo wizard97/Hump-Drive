@@ -36,6 +36,10 @@ let broadcast msg =
 *)
 
 
+let split_port s =
+  let idx = String.index_from s 0 ':' in
+  String.sub s 0 idx
+
 
 (* Send out UDP packet to alert network of this device
  * Only contains the public key of the device *)
@@ -44,8 +48,8 @@ let listen dcallback =
   Udp.bind adr_port >>= fun s ->
     let fd = Async_extra.Import.Socket.fd s in
     let callback buf adr =
-      let adr' = Async_extra.Import.Socket.Address.Inet.to_string adr in
-      dcallback adr' (Core.Iobuf.to_string buf)
+      let adrs = Async_extra.Import.Socket.Address.Inet.to_string adr in
+      dcallback (split_port adrs) (Core.Iobuf.to_string buf)
     in
     Udp.recvfrom_loop fd callback >>= fun () -> Deferred.return fd
 

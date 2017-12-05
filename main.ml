@@ -5,7 +5,7 @@
 (* Crypto encrpyts files and user info/ connection-establishing processes *)
 open Communication
 open Crypto
-open Database
+open State
 open Async
 open Async.Reader
 open Async_extra
@@ -45,13 +45,13 @@ let string_bcast_msg s : bcast_msg option =
 let to_unit d = upon d (fun _ -> ())
 
 
-
 let peer_discovered mypeer foundpeer myst addr msg  =
+  print_string "Peer discovered";
   match (string_bcast_msg msg) with
   | Some (name, pubkey) when not !foundpeer->
-    if (mypeer = pubkey) then
+    if (Crypto.compare mypeer pubkey) then
       let _ = print_endline ("Found peer: "^name^" "^addr) in
-      let stpick = Database.to_string myst in
+      let stpick = State.to_string myst in
       let pr : peer = {ip=addr; key=pubkey} in
       foundpeer := true;
       let _ = Communication.send_state pr stpick in
@@ -64,10 +64,10 @@ let peer_discovered mypeer foundpeer myst addr msg  =
 
 
 let proc_state_update currstate rs pr :state_info Deferred.t  =
-  Database.update_state currstate >>= fun nstate ->
-  let ups = Database.files_to_request nstate rs in
-  let recf st f :state_info Deferred.t = (Communication.request_file pr f f) >>= fun () ->
-    Database.acknowledge_file_recpt st f
+  State.update_state currstate >>= fun nstate ->
+  let ups = State.files_to_request nstate rs in
+  let recf st f :state_info Deferred.t = (Communication.request_file pr f f) >>= fun () -> st >>= fun st' ->
+    (State.acknowledge_file_recpt st' f)
   in
   List.fold_left recf (Deferred.return nstate) ups
 
@@ -78,7 +78,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
     | State s ->
       begin
         print_string "Got state update!";
-        let rst = Database.from_string s in
+        let rst = State.from_string s in
         match !rset with
         | None -> rset := Some rst; proc_state_update (!currstate) rst pr >>= fun ns ->
           currstate := ns;
@@ -103,7 +103,7 @@ let launch_synch () =
   let mypeer = Crypto.key_from_string "" in (* TODO fix this*)
   let mypub = Crypto.key_from_string "" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
-  Database.state_for_dir "submission/" >>= fun sinfo ->
+  State.state_for_dir "submission/" >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref (Some sinfo) in
   let currstate = ref sinfo in
