@@ -2,7 +2,6 @@
 module OUnix = Unix
 open Async
 
-
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
 
@@ -83,7 +82,7 @@ let state_for_dir dir_path =
 let changed_files dir_path acc (fname, modtime) =
   acc >>= fun (file_map,queue) ->
   try
-    let stored_hash, stored_modtime = FileMap.find fname file_map in
+    let _, stored_modtime = FileMap.find fname file_map in
     if modtime <> stored_modtime then
       hash_file (dir_path^Filename.dir_sep^fname) >>=
       fun new_hash -> Deferred.return
