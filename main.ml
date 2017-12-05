@@ -46,7 +46,7 @@ let to_unit d = upon d (fun _ -> ())
 
 let peer_discovered addr msg =
   match (string_bcast_msg msg) with
-  | Some (name, pubkey) -> print_endline name
+  | Some (name, pubkey) -> print_endline (name^": "^addr)
   | None -> print_string "Garbage!"
 
 
