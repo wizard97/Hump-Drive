@@ -4,13 +4,19 @@
  * Aaron Wisner (daw268)
 *)
 
-type key
+type key = Big_int.big_int
 (*type cypher_state *)
 
 
 (* Given a short cypher phrase generate a much larger key
  * treat the string as an integer in base 62 with A-0,B-1, ... ,8-60,9-61 *)
 val key_from_string : string -> key
+
+
+(* Same as above but the inverse *)
+val string_from_key : key -> string
+
+
 
 (* Given a key produce a state that represented the cypher
  * state before any chunks of the message were encrypted *)
@@ -30,3 +36,7 @@ val encrypt_line : string -> key ->  string
  * and the sending device's public key *)
 val decrypt_line : string -> key -> key -> string
 
+
+val modinv : key -> key -> key
+
+val mod_exp : key -> key -> key -> key
