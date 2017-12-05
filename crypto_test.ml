@@ -28,7 +28,7 @@ let to_int = Big_int.int_of_big_int
 
 let test () =
   let (pu,pr) = Crypto.generate_public_private () in
-  let l1 = encrypt_line "WHAT:1234" pu in
+  let l1 = encrypt_line "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" pu in
   "After encryption: "^l1 |> print_endline;
   let l2 = decrypt_line l1 pu pr in
   "After Decryption: "^l2 |> print_endline
