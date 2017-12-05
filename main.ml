@@ -9,8 +9,34 @@ open Async.Reader
 open Async_extra
 open Peer_discovery
 
-
 let bcast_interval = 5.
+
+(* Name, pubkey*)
+type bcast_msg = string*int
+
+let compute_hash s =
+  let hash = ref 0 in
+  let update_hash c =
+    let h = !hash in
+    let h' = ((h lsl 5) - h) + (Char.code c) in
+    hash := h' land h'
+  in String.iter (update_hash) s; !hash
+
+
+let bcastmsg_to_string m =
+  let data = Marshal.to_string m [] in
+  let payload = (string_of_int (compute_hash data), data) in
+  Marshal.to_string payload []
+
+
+let string_bcast_msg s =
+  let (hash, buf) : (string*string) = Marshal.from_string s 0 in
+  let data : bcast_msg = Marshal.from_string buf 0 in
+  if (string_of_int (compute_hash buf)) = hash then
+    Some data
+  else
+    None
+
 
 
 (* Empty function for converting deferred to unit *)
@@ -19,8 +45,9 @@ let to_unit d = upon d (fun _ -> ())
 
 
 let peer_discovered addr msg =
-  print_endline addr;
-  print_string msg
+  match (string_bcast_msg msg) with
+  | Some (name, pubkey) -> print_endline name
+  | None -> print_string "Garbage!"
 
 
 
@@ -36,10 +63,10 @@ let comm_server () =
   Communication.start_server notify_callback
 
 
-let rec peer_broadcaster () =
+let rec peer_broadcaster msg =
   upon(after (Core.sec bcast_interval) >>= fun () ->
-                          Peer_discovery.broadcast "TODO,mypubkey" )
-    (fun () -> print_endline "sent bcast"; peer_broadcaster ())
+                          Peer_discovery.broadcast msg )
+    (fun () -> print_endline "sent bcast"; peer_broadcaster msg)
 
 
 let launch_synch () =
@@ -48,7 +75,7 @@ let launch_synch () =
   print_endline "Starting comm server";
   comm_server () >>= fun _ ->
   print_endline "Starting discovery broadcaster";
-  peer_broadcaster ();
+  peer_broadcaster (bcastmsg_to_string ("Computer A", 1234567));
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen peer_discovered in
   Deferred.return (print_string "Init complete")
