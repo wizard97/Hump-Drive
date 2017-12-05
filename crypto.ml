@@ -94,7 +94,7 @@ let rec large_int_to_string' n s=
   if eq n zero then s else
   let r = bMod n (of_int 256) in
   large_int_to_string'
-  (div (sub n r) (of_int 256)) ((to_int r |> Char.chr |> Char.escaped)^s)
+  (div (sub n r) (of_int 256)) ((to_int r |> Char.chr |> String.make 1)^s)
 
 let large_int_to_string n = large_int_to_string' n ""
 
@@ -104,7 +104,7 @@ let rec string_from_key' k s =
   if eq k zero  && s = "" then "" else
   if eq k zero then s else
   let r = bMod k b in
- string_from_key' (div (sub k r) b) (Char.( (to_int r)+48 |> chr |> escaped)^s)
+ string_from_key' (div (sub k r) b) (Char.( (to_int r)+48 |> chr |> String.make 1)^s)
 
 (* Convert the int key to a readable string *)
 let string_from_key k = string_from_key' k ""
@@ -150,13 +150,14 @@ let generate_public_private ()=
   (mult x x ,x)
 
 
-(* Convert to int, encrypt, convert back to string
+(* Convert to int, encrypt, convert back to string *)
 let encrypt_string k s =
-  mod_exp (string_to_large_int s) exp k |> large_int_to_string *)
+  mod_exp (string_to_large_int s) exp k |> large_int_to_string
 
+(*
 let encrypt_string k s =
   mod_exp (key_from_string s) exp k |> string_from_key
-
+*)
 
 
 
@@ -181,14 +182,14 @@ let encrypt_line s pu =
      List.fold_right (fun e acc -> e^acc) lst ""
 *)
 
-(*
+
 let decrypt_line s pu pr =
   let k' = modinv exp (mult pr (decr pr) ) in
   let s' = string_to_large_int s in
-  mod_exp s' k' pu |> large_int_to_string *)
+  mod_exp s' k' pu |> large_int_to_string
 
-
+(*
 let decrypt_line s pu pr =
   let k' = modinv exp (mult pr (decr pr) ) in
   let s' = key_from_string s in
-  mod_exp s' k' pu |> string_from_key
+  mod_exp s' k' pu |> string_from_key *)
