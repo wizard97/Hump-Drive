@@ -44,9 +44,15 @@ let to_unit d = upon d (fun _ -> ())
 
 
 
-let peer_discovered addr msg =
+let peer_discovered mypeer foundpeer addr msg =
   match (string_bcast_msg msg) with
-  | Some (name, pubkey) -> print_endline (name^": "^addr)
+  | Some (name, pubkey) when not !foundpeer->
+    if (mypeer = pubkey) then
+      let _ = print_endline ("Found   let _ =  peer: "^name^" "^addr) in
+      foundpeer := true
+    else
+      print_endline ("Found different peer: "^name^": "^addr)
+  | Some _ -> ()
   | None -> print_string "Garbage!"
 
 
@@ -77,7 +83,9 @@ let launch_synch () =
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", 1234567));
   print_endline "Starting discovery server";
-  let _ = Peer_discovery.listen peer_discovered in
+  let mypeer = 32432543634 in
+  let foundpeer = ref false in
+  let _ = Peer_discovery.listen (peer_discovered mypeer foundpeer) in
   Deferred.return (print_string "Init complete")
 
 
