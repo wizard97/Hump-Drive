@@ -1,12 +1,13 @@
 open Async
 open Async_extra.Tcp
 open Async_extra.Import.Reader
+open Crypto
 
 
 type message = State of string | Filerequest of string
 
 (* ip, key *)
-type peer = { ip:string; key:string;} (* Todo make crypto key *)
+type peer = { ip:string; key:Crypto.key;} (* Todo make crypto key *)
 
 type server
 

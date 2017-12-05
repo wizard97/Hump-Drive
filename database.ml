@@ -1,4 +1,5 @@
 (* Done to differentiate between OCaml's default Unix module and JaneStreet's Async.Unix *)
+open Unix
 module OUnix = Unix
 open Async
 
