@@ -14,6 +14,6 @@ val files_to_request : state_info -> state_info -> dir_path list
 
 val acknowledge_file_recpt : state_info ->  string -> state_info Async.Deferred.t
 
-val to_string : state_info -> dir_path
+val to_string : state_info -> string
 
 val from_string : dir_path -> state_info
