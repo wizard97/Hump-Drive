@@ -6,8 +6,8 @@ open Async
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
 
-type file_hash = int
 type dir_path = string
+type file_hash = int
 type update_queue = StringSet.t
 type last_modified = float
 type files_to_info = (file_hash * last_modified) FileMap.t

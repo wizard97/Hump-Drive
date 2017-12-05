@@ -1,9 +1,10 @@
 (* Represents the database's internal state *)
-
 module OUnix = Unix
+open Async
 
 type state_info
-type dir_path
+
+type dir_path = string
 
 val state_for_dir : dir_path -> state_info Async.Deferred.t
 

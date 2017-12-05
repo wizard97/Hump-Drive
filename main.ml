@@ -4,6 +4,7 @@
 (* GUI displays all stuff *)
 (* Crypto encrpyts files and user info/ connection-establishing processes *)
 open Communication
+open Database
 open Async
 open Async.Reader
 open Async_extra
@@ -76,9 +77,10 @@ let rec peer_broadcaster msg =
 
 
 let launch_synch () =
-  print_endline "Scanning directory";
+  let _ = print_endline "Scanning directory" in
+  Database.state_for_dir "submission/" >>= fun sinfo ->
   (* TODO connect into directory scanner*)
-  print_endline "Starting comm server";
+  let _ = print_endline "Starting comm server" in
   comm_server () >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", 1234567));
