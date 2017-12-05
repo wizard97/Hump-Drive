@@ -36,12 +36,10 @@ let comm_server () =
   Communication.start_server notify_callback
 
 
-let rec periodic_broadcast () =
-  Peer_discovery.broadcast "TODO,mypubkey" >>= fun _ ->
-  after (Core.sec bcast_interval) >>= fun _ ->
-  print_string "broadcasting";
-  periodic_broadcast ()
-
+let rec peer_broadcaster () =
+  upon(after (Core.sec bcast_interval) >>= fun () ->
+                          Peer_discovery.broadcast "TODO,mypubkey" )
+    (fun () -> print_endline "sent bcast"; peer_broadcaster ())
 
 
 let launch_synch () =
@@ -49,10 +47,11 @@ let launch_synch () =
   (* TODO connect into directory scanner*)
   print_endline "Starting comm server";
   comm_server () >>= fun _ ->
-  print_endline "Starting discovery";
-  Peer_discovery.listen peer_discovered >>= fun _ ->
   print_endline "Starting discovery broadcaster";
-  periodic_broadcast ()
+  peer_broadcaster ();
+  print_endline "Starting discovery server";
+  let _ = Peer_discovery.listen peer_discovered in
+  Deferred.return (print_string "Init complete")
 
 
 let client () =
