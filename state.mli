@@ -1,4 +1,5 @@
 (* OCaml's standard Unix is opened as OUnix to disambiguate from Async's Unix module  *)
+open Unix
 module OUnix = Unix
 open Async
 

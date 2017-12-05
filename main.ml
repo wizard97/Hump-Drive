@@ -5,7 +5,7 @@
 (* Crypto encrpyts files and user info/ connection-establishing processes *)
 open Communication
 open Crypto
-open Database
+open State
 open Async
 open Async.Reader
 open Async_extra
@@ -53,7 +53,7 @@ let peer_discovered mypeer foundpeer myst addr msg  =
     if (mypeer = pubkey) then
       let _ = print_endline ("Found   let _ =  peer: "^name^" "^addr) in
       foundpeer := true;
-      let stpick = Database.to_string myst in
+      let stpick = State.to_string myst in
       let pr : peer = {ip=addr; key=pubkey} in
       upon (Communication.send_state pr stpick) (fun () -> ())
     else
@@ -83,7 +83,7 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let _ = print_endline "Scanning directory" in
-  Database.state_for_dir "submission/" >>= fun sinfo ->
+  State.state_for_dir "submission/" >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   comm_server () >>= fun _ ->
   print_endline "Starting discovery broadcaster";
