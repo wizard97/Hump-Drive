@@ -13,7 +13,7 @@ let key_from_string s = s
 
 let string_from_key s = s
 
-let generate_public_private () = ("key", "key")
+let generate_public_private () = ("key", "key1")
 
 let encrypt_line s key = s
 

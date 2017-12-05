@@ -100,8 +100,8 @@ let rec peer_broadcaster msg =
 
 
 let launch_synch () =
-  let mypeer = Crypto.key_from_string "" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
   State.state_for_dir "submission/" >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
