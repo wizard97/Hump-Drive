@@ -63,13 +63,13 @@ let peer_discovered mypeer foundpeer myst addr msg  =
 
 
 
-let proc_state_update currstate rs pr =
-  Database.update_state !currstate >>= fun ns ->
-  currstate := ns;
-  let ups = Database.files_to_request !currstate rs in
-  let recvf f = upon(Communication.request_file pr f f) (fun () -> ()) in
-  List.iter recvf ups;
-  Deferred.return ()
+let proc_state_update currstate rs pr :state_info Deferred.t  =
+  Database.update_state currstate >>= fun nstate ->
+  let ups = Database.files_to_request nstate rs in
+  let recf st f :state_info Deferred.t = (Communication.request_file pr f f) >>= fun () ->
+    Database.acknowledge_file_recpt st f
+  in
+  List.fold_left recf (Deferred.return nstate) ups
 
 
 let comm_server currstate rset mypeer = (* TODO make sure peer is who we think it is*)
@@ -80,7 +80,8 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
         print_string "Got state update!";
         let rst = Database.from_string s in
         match !rset with
-        | None -> rset := Some rst; proc_state_update currstate rst pr >>= fun () ->
+        | None -> rset := Some rst; proc_state_update (!currstate) rst pr >>= fun ns ->
+          currstate := ns;
           Deferred.return (rset := None)
         | _ -> Deferred.return ()
       end
