@@ -1,8 +1,8 @@
-(* Done to differentiate between OCaml's default Unix module and JaneStreet's Async.Unix *)
 open Unix
 module OUnix = Unix
 open Async
 
+(* Modules used to maintain our files_to_info and update_queue structures *)
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
 
@@ -10,8 +10,11 @@ type dir_path = string
 type file_hash = int
 type update_queue = StringSet.t
 type last_modified = float
+
+(* Maps file names to file meta data of the files currently tracked *)
 type files_to_info = (file_hash * last_modified) FileMap.t
 
+(* [compute_hash s] is the hash calculated for a string [s] *)
 let compute_hash s =
   let hash = ref 0 in
   let update_hash c =
@@ -20,11 +23,15 @@ let compute_hash s =
     hash := h' land h'
   in String.iter (update_hash) s; !hash
 
+(* Internal state *)
 type state_info = {dir_path : dir_path;
                    files_to_info : files_to_info;
                    last_modified : last_modified;
                    update_queue : update_queue}
 
+
+(* [get_dir_contents acc h] returns a list of contents contained in the directory
+ * specified by [h] *)
 let rec get_dir_contents acc h =
   Async.Unix.readdir_opt h >>= (fun s ->
     match s with
@@ -32,6 +39,7 @@ let rec get_dir_contents acc h =
     | None -> Async.Unix.closedir h >>= (fun () -> Deferred.return (acc))
   )
 
+(* Opens the file denoted by [fpath] and hashes its contents *)
 let hash_file fpath =
   Reader.open_file fpath >>= (fun rdr ->
     Reader.pipe rdr |> Async_unix.Import.Pipe.read >>=
@@ -41,24 +49,24 @@ let hash_file fpath =
         | `Eof -> failwith "Unsupported")
     )
 
+(* Returns whether the file denoted by [fpath] is a regular file *)
 let is_reg_file fpath =
   let fdesc = OUnix.openfile fpath [O_RDONLY; O_NONBLOCK] 644 in
   let stats = OUnix.fstat fdesc in
   stats.st_kind = S_REG
 
+(* Returns the last modified time of the file denoted by [path] *)
 let last_modtime path =
   let fdesc = OUnix.openfile path [O_RDONLY; O_NONBLOCK] 644 in
   let stats = OUnix.fstat fdesc in
   stats.st_mtime
 
+(* Gets a list of only the regular files in the directory [dir_path] *)
 let files_in_dir dir_path =
   let handle = OUnix.opendir dir_path in
   get_dir_contents [] handle >>= fun lst ->
   Deferred.return (List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f)) lst)
 
-(* NOTE Delete Isn't supported right now. Might want to think about adding some kind of purge function or something.*)
-
-(* Init for a new state given a dir_path *)
 let state_for_dir dir_path =
   (files_in_dir dir_path) >>=
   fun filenames ->
@@ -113,10 +121,13 @@ let update_state st =
   if new_modtime <> st.last_modified then
     update_file_info st >>= fun (binds,queue) -> Deferred.return
       {st with files_to_info = binds; update_queue = queue; last_modified = new_modtime}
-    else Deferred.return st
+  else Deferred.return st
 
+(* Looks up a [file] in [st]'s files_to_info *)
 let lookup_file file st = FileMap.find file st.files_to_info
 
+(* Compares two versions of the same file [f] in [st1] and [st2]. Returns true if
+ * the version of [st2] is newer than that of [st1 ]*)
 let cmp_file_versions st1 st2 f =
   let h1,t1 = lookup_file f st1 in
   let h2,t2 = lookup_file f st2 in

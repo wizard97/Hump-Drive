@@ -25,24 +25,24 @@ let even b = eq (bMod b (Big_int.big_int_of_int 2)) zero
 let of_int = Big_int.big_int_of_int
 let to_int = Big_int.int_of_big_int
 
-let b = of_int 43
-let exp = of_int 17 (* Encryption exponent *)
+let b = of_int 256
+let exp = of_int 17
 
-
-
-
-(* max key size is 11 so find a 5 digit prime *)
 
 (***** HELPERS *****)
 
+(* Requires: s:string of length >0*)
+(* Returns: the highest index character in s*)
 let last_char s =
   get s (length s - 1)
 
+(* Requires: s:string of length >0*)
+(* Returns: s without its highest index character *)
 let strip_last s =
   String.sub s 0 (String.length s - 1)
 
 
-(* RequiresL ints a,b, and m *)
+(* Requires: keys a,b, and m *)
 (* Returns: a^b mod m while avoiding overflow *)
 let rec mod_exp a b m =
   if eq b zero then of_int 1 else
@@ -54,7 +54,7 @@ let rec mod_exp a b m =
     bMod (mult (bMod a m)  (bMod v m)) m
 
 
-(* Requires: int n*)
+(* Requires: key n *)
 (* Returns: whether n is prime. Based on the fermat test *)
 let is_prime n =
   let x1 = of_int 17 in (* {1,..,n-1} *)
@@ -70,73 +70,63 @@ let rec egcd a b m=
   else let (g,y,x) = egcd (bMod b a) a m in
   (g,sub x (mult (div b a) y), y)
 
+(* Requires a,m of type key *)
+(* Returns: a^(-1) mod m, if it exists. Otherwise raise and exception *)
 let modinv a m =
   let (g,x,y) = egcd a m m in
   if not (eq g (of_int 1)) then failwith "No inverse"
-  else let x' = bMod x m in
-  if Big_int.lt_big_int x' zero
-  then Big_int.add_big_int x' m
-  else x'
+    else let x' = bMod x m in
+  if Big_int.lt_big_int x' zero then add x' m else x'
 
 
 (* Given a string of any ascii characters return its
- * big int representation *)
+ * Big_int representation by treating a string as a base 256 integer
+ * where each character correspons to a digit with its ascii code as value *)
 let rec string_to_large_int s =
   if s = "" then zero else
   add_i (last_char s |> Char.code)
-    (mult_i 256 (string_to_large_int (strip_last s)) )
+    (mult b (string_to_large_int (strip_last s)) )
 
 
 
-(* Inverse of above *)
-
+(* Recursive helper function implemeneting the functionality of
+ * large_int_to_string *)
 let rec large_int_to_string' n s=
   if eq n zero then s else
-  let r = bMod n (of_int 256) in
+  let r = bMod n b in
   large_int_to_string'
-  (div (sub n r) (of_int 256)) ((to_int r |> Char.chr |> Char.escaped)^s)
+  (div (sub n r) b) ((to_int r |> Char.chr |> String.make 1)^s)
 
+(* Given a Big_int convert it to a string representation by converting the
+ * Big_int to a base 256 integer and creating a string where character i
+ * is the character represented by ascii code of digit i in that base
+ * 256 representation of the number. *)
 let large_int_to_string n = large_int_to_string' n ""
 
 
+let string_from_key = large_int_to_string
 
-let rec string_from_key' k s =
-  if eq k zero  && s = "" then "" else
-  if eq k zero then s else
-  let r = bMod k b in
- string_from_key' (div (sub k r) b) (Char.( (to_int r)+48 |> chr |> escaped)^s)
-
-(* Convert the int key to a readable string *)
-let string_from_key k = string_from_key' k ""
-
-
-let rec key_from_string s =
-  if length s = 0 then zero
-  else
-(*   let str = "Digit is "^(string_of_int (Char.code (last_char s) - 48)) in
-   print_endline str; *)
-let s' = (String.sub s 0 (length s - 1)) in
-add_i (Char.code (last_char s) - 48) (mult b (key_from_string s'))
-
+let key_from_string = string_to_large_int
 
 (***** END HELPERS *****)
 
-let init_cypher k =
-  failwith "Unimplemented"
 
+(* Helper for the large random number generator. Generates a random digit
+ * n times, appending them together. *)
 let rec big_random' acc n =
   if n = 0 then Big_int.big_int_of_string acc
   else big_random' ((Random.int 9 + 1 |> string_of_int)^acc) (n-1)
 
 
-(* Generate a random very large integer *)
+(* Generate a random very large integer by the helper big_random' for some
+ * set number of iterations and appending the results *)
 let big_random () =
   big_random' "" 200
 
 
-
-(* Ranges from 0 to [612436557] in decimal or
-  A to zzzzz in our char base 57. Square this number to make a public/private*)
+(* Call the large random number generator repeatedly, check whether
+ * it is prime, and if not search for another number. Once a prime is
+ * found, return it. *)
 let generate_key =
   Random.self_init ();
   let rec loop () =
@@ -144,22 +134,24 @@ let generate_key =
     if is_prime p then p else loop ()
   in loop
 
-(* Returns tuple of pu*pr *)
+(* Generate two large prime number and let their product *)
 let generate_public_private ()=
   let x = generate_key () in
-  (mult x x ,x)
+  let y = generate_key () in
+  (mult x y ,x)
 
 
-(* Convert to int, encrypt, convert back to string
-let encrypt_string k s =
-  mod_exp (string_to_large_int s) exp k |> large_int_to_string *)
+let encrypt_line s pu =
+  mod_exp (string_to_large_int s) exp pu |> large_int_to_string
 
-let encrypt_string k s =
-  mod_exp (key_from_string s) exp k |> string_from_key
+let decrypt_line s pu pr =
+  let pr' = div pu pr in
+  let k' = modinv exp (mult (decr pr') (decr pr)) in
+  let s' = string_to_large_int s in
+  mod_exp s' k' pu |> large_int_to_string
 
 
-
-
+(*
 let rec chunk' s acc n=
   if s = "" then acc else
   if String.length s <= n then List.rev (s::acc)  else
@@ -167,28 +159,6 @@ let rec chunk' s acc n=
 
   chunk' (all_but_n s) ((String.sub s 0 n)::acc) n
 
-(* Given a string return a list of the chunks *)
-let chunk s = chunk' s [] 5
+Given a string return a list of the chunks
+let chunk s = chunk' s [] 5 *)
 
-
-
-
-let encrypt_line s pu =
-    encrypt_string pu s
-
-(*
-    let lst = List.map (encrypt_string pu) (chunk s) in
-     List.fold_right (fun e acc -> e^acc) lst ""
-*)
-
-(*
-let decrypt_line s pu pr =
-  let k' = modinv exp (mult pr (decr pr) ) in
-  let s' = string_to_large_int s in
-  mod_exp s' k' pu |> large_int_to_string *)
-
-
-let decrypt_line s pu pr =
-  let k' = modinv exp (mult pr (decr pr) ) in
-  let s' = key_from_string s in
-  mod_exp s' k' pu |> string_from_key
