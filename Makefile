@@ -1,6 +1,6 @@
 compile:
 	ocamlbuild -use-ocamlfind crypto.cmo gui.cmo
-	corebuild -pkg async filetransfer.cmo communication.cmo peer_discovery.cmo
+	corebuild -pkg async filetransfer.cmo communication.cmo peer_discovery.cmo database.cmo crypto.cmo
 crypto_test:
 	corebuild -pkg async crypto_test.byte && ./crypto_test.byte
 net_test_server:

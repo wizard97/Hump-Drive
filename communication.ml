@@ -2,12 +2,13 @@ open Async
 open Async_extra.Tcp
 open Async_extra.Import.Reader
 open Async_extra.Import.Writer
+open Crypto
 
 
 type message = State of string | Filerequest of string
 
 (* ip, key *)
-type peer = { ip:string; key:string;} (* Todo make crypto key *)
+type peer = { ip:string; key:Crypto.key;} (* Todo make crypto key *)
 
 type server = (Socket.Address.Inet.t, int) Async_extra.Tcp.Server.t
 
@@ -72,7 +73,7 @@ let start_server hookup =
     read_until read (`Char '\n') ~keep_delim:(false) >>= fun r ->
     match (r) with
     | `Ok s ->
-      let pr = {ip=saddr; key="TODO KEY"} in
+      let pr = {ip=saddr; key=(Crypto.key_from_string s)} in
       process_cmd s cs pr hookup >>= fun () ->
       Writer.close write
     | `Eof_without_delim s ->

@@ -4,6 +4,8 @@
 (* GUI displays all stuff *)
 (* Crypto encrpyts files and user info/ connection-establishing processes *)
 open Communication
+open Crypto
+open Database
 open Async
 open Async.Reader
 open Async_extra
@@ -12,7 +14,7 @@ open Peer_discovery
 let bcast_interval = 5.
 
 (* Name, pubkey*)
-type bcast_msg = string*int
+type bcast_msg = string*Crypto.key
 
 let compute_hash s =
   let hash = ref 0 in
@@ -23,13 +25,13 @@ let compute_hash s =
   in String.iter (update_hash) s; !hash
 
 
-let bcastmsg_to_string m =
+let bcastmsg_to_string m : string =
   let data = Marshal.to_string m [] in
   let payload = (string_of_int (compute_hash data), data) in
   Marshal.to_string payload []
 
 
-let string_bcast_msg s =
+let string_bcast_msg s : bcast_msg option =
   let (hash, buf) : (string*string) = Marshal.from_string s 0 in
   let data : bcast_msg = Marshal.from_string buf 0 in
   if (string_of_int (compute_hash buf)) = hash then
@@ -44,12 +46,16 @@ let to_unit d = upon d (fun _ -> ())
 
 
 
-let peer_discovered mypeer foundpeer addr msg =
+
+let peer_discovered mypeer foundpeer myst addr msg  =
   match (string_bcast_msg msg) with
   | Some (name, pubkey) when not !foundpeer->
     if (mypeer = pubkey) then
       let _ = print_endline ("Found   let _ =  peer: "^name^" "^addr) in
-      foundpeer := true
+      foundpeer := true;
+      let stpick = Database.to_string myst in
+      let pr : peer = {ip=addr; key=pubkey} in
+      upon (Communication.send_state pr stpick) (fun () -> ())
     else
       print_endline ("Found different peer: "^name^": "^addr)
   | Some _ -> ()
@@ -76,24 +82,24 @@ let rec peer_broadcaster msg =
 
 
 let launch_synch () =
-  print_endline "Scanning directory";
-  (* TODO connect into directory scanner*)
-  print_endline "Starting comm server";
+  let _ = print_endline "Scanning directory" in
+  Database.state_for_dir "submission/" >>= fun sinfo ->
+  let _ = print_endline "Starting comm server" in
   comm_server () >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", 1234567));
   print_endline "Starting discovery server";
-  let mypeer = 32432543634 in
+  let mypeer = Crypto.key_from_string "" in (* TODO fix this*)
   let foundpeer = ref false in
-  let _ = Peer_discovery.listen (peer_discovered mypeer foundpeer) in
+  let _ = Peer_discovery.listen (peer_discovered mypeer foundpeer sinfo) in
   Deferred.return (print_string "Init complete")
 
-
+    (*
 let client () =
   let peer = {ip = "10.132.7.82"; key="hjga"} in
   Communication.request_file peer "ydf.mp4" "recv.mp4" >>= fun () ->
     print_string "Success!\n"; Async.Deferred.return ()
-
+*)
 
 (* Given an input string from the repl, handle the command *)
 let process_input = function

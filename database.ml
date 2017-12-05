@@ -1,11 +1,12 @@
 (* Done to differentiate between OCaml's default Unix module and JaneStreet's Async.Unix *)
+open Unix
 module OUnix = Unix
 open Async
-
 
 module StringSet = Set.Make(String)
 module FileMap = Map.Make(String)
 
+<<<<<<< HEAD
 
 type file_hash = int
 type dir_path = string
@@ -13,6 +14,12 @@ type update_queue = StringSet.t (* List of files that need to be updated *)
 type last_modified = float (* Last modified timestamp of a file *)
 
 (* Dictionary of file names to a tuple of its hash, last modified timestamp *)
+=======
+type dir_path = string
+type file_hash = int
+type update_queue = StringSet.t
+type last_modified = float
+>>>>>>> 46ecab66342951e8fbdf79677fa94862c39d3b43
 type files_to_info = (file_hash * last_modified) FileMap.t
 
 
@@ -110,7 +117,7 @@ let state_for_dir dir_path =
 let changed_files dir_path acc (fname, modtime) =
   acc >>= fun (file_map,queue) ->
   try
-    let stored_hash, stored_modtime = FileMap.find fname file_map in
+    let _, stored_modtime = FileMap.find fname file_map in
     if modtime <> stored_modtime then
       hash_file (dir_path^Filename.dir_sep^fname) >>=
       fun new_hash -> Deferred.return
