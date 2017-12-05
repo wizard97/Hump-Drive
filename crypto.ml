@@ -151,6 +151,9 @@ let decrypt_line s pu pr =
   mod_exp s' k' pu |> large_int_to_string
 
 
+let compare = eq
+
+
 (*
 let rec chunk' s acc n=
   if s = "" then acc else

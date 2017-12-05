@@ -31,6 +31,10 @@ val encrypt_line : string -> key ->  string
  * and the sending device's public key return the decrypted message *)
 val decrypt_line : string -> key -> key -> string
 
+(* Determine whether two keys are equal *)
+val compare : key -> key -> bool
+
+
 
 (*
 val modinv : key -> key -> key
