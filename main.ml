@@ -129,7 +129,7 @@ let launch_synch () =
   peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
-  (* let _ = peer_syncer discovered_peers mypeer currstate in *)
+  let _ = peer_syncer discovered_peers mypeer currstate in 
   Deferred.return (print_string "Init complete")
 
     (*
