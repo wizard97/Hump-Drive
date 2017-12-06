@@ -9,6 +9,10 @@ open String
 (* Number base for the string form of the keys *)
 type key = Big_int.big_int
 
+let chunk_size = 128
+let max_length = 200
+let chunk_size_char = Char.chr chunk_size |> String.make 1
+
 
 let zero = Big_int.zero_big_int
 let bMod = Big_int.mod_big_int
@@ -121,7 +125,7 @@ let rec big_random' acc n =
 (* Generate a random very large integer by the helper big_random' for some
  * set number of iterations and appending the results *)
 let big_random () =
-  big_random' "" 200
+  big_random' "" max_length
 
 
 (* Call the large random number generator repeatedly, check whether
@@ -140,7 +144,7 @@ let generate_public_private ()=
   let y = generate_key () in
   (mult x y ,x)
 
-
+(* Pad to make sure length = max_length *)
 let encrypt_line s pu =
   mod_exp (string_to_large_int s) exp pu |> large_int_to_string
 
@@ -154,7 +158,36 @@ let decrypt_line s pu pr =
 let compare = eq
 
 
+let chunk s = String.sub s 0 chunk_size
+let remaining s = String.sub s chunk_size (String.length s - chunk_size)
+
+(* Pads zero characters onto s until len(S) = l *)
+let rec zero_pad s l =
+  if String.length s < l then
+  zero_pad ((String.make 1 '\000')^s) l
+  else s
+
+
+
+let rec encrypt_and_chunk s pu =
+  if String.length s > chunk_size then
+  let s1 = chunk_size_char ^ (encrypt_line (chunk s) pu) in
+  let s2 = (s |> remaining |> encrypt_and_chunk) pu in s1^s2
+  else (String.length s |> Char.chr |> String.make 1)^
+    (encrypt_line s pu)
+
+
+
+let decrypt_chunked s pu pr =
+  if String.length s > (chunk_size + 1) then let size = Char.code s.[0] in
+  let dec = decrypt_line (String.sub s 1 (String.length s - 1) ) pu pr in
+  if size = String.
+
+
+
+
 (*
+
 let rec chunk' s acc n=
   if s = "" then acc else
   if String.length s <= n then List.rev (s::acc)  else
