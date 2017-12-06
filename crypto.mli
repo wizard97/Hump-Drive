@@ -42,9 +42,9 @@ val encrypt_and_chunk : string -> key -> string
  * original message. *)
 val decrypt_chunked : string -> key -> key -> string
 
+(*
 val test_modinv : int -> unit
 
-(*
 val modinv : key -> key -> key
 
 val mod_exp : key -> key -> key -> key

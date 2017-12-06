@@ -120,7 +120,7 @@ let key_from_string = string_to_large_int
  * n times, appending them together. *)
 let rec big_random' acc n =
   if n = 0 then Big_int.big_int_of_string acc
-  else big_random' ((Random.int 9 + 1 |> string_of_int)^acc) (n-1)
+  else big_random' ((Random.int 10  |> string_of_int)^acc) (n-1)
 
 
 (* Generate a random very large integer by the helper big_random' for some
@@ -195,7 +195,7 @@ let rec decrypt_chunked s pu pr =
     if size <> String.length dec then zero_pad dec size else dec
 
 
-
+(*
 
 let rec test_modinv n =
   if n = 0 then print_endline "NICE" else
@@ -203,7 +203,7 @@ let rec test_modinv n =
   let pr2 = div pu pr in
     let x = modinv (of_int 17) (mult (decr pr2) (decr pr)) in
     test_modinv (n-1)
-
+*)
 
 
 (*
