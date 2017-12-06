@@ -10,7 +10,8 @@ open String
 type key = Big_int.big_int
 
 let chunk_size = 128
-let max_length = 200
+let key_size = 200
+let max_length = 2*key_size + 1
 let chunk_size_char = Char.chr chunk_size |> String.make 1
 
 
@@ -125,7 +126,7 @@ let rec big_random' acc n =
 (* Generate a random very large integer by the helper big_random' for some
  * set number of iterations and appending the results *)
 let big_random () =
-  big_random' "" max_length
+  big_random' "" key_size
 
 
 (* Call the large random number generator repeatedly, check whether
@@ -135,7 +136,7 @@ let generate_key =
   Random.self_init ();
   let rec loop () =
     let p = big_random () in
-    if is_prime p then p else loop ()
+    if is_prime p && not (eq (bMod (decr p) exp) zero) then p else loop ()
   in loop
 
 (* Generate two large prime number and let their product *)
@@ -173,11 +174,13 @@ let rec zero_pad s l =
 
 
 let rec encrypt_and_chunk s pu =
-  if String.length s > chunk_size then
-  let s1 = chunk_size_char ^ (encrypt_line (chunk s) pu) in
-  let s2 = (s |> remaining |> encrypt_and_chunk) pu in s1^s2
+  if String.length s >= chunk_size then
+    let enc = zero_pad (encrypt_line (chunk s) pu) max_length in
+
+    let s1 = chunk_size_char ^ enc in
+    let s2 = (s |> remaining |> encrypt_and_chunk) pu in s1^s2
   else (String.length s |> Char.chr |> String.make 1)^
-    (encrypt_line s pu)
+    zero_pad (encrypt_line s pu) max_length
 
 
 
@@ -187,9 +190,19 @@ let rec decrypt_chunked s pu pr =
     let s1 = if size = String.length dec then dec else zero_pad dec size in
     let strip = String.sub s 1 (String.length s - 1) |> remaining_dec in
     s1^(decrypt_chunked strip pu pr)
-  else let size = Char.code s.[0] in let dec = decrypt_line (String.sub s 1 (String.length s  - 1)) pu pr in
+  else if s = "" then s else
+  let size = Char.code s.[0] in let dec = decrypt_line (String.sub s 1 (String.length s  - 1)) pu pr in
     if size <> String.length dec then zero_pad dec size else dec
 
+
+
+
+let rec test_modinv n =
+  if n = 0 then print_endline "NICE" else
+  let (pu,pr) = generate_public_private () in
+  let pr2 = div pu pr in
+    let x = modinv (of_int 17) (mult (decr pr2) (decr pr)) in
+    test_modinv (n-1)
 
 
 
