@@ -12,7 +12,7 @@ let notify_callback cstate peer msg =
 
 
 let main () =
-  let peer = {ip="127.0.0.1"; key="123abc"} in
+  let peer = {ip="127.0.0.1"; key=Crypto.key_from_string""} in
   print_string "Testing123";
   let _ = Communication.start_server notify_callback in
   Scheduler.go ()
