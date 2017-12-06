@@ -160,6 +160,9 @@ let compare = eq
 
 let chunk s = String.sub s 0 chunk_size
 let remaining s = String.sub s chunk_size (String.length s - chunk_size)
+let remaining_dec s = String.sub s max_length (String.length s - max_length)
+
+
 
 (* Pads zero characters onto s until len(S) = l *)
 let rec zero_pad s l =
@@ -179,12 +182,12 @@ let rec encrypt_and_chunk s pu =
 
 
 let rec decrypt_chunked s pu pr =
-  if String.length s > (chunk_size + 1) then let size = Char.code s.[0] in
-    let dec = decrypt_line (String.sub s 1 (String.length s - 1) ) pu pr in
+  if String.length s >= (max_length + 1) then let size = Char.code s.[0] in
+    let dec = decrypt_line (String.sub s 1 max_length) pu pr in
     let s1 = if size = String.length dec then dec else zero_pad dec size in
-    let strip = String.sub s 1 (String.length s - 1) |> remaining in
+    let strip = String.sub s 1 (String.length s - 1) |> remaining_dec in
     s1^(decrypt_chunked strip pu pr)
-  else let size = Char.code s.[0] in let dec = decrypt_line s pu pr in
+  else let size = Char.code s.[0] in let dec = decrypt_line (String.sub s 1 (String.length s  - 1)) pu pr in
     if size <> String.length dec then zero_pad dec size else dec
 
 
