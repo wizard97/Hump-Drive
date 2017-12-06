@@ -178,10 +178,14 @@ let rec encrypt_and_chunk s pu =
 
 
 
-let decrypt_chunked s pu pr =
+let rec decrypt_chunked s pu pr =
   if String.length s > (chunk_size + 1) then let size = Char.code s.[0] in
-  let dec = decrypt_line (String.sub s 1 (String.length s - 1) ) pu pr in
-  if size = String.
+    let dec = decrypt_line (String.sub s 1 (String.length s - 1) ) pu pr in
+    let s1 = if size = String.length dec then dec else zero_pad dec size in
+    let strip = String.sub s 1 (String.length s - 1) |> remaining in
+    s1^(decrypt_chunked strip pu pr)
+  else let size = Char.code s.[0] in let dec = decrypt_line s pu pr in
+    if size <> String.length dec then zero_pad dec size else dec
 
 
 
