@@ -9,7 +9,7 @@ open String
 (* Number base for the string form of the keys *)
 type key = Big_int.big_int
 
-let chunk_size = 128
+let chunk_size = 255
 let key_size = 200
 let max_length = 2*key_size + 1
 let output_chunk_size = max_length + 1
