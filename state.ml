@@ -54,9 +54,11 @@ let hash_file fpath =
 
 (* Returns whether the file denoted by [fpath] is a regular file *)
 let is_reg_file fpath =
-  let fdesc = OUnix.openfile fpath [O_RDONLY; O_NONBLOCK] 644 in
-  let stats = OUnix.fstat fdesc in
-  stats.st_kind = S_REG
+  try
+    let fdesc = OUnix.openfile fpath [O_RDONLY; O_NONBLOCK] 644 in
+    let stats = OUnix.fstat fdesc in
+    stats.st_kind = S_REG
+  with _ -> false
 
 (* Returns the last modified time of the file denoted by [path] *)
 let last_modtime path =

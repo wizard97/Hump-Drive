@@ -10,6 +10,7 @@ open Async
 open Async.Reader
 open Async_extra
 open Peer_discovery
+open Config
 
 let bcast_interval = 5.
 
@@ -62,7 +63,6 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
 
 
-
 let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
   print_string "Peer discovered";
   match (string_bcast_msg msg) with
@@ -70,7 +70,6 @@ let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
     Hashtbl.add peers key (name,{ip=addr; key=key});
     print_endline ("Found peer: "^name^" "^addr^": "^(Crypto.string_from_key key))
   | None -> print_string "Garbage!"
-
 
 
 let proc_state_update currstate rs pr :state_info Deferred.t  =
@@ -115,8 +114,17 @@ let launch_synch () =
   let rdir = "test/" in
   let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
-  let _ = print_endline "Scanning directory" in
-  State.state_for_dir rdir >>= fun sinfo ->
+  let _ = print_endline "Scanning directory... \n" in
+  let st =
+    print_endline "Looking for saved states...";
+    try
+      Config.load_state rdir
+    with exn ->
+      print_string "Could not find a saved state. Either no saved state or corrupt...\nEstablishing new state.\n";
+      State.state_for_dir rdir
+  in
+  print_endline "State successfully loaded!";
+  st >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
   let currstate = ref sinfo in
@@ -127,14 +135,7 @@ let launch_synch () =
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
   let _ = peer_syncer discovered_peers mypeer currstate in
-  Deferred.return (print_string "Init complete")
-
-    (*
-let client () =
-  let peer = {ip = "10.132.7.82"; key="hjga"} in
-  Communication.request_file peer "ydf.mp4" "recv.mp4" >>= fun () ->
-    print_string "Success!\n"; Async.Deferred.return ()
-*)
+  (print_endline "Init complete!"); Config.save_state sinfo rdir
 
 (* Given an input string from the repl, handle the command *)
 let process_input = function
@@ -152,7 +153,6 @@ let repl () =
       match r with
       | `Ok s -> process_input s; loop ()
       | `Eof -> print_endline "What happened"
-      ;
     end
   in loop ()
 
