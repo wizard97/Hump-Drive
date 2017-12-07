@@ -9,7 +9,11 @@
  * in securing message in a fasion similar to the RSA protocol. *)
 type key
 
+(* Size of each read chunk *)
 val chunk_size : int
+
+(* Size of read chunks to decrypt *)
+val output_chunk_size : int
 
 (* true if key1 = key2 *)
 val key_equal : key -> key -> bool

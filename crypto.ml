@@ -12,6 +12,7 @@ type key = Big_int.big_int
 let chunk_size = 128
 let key_size = 200
 let max_length = 2*key_size + 1
+let output_chunk_size = max_length + 1
 let chunk_size_char = Char.chr chunk_size |> String.make 1
 
 
@@ -177,6 +178,10 @@ let rec zero_pad s l =
   zero_pad ((String.make 1 '\000')^s) l
   else s
 
+let rec strip_to s l =
+  if String.length s > l then
+  strip_to (String.sub s 1 (String.length s - 1)) l
+  else s
 
 
 let rec encrypt_and_chunk s pu =
@@ -200,7 +205,7 @@ let rec decrypt_chunked s pu pr =
   else if s = "" then s else
   let size = Char.code s.[0] in
   let dec = decrypt_line (String.sub s 1 (String.length s  - 1)) pu pr in
-    String.sub dec 0 size
+    strip_to dec size
 
  (*   if size <> String.length dec then zero_pad dec size else dec *)
 
