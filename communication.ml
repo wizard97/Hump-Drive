@@ -48,12 +48,14 @@ let transfer_file fname (addr,read,write) =
     let buf = Core.String.create Crypto.chunk_size in
     let rec rp () = Reader.really_read r ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
     match res with
-    | `Ok -> Writer.write write buf; Writer.flushed write >>= fun () -> rp ()
+    | `Ok -> Writer.write write buf; rp ()
     | `Eof 0-> Writer.flushed write
-    | `Eof n -> Writer.write write (String.sub buf 0 n); Writer.flushed write
+    | `Eof n -> Writer.write write (String.sub buf 0 n); print_string (String.sub buf 0 n); Writer.flushed write
     in
-    rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.flushed write >>=
-    fun () ->  after(Core.sec 2.0) >>= fun a -> Reader.close r >>= fun a -> Writer.close write
+    rp () >>= fun () -> print_endline "Finished Transferring!";
+    let p = (Writer.pipe write) in
+    Pipe.upstream_flushed p >>= fun _ -> Pipe.downstream_flushed p >>= fun _ ->
+    Writer.close write >>= fun () -> Reader.close r
 
 
 (*
@@ -73,8 +75,10 @@ let recv_file fdest (addr,read,write) =
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> Writer.write write (String.sub buf 0 n); Writer.flushed write
   in
-  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.flushed fw >>= fun () ->
-  after(Core.sec 2.0) >>= fun a -> Writer.close fw
+  rp () >>= fun () -> print_endline "Finished receiving!";
+  let p = (Reader.pipe read) in
+  Pipe.upstream_flushed p >>= fun _ -> Pipe.downstream_flushed p >>= fun _ ->
+  Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
