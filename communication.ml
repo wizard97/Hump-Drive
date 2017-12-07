@@ -20,7 +20,7 @@ type server = (Socket.Address.Inet.t, int) Async_extra.Tcp.Server.t
 type conn_state = Socket.Address.Inet.t*Reader.t*Writer.t
 
 
-let port = 12346
+let port = 13347
 
 
 let cmp_sub s cmd =
@@ -52,7 +52,7 @@ let transfer_file fname (addr,read,write) =
     match res with
     | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); rp ()
     | `Eof 0-> Writer.flushed write
-    | `Eof n -> failwith ("Wrong length read"^(string_of_int n))
+    | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 n) pu); Writer.flushed write
     in
     rp () >>= fun () -> print_endline "Finished Transferring!"; Reader.close r
 
@@ -72,7 +72,7 @@ let recv_file fdest (addr,read,write) =
   match res with
   | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); rp ()
   | `Eof 0-> Writer.flushed fw
-  | `Eof n -> failwith ("Wrong length read"^(string_of_int n))
+  | `Eof n -> failwith ("Wrong length read: "^(string_of_int n))
   in
   rp () >>= fun () -> print_endline "Finished receiving!"; Writer.close fw
 
