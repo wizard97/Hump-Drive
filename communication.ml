@@ -16,6 +16,8 @@ type conn_state = Socket.Address.Inet.t*Reader.t*Writer.t
 
 
 let port = 31101
+let pu = Crypto.key_from_string "35"
+let pr = Crypto.key_from_string "35"
 
 
 let cmp_sub s cmd =
@@ -38,6 +40,16 @@ let transfer_file fname (addr,read,write) =
   Writer.flushed write >>= fun () ->
   print_string "Finished Transferring!";
   Reader.close fd
+
+let transfer_file_crypt fname (addr,read,write) =
+  Reader.open_file fname >>= fun r ->
+    let prd = Reader.pipe r in
+    read prd >>= fun a -> match a with
+      | `Ok s -> Crypto.encrypt_and_chunk s pu |> Writer.write write |> return
+      | `Eof -> Reader.close r
+
+
+
 
 
 
