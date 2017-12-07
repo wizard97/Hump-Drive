@@ -90,7 +90,8 @@ let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
   let recf st f = (Communication.request_file pubpriv pr f
-                     ((State.root_dir currstate)^Filename.dir_sep^f)) >>= fun () -> st >>= fun st' ->
+                     ((State.root_dir currstate)^Filename.dir_sep^f))
+                                              >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file :"^f);
     (State.acknowledge_file_recpt st' f)
   in
@@ -111,7 +112,8 @@ let comm_server pubpriv currstate lockstate rset mypeer =
         match !rset with
         | None when (not !lockstate)->
           lockstate := true;
-          rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
+          rset := Some rst; proc_state_update pubpriv
+                                        (!currstate) rst pr >>= fun ns ->
           let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
           lockstate := false;
@@ -121,7 +123,8 @@ let comm_server pubpriv currstate lockstate rset mypeer =
     | Filerequest f when (not !lockstate) ->
       print_endline ("Incoming file request for: "^f);
       lockstate := true;
-      Communication.transfer_file mypeer ((State.root_dir !currstate)^Filename.dir_sep^f) cstate >>= fun () ->
+      Communication.transfer_file mypeer
+        ((State.root_dir !currstate)^Filename.dir_sep^f) cstate >>= fun () ->
       Deferred.return (lockstate := false)
     | _ -> Deferred.return (())
   in
@@ -180,7 +183,8 @@ let launch_synch rdir =
     try
       Config.load_state rdir
     with exn ->
-      print_string "Could not find a saved state. Either no saved state or corrupt...\nEstablishing new state.\n";
+      print_string
+        "Could not find a saved state. Either no saved state or corrupt...\nEstablishing new state.\n";
       State.state_for_dir rdir
   in
   print_endline "State successfully loaded!";
@@ -197,7 +201,8 @@ let launch_synch rdir =
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
   let _ = peer_syncer discovered_peers peerkey currstate in
-  Config.save_state sinfo rdir >>= fun _ -> Deferred.return (print_endline "Init complete!")
+  Config.save_state sinfo rdir >>= fun _ ->
+  Deferred.return (print_endline "Init complete!")
 
 
 (* Given an input string from the repl, handle the command *)
@@ -226,7 +231,8 @@ let get_dir_path () =
     match r with
     | `Ok s -> begin
       try let p = (Config.path_ok s) in Deferred.return p
-      with exn -> print_endline "That is not a valid path!"; exit_graceful(); Deferred.return ("Oops")
+      with exn -> print_endline "That is not a valid path!";
+        exit_graceful(); Deferred.return ("Oops")
     end
     | `Eof ->  exit_graceful(); Deferred.return("Oops")
 
