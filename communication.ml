@@ -90,6 +90,7 @@ let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Asy
 
 let start_server hookup =
   let server_callback addr read write =
+    Writer.set_buffer_age_limit write Writer.(`Unlimited);
     let (cs:conn_state) = (addr,read,write) in
     print_string "Got Client!";
     let saddr = Socket.Address.Inet.addr addr |> Unix.Inet_addr.to_string in
