@@ -161,7 +161,8 @@ let launch_synch rdir =
   st >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
-  let currstate = ref sinfo in
+  State.update_state sinfo >>= fun cs ->
+  let currstate = ref cs in
   let discovered_peers = KeyHashtbl.create 5 in
   comm_server (pub,priv) currstate rstate peerkey >>= fun _ ->
   print_endline "Starting discovery broadcaster";
