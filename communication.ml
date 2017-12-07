@@ -47,10 +47,15 @@ let transfer_file fname (addr,read,write) =
 
 let transfer_file fname (addr,read,write) =
   Reader.open_file fname >>= fun r ->
-    let prd = Reader.pipe r in
-    Pipe.read prd >>= fun a -> match a with
-      | `Ok s -> Crypto.encrypt_and_chunk s pu |> Writer.write write |> return
-      | `Eof -> Reader.close r
+    let buf = "" in
+    let rec rp () = Reader.really_read r ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
+    match res with
+    | `Ok -> Writer.write write buf; print_string buf; rp ()
+    | `Eof 0-> Writer.flushed write
+    | `Eof _ -> Writer.write write buf; Deferred.return (print_string "Wrong length recvd")
+    in
+    rp () >>= fun () -> print_endline "Finished Transferring!"; Reader.close r
+
 
 (*
 let recv_file fdest (addr,read,write) =
@@ -61,11 +66,15 @@ let recv_file fdest (addr,read,write) =
 
 
 let recv_file fdest (addr,read,write) =
-  Writer.open_file fdest >>= fun w ->
-  let prd = Reader.pipe read in
-  Pipe.read prd >>= fun a -> match a with
-    | `Ok s -> Crypto.decrypt_chunked s pu pr |> Writer.write w |> return
-    | `Eof -> Writer.close w
+  Writer.open_file fdest >>= fun fw ->
+  let buf = "" in
+  let rec rp () =  Reader.really_read read ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
+  match res with
+  | `Ok -> Writer.write fw buf; print_string buf; rp ()
+  | `Eof 0-> Writer.flushed fw
+  | `Eof _ -> Writer.write fw buf; Deferred.return (print_string "Wrong length recvd")
+  in
+  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
