@@ -73,7 +73,7 @@ let recv_file fdest (addr,read,write) =
   match res with
   | `Ok -> Writer.write fw buf; Writer.flushed write >>= fun () -> rp ()
   | `Eof 0-> Writer.flushed fw
-  | `Eof n -> Writer.write write (String.sub buf 0 n); (print_string (String.sub buf 0 n)); Writer.flushed write
+  | `Eof n -> Writer.write fw (String.sub buf 0 n); (print_string (String.sub buf 0 n)); Writer.flushed fw
   in
   rp () >>= fun () -> print_endline "Finished receiving!";
   let p = (Reader.pipe read) in
