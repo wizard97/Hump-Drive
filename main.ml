@@ -15,6 +15,15 @@ let bcast_interval = 5.
 
 type locked_state = Locked of State.state_info | Unlocked of State.state_info
 
+
+module KeyHash = struct
+  type t = Crypto.key
+  let equal k1 k2 = Crypto.key_equal k1 k2
+  let hash k = Crypto.key_hash k
+end
+
+module KeyHashtbl = Hashtbl.Make(KeyHash)
+
 (* Name, pubkey*)
 type disc_peer = string*Communication.peer
 type bcast_msg = string*Crypto.key
@@ -52,9 +61,9 @@ let to_unit d = upon d (fun _ -> ())
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
        print_string "In peer syncer";
-  if Hashtbl.mem peers mypeer then
+  if KeyHashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
-    let (name,pinfo) = Hashtbl.find peers mypeer in
+    let (name,pinfo) = KeyHashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     print_string "Send: "; print_int (compute_hash strs); print_endline "";
@@ -63,11 +72,11 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
 
 
 
-let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
+let peer_discovered peers addr msg  =
   print_string "Peer discovered";
   match (string_bcast_msg msg) with
   | Some (name, key) ->
-    Hashtbl.add peers key (name,{ip=addr; key=key});
+    KeyHashtbl.add peers key (name,{ip=addr; key=key});
     print_endline ("Found peer: "^name^" "^addr^": "^(Crypto.string_from_key key))
   | None -> print_string "Garbage!"
 
@@ -113,20 +122,20 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
   State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
   let currstate = ref sinfo in
-  let discovered_peers : ((Crypto.key, disc_peer) Hashtbl.t) = Hashtbl.create 5 in
+  let discovered_peers  = KeyHashtbl.create 5 in
   comm_server currstate rstate mypeer >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
-  let _ = peer_syncer discovered_peers mypeer currstate in
+  (* let _ = peer_syncer discovered_peers mypeer currstate in *)
   Deferred.return (print_string "Init complete")
 
     (*
