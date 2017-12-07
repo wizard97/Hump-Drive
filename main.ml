@@ -123,8 +123,8 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let _ = print_endline "Scanning directory... \n" in
   let st =
     print_endline "Looking for saved states...";
