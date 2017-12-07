@@ -29,6 +29,8 @@ let decr b = add b (Big_int.big_int_of_int (-1))
 let even b = eq (bMod b (Big_int.big_int_of_int 2)) zero
 let of_int = Big_int.big_int_of_int
 let to_int = Big_int.int_of_big_int
+let of_string = Big_int.big_int_of_string
+
 
 let b = of_int 256
 let exp = of_int 17

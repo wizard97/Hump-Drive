@@ -16,6 +16,10 @@ val key_equal : key -> key -> bool
 
 val key_hash : key -> int
 
+(* Works as expected *)
+val of_string : string -> key
+
+
 (* Given a short cypher phrase generate a much larger key
  * treat the string as an integer in base 62 with A-0,B-1, ... ,8-60,9-61 *)
 val key_from_string : string -> key
