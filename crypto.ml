@@ -185,8 +185,10 @@ let rec strip_to s l =
 
 
 let encrypt_and_chunk s pu =
+  print_int (String.length s); print_endline "";
   if String.length s <= chunk_size then
-    let enc = zero_pad (encrypt_line (chunk s) pu) max_length in
+    let enc = zero_pad (encrypt_line s pu) max_length in
+    assert((String.length enc) = 401);
     (chunk_size_char)^enc
   else failwith "Encrypt chunk wrong size"
 (*
@@ -201,12 +203,9 @@ let encrypt_and_chunk s pu =
 let decrypt_chunked s pu pr =
   print_int (String.length s); print_endline "";
   assert ((String.length s) = output_chunk_size);
-  if String.length s >= (max_length + 1) then let size = Char.code s.[0] in
-    let dec = decrypt_line (String.sub s 1 max_length) pu pr in
-    let s1 = strip_to dec size in
-    let striped = String.sub s 1 (String.length s - 1) |> remaining_dec in
-    s1 (* ^(decrypt_chunked striped pu pr) *)
-  else if s = "" then s else failwith "Not even chunk number in decry-chunked"
+  let size = Char.code s.[0] in
+  let dec = decrypt_line (String.sub s 1 (String.length s - 1)) pu pr in
+  strip_to dec size
 
 
   (*
