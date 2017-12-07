@@ -135,7 +135,7 @@ let files_to_request st_curr st_inc =
   let curr_binds = st_curr.files_to_info in
   let inc_binds = st_inc.files_to_info in
   FileMap.fold (fun k _ acc ->
-      if FileMap.mem k curr_binds then acc
+      if not (FileMap.mem k curr_binds) then k::acc
       else if (cmp_file_versions st_curr st_inc k)
       then k::acc else acc) inc_binds []
 
