@@ -13,15 +13,7 @@ open Peer_discovery
 
 let bcast_interval = 5.
 
-
-module DiscoveredPeers = struct
-  type t = string*Communication.peer
-
-  let compare (_,p1) (_,p2)  =
-    Pervasives.compare p1.key p2.key
-end
-
-module PeerSet = Set.Make(DiscoveredPeers)
+type locked_state = Locked of State.state_info | Unlocked of State.state_info
 
 (* Name, pubkey*)
 type disc_peer = string*Communication.peer
@@ -63,6 +55,7 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   if Hashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
     let (name,pinfo) = Hashtbl.find peers mypeer in
+    let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     print_string "Send: "; print_int (compute_hash strs); print_endline "";
     Communication.send_state pinfo strs
@@ -121,8 +114,8 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
   State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
