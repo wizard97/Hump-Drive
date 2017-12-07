@@ -9,6 +9,7 @@ open String
 (* Number base for the string form of the keys *)
 type key = Big_int.big_int
 
+(* Various constants for string parsing and encrypting/ descrypting *)
 let chunk_size = 128
 let key_size = 200
 let max_length = 2*key_size + 1
@@ -16,6 +17,7 @@ let output_chunk_size = max_length + 1
 let chunk_size_char = Char.chr chunk_size |> String.make 1
 
 
+(* Aliases for common functions used in working with Big_ints *)
 let zero = Big_int.zero_big_int
 let bMod = Big_int.mod_big_int
 let eq = Big_int.eq_big_int
@@ -33,16 +35,17 @@ let to_int = Big_int.int_of_big_int
 let of_string = Big_int.big_int_of_string
 let to_string = Big_int.string_of_big_int
 
-
+(* Constants for this version of the RSA algorithm. *)
 let b = of_int 256
 let exp = of_int 17
 
-(* hashing stuff *)
+(* Functions to be fed to a Functor to form
+ * a hastable involving keys *)
 let key_equal = eq
 let key_hash k = bMod k (of_int max_int) |> to_int
 
 
-(***** HELPERS *****)
+(***** HELPER FUNCTIONS *****)
 
 (* Requires: s:string of length >0*)
 (* Returns: the highest index character in s*)
@@ -116,12 +119,12 @@ let rec large_int_to_string' n s=
  * 256 representation of the number. *)
 let large_int_to_string n = large_int_to_string' n ""
 
-
+(* Aliases for .mli function *)
 let string_from_key = to_string
 
 let key_from_string = of_string
 
-(***** END HELPERS *****)
+(***** END HELPER FUNCTIONS *****)
 
 
 (* Helper for the large random number generator. Generates a random digit
@@ -154,7 +157,7 @@ let generate_public_private ()=
    (mult x y ,x)
 
 
-(* Pad to make sure length = max_length *)
+(* Pad to make sure packet length = output chunk size *)
 let encrypt_line s pu =
   mod_exp (string_to_large_int s) exp pu |> large_int_to_string
 
@@ -165,22 +168,14 @@ let decrypt_line s pu pr =
   mod_exp s' k' pu |> large_int_to_string
 
 
-
-let compare = eq
-
-
-let chunk s = String.sub s 0 chunk_size
-let remaining s = String.sub s chunk_size (String.length s - chunk_size)
-let remaining_dec s = String.sub s max_length (String.length s - max_length)
-
-
-
 (* Pads zero characters onto s until len(S) = l *)
 let rec zero_pad s l =
   if String.length s < l then
   zero_pad ((String.make 1 '\000')^s) l
   else s
 
+(* Given a string s either strip character or pad zeros until
+ * Length s = l *)
 let rec fix_length s l =
   if String.length s > l then
   fix_length (String.sub s 1 (String.length s - 1)) l
@@ -189,28 +184,21 @@ let rec fix_length s l =
   else s
 
 
-(* INVARIANT Lend s = *)
+(* Given a string s of size chunk_size or less and the target device's public
+ * key,  encrypt its data and pad the result with zero character, labeleding
+ * the result with another character indicating the length of the original data.
+ *)
 let encrypt_and_chunk s pu =
     let lead_chr = (String.length s) |> Char.chr |> String.make 1 in
     let enc = zero_pad (encrypt_line s pu) max_length in
     (lead_chr)^enc
 
 
-(* INVARIANT : *)
+(* Given a string s of size output_chunk_size  and a public key, private key
+ * pair extract the data size from the first character, decrypt
+ * the remainder of the string
+ * and strip the result to match the desired size. *)
 let decrypt_chunked s pu pr =
   let size = Char.code s.[0] in
   let dec = decrypt_line (String.sub s 1 (String.length s - 1)) pu pr in
   fix_length dec size
-
-
-(*
-
-let rec chunk' s acc n=
-  if s = "" then acc else
-  if String.length s <= n then List.rev (s::acc)  else
-  let all_but_n str = String.sub str n (String.length str - n) in
-
-  chunk' (all_but_n s) ((String.sub s 0 n)::acc) n
-
-Given a string return a list of the chunks
-let chunk s = chunk' s [] 5 *)
