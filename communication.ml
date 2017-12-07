@@ -33,7 +33,7 @@ let msg_to_string = function
   | State s -> "state:"^s^"\n"
   | Filerequest s -> "freq:"^s^"\n"
 
-(*)
+(*
 let transfer_file fname (addr,read,write) =
   Reader.open_file fname >>= fun fd ->
   Writer.transfer write (Reader.pipe fd)
@@ -66,11 +66,11 @@ let recv_file fdest (addr,read,write) =
   let buf = Core.String.create Crypto.output_chunk_size in
   let rec rp () =  Reader.really_read read ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
-  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); Writer.flushed write >>= fun () -> rp ()
+  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); Writer.flushed fw >>= fun () -> rp ()
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> failwith ("Wrong length read: "^(string_of_int n))
   in
-  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.close fw
+  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.close write >>= fun () -> Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
@@ -108,11 +108,6 @@ let start_server hookup =
       Writer.close write
   in
   Server.create (on_port port) server_callback
-
-
-
-let stop_server (s:server) =
-  failwith "TODO"
 
 
 
