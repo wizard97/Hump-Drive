@@ -43,19 +43,16 @@ let transfer_file fname (addr,read,write) =
   Reader.close fd   *)
 
 
-let transfer_file fname (addr,read,write) =
-  Reader.open_file fname >>= fun r ->
-    let buf = Core.String.create Crypto.chunk_size in
-    let rec rp () = Reader.really_read r ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
-    match res with
-    | `Ok -> Writer.write write buf; rp ()
-    | `Eof 0-> Writer.flushed write
-    | `Eof n -> Writer.write write (String.sub buf 0 n); print_string (String.sub buf 0 n); Writer.flushed write
-    in
-    rp () >>= fun () -> print_endline "Finished Transferring!";
-    let p = (Writer.pipe write) in
-    Pipe.upstream_flushed p >>= fun _ -> Pipe.downstream_flushed p >>= fun _ ->
-    Writer.close write >>= fun () -> Reader.close r
+  let transfer_file fname (addr,read,write) =
+    Reader.open_file fname >>= fun r ->
+      let buf = Core.String.create Crypto.chunk_size in
+      let rec rp () = Reader.really_read r ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
+      match res with
+      | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); Writer.flushed write >>= fun () -> rp ()
+      | `Eof 0-> Writer.flushed write
+      | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 (n-1)) pu); Writer.flushed write
+      in
+      rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.close write >>= fun () -> Reader.close r
 
 
 (*
@@ -64,21 +61,16 @@ let recv_file fdest (addr,read,write) =
   Reader.transfer read (Writer.pipe fd) >>= fun () ->
   print_string "Finished receiving!";
   Writer.close fd *)
-
-
 let recv_file fdest (addr,read,write) =
   Writer.open_file fdest >>= fun fw ->
   let buf = Core.String.create Crypto.output_chunk_size in
   let rec rp () =  Reader.really_read read ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
-  | `Ok -> Writer.write fw buf; Writer.flushed write >>= fun () -> rp ()
+  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); Writer.flushed write >>= fun () -> rp ()
   | `Eof 0-> Writer.flushed fw
-  | `Eof n -> Writer.write fw (String.sub buf 0 n); (print_string (String.sub buf 0 n)); Writer.flushed fw
+  | `Eof n -> failwith ("Wrong length read: "^(string_of_int n))
   in
-  rp () >>= fun () -> print_endline "Finished receiving!";
-  let p = (Reader.pipe read) in
-  Pipe.upstream_flushed p >>= fun _ -> Pipe.downstream_flushed p >>= fun _ ->
-  Writer.flushed fw >>= fun () -> Writer.close fw
+  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
