@@ -142,23 +142,30 @@ let process_input = function
 | "quit" -> print_endline "Exiting gracefully..."; upon (exit 0) (fun _ -> ())
 |_ -> print_endline "Invalid Command!"
 
-
-(* Repl for filesyncing interface *)
-let repl st_ref =
-
-  let rec loop () =
-    print_string " >>> ";
-    (Reader.stdin |> Lazy.force |> Reader.read_line |> upon)
+        (* returns unit*)
+let rec loop rstate =
+  print_string " >>> ";
+  (Reader.stdin |> Lazy.force |> Reader.read_line |> upon)
     begin fun r ->
       match r with
-      | `Ok s -> process_input s; loop ()
-      | `Eof -> print_endline "What happened"
+      | `Ok s -> process_input s; loop rstate
+      | `Eof ->  print_endline "What happened"
     end
-  in loop ()
 
+(* Repl for filesyncing interface *)
+let repl () =
+  let _ = print_string " Welcome to Hump-Drive Version 1.0.\nMake sure you have configured everything correctly.\nType <start> to begin.\n";
+  print_endline " >>> " in
+  upon (Reader.stdin |> Lazy.force |> Reader.read_line)
+  begin
+    fun r ->
+      match r with
+      | `Ok s -> if (s = "start") then upon (launch_synch()) (fun rstate -> loop rstate) else ()
+      | `Eof -> ()
+  end
 
 let main () =
-  let _ = launch_synch () |> repl in
+  let _ = repl () in
   Scheduler.go ()
 
 let _ = main ()
