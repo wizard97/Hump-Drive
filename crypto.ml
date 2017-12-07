@@ -178,23 +178,26 @@ let rec zero_pad s l =
   zero_pad ((String.make 1 '\000')^s) l
   else s
 
-let rec strip_to s l =
+let rec fix_length s l =
   if String.length s > l then
-  strip_to (String.sub s 1 (String.length s - 1)) l
+  fix_length (String.sub s 1 (String.length s - 1)) l
+  else if String.length s < l then
+  fix_length ((String.make 1 '\000')^s) l
   else s
 
 
 (* INVARIANT Lend s = *)
 let encrypt_and_chunk s pu =
+    let lead_chr = (String.length s) |> Char.chr |> String.make 1 in
     let enc = zero_pad (encrypt_line s pu) max_length in
-    (chunk_size_char)^enc
+    (lead_chr)^enc
 
 
 (* INVARIANT : *)
 let decrypt_chunked s pu pr =
   let size = Char.code s.[0] in
   let dec = decrypt_line (String.sub s 1 (String.length s - 1)) pu pr in
-  strip_to dec size
+  fix_length dec size
 
 
 (*
