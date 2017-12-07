@@ -46,7 +46,6 @@ let string_bcast_msg s : bcast_msg option =
 (* Empty function for converting deferred to unit *)
 let to_unit d = upon d (fun _ -> ())
 
-
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
        print_string "In peer syncer";
@@ -55,6 +54,7 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
     let (name,pinfo) = Hashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
+    let _ = Config.save_st_string strs (State.root_dir !st) in
     print_string "Send: "; print_int (compute_hash strs); print_endline "";
     Communication.send_state pinfo strs
   else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
@@ -89,6 +89,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
         let rst = State.from_string s in
         match !rset with
         | None -> rset := Some rst; proc_state_update (!currstate) rst pr >>= fun ns ->
+          let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
           Deferred.return (rset := None)
         | _ -> Deferred.return (print_endline "Pending update!") (* Ignore if already being processed*)
@@ -111,7 +112,7 @@ let launch_synch () =
   let rdir = "test/" in
   let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
-  let _ = print_endline "Scanning directory... \n" in
+  let _ = print_endline "Scanning directory..." in
   let st =
     print_endline "Looking for saved states...";
     try
@@ -132,36 +133,37 @@ let launch_synch () =
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
   let _ = peer_syncer discovered_peers mypeer currstate in
-  Config.save_state sinfo rdir >>= fun _ -> (print_endline "Init complete!");
-    Deferred.return (rstate)
+  Config.save_state sinfo rdir >>= fun _ -> Deferred.return (print_endline "Init complete!")
 
+
+let exit_graceful = fun () -> upon (exit 0) (fun _ -> ())
 
 (* Given an input string from the repl, handle the command *)
 let process_input = function
 | "about" -> print_endline "*****Version 1.0****"
-| "quit" -> print_endline "Exiting gracefully..."; upon (exit 0) (fun _ -> ())
+| "quit" -> print_endline "Exiting gracefully..."; exit_graceful ()
 |_ -> print_endline "Invalid Command!"
 
-        (* returns unit*)
-let rec loop rstate =
+
+let rec loop () =
   print_string " >>> ";
   (Reader.stdin |> Lazy.force |> Reader.read_line |> upon)
     begin fun r ->
       match r with
-      | `Ok s -> process_input s; loop rstate
-      | `Eof ->  print_endline "What happened"
+      | `Ok s -> process_input s; loop ()
+      | `Eof ->  print_endline "What happened"; exit_graceful ()
     end
 
 (* Repl for filesyncing interface *)
 let repl () =
-  let _ = print_string " Welcome to Hump-Drive Version 1.0.\nMake sure you have configured everything correctly.\nType <start> to begin.\n";
-  print_endline " >>> " in
+  let _ = print_string "\n\nWelcome to Hump-Drive Version 1.0!\nMake sure you have configured everything correctly.\nConsult report for configuration. Type <start> to begin.\n";
+  print_string " >>> " in
   upon (Reader.stdin |> Lazy.force |> Reader.read_line)
   begin
     fun r ->
       match r with
-      | `Ok s -> if (s = "start") then upon (launch_synch()) (fun rstate -> loop rstate) else ()
-      | `Eof -> ()
+      | `Ok s -> if (s = "start") then upon (launch_synch()) (fun _ -> loop()) else exit_graceful ()
+      | `Eof -> exit_graceful ()
   end
 
 let main () =

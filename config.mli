@@ -32,3 +32,5 @@ val load_state : string -> State.state_info Deferred.t
 
 (* <==== Write functions ====> *)
 val save_state : State.state_info -> string -> unit Async.Deferred.t
+
+val save_st_string : string -> string -> unit Async.Deferred.t

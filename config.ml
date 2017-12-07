@@ -52,3 +52,5 @@ let load_state dir =
 let save_state st dir_path =
   let s = State.to_string st in
   write_file s fname_STORED_STATE dir_path
+
+let save_st_string s dir_path = write_file s fname_STORED_STATE dir_path
