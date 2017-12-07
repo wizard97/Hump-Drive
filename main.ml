@@ -83,7 +83,7 @@ let proc_state_update currstate rs pr :state_info Deferred.t  =
   State.update_state currstate >>= fun nstate ->
   let ups = State.files_to_request nstate rs in
   print_endline (string_of_int (List.length ups)^" files");
-  let recf st f :state_info Deferred.t = (Communication.request_file pr f f) >>= fun () -> st >>= fun st' ->
+  let recf st f :state_info Deferred.t = (Communication.request_file pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file:"^f);
     (State.acknowledge_file_recpt st' f)
   in
@@ -105,7 +105,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
       end
     | Filerequest f ->
       print_string "Got request for file!";
-      Communication.transfer_file f cstate
+      Communication.transfer_file ((State.root_dir !currstate)^f) cstate
   in
   print_string "Running Server\n";
   Communication.start_server notify_callback
@@ -118,10 +118,11 @@ let rec peer_broadcaster msg =
 
 
 let launch_synch () =
+  let rdir = "test/" in
   let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
-  State.state_for_dir "test/" >>= fun sinfo ->
+  State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
   let currstate = ref sinfo in

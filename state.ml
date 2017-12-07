@@ -30,6 +30,9 @@ type state_info = {dir_path : dir_path;
                    update_queue : update_queue}
 
 
+let root_dir s =
+  s.dir_path
+
 (* [get_dir_contents acc h] returns a list of contents contained in the directory
  * specified by [h] *)
 let rec get_dir_contents acc h =
