@@ -186,7 +186,7 @@ let rec strip_to s l =
 
 let encrypt_and_chunk s pu =
   print_int (String.length s); print_endline "";
-  assert ((String.length s) = chunk_size)
+  assert ((String.length s) = chunk_size);
   if String.length s <= chunk_size then
     let enc = zero_pad (encrypt_line s pu) max_length in
     assert((String.length enc) = 401);
