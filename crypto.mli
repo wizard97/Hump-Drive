@@ -7,7 +7,7 @@
 
 (* The key type is an enormous prime number ht be used
  * in securing message in a fasion similar to the RSA protocol. *)
-type key
+type key = Big_int.big_int
 
 val chunk_size : int
 
