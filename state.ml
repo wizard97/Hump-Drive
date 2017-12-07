@@ -49,8 +49,9 @@ let hash_file fpath =
     (fun x ->
       match x with
         | `Ok s -> Deferred.return (compute_hash s)
-        | `Eof -> failwith "Unsupported")
+        | `Eof -> Deferred.return (compute_hash "")
     )
+  )
 
 (* Returns whether the file denoted by [fpath] is a regular file *)
 let is_reg_file fpath =
@@ -153,6 +154,15 @@ let acknowledge_file_recpt st fname =
                     files_to_info = filemap;
                     last_modified = dir_lastmodtime}
 
-let to_string (st : state_info) = Marshal.to_string st [Compat_32; Closures; No_sharing] |> String.escaped
+let to_string (st : state_info) = Marshal.to_string st [No_sharing] |> String.escaped
 
-let from_string (s : string) : state_info = Scanf.unescaped |> Marshal.from_string s 0
+let from_string (s : string) : state_info = Marshal.from_string (Scanf.unescaped s) 0
+
+
+(*  let to_string (st : state_info) = Core.Bigstring_marshal.marshal st |> Bigstring.to_string |> String.escaped
+
+let from_string (s : string) : state_info =  Scanf.unescaped |> Bigstring.from_string |> Core.Bigstring_marshal.unmarshal
+
+
+ Scanf.unescaped s |> Marshal.from_string s 0
+ *)
