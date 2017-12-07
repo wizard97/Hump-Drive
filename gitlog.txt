@@ -1,0 +1,2439 @@
+commit 3c5657f714d69f12e6a2e893b0a8a2bbe46fcb5b
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 15:05:11 2017 -0500
+
+    Add to readme
+
+ README.txt | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+commit e66834592bd67a3af331e56684413aa1171fe98a
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:59:10 2017 -0500
+
+    Fix makefile
+
+ Makefile           | 10 ----------
+ discover_listen.ml | 11 -----------
+ discovery_test.ml  |  8 --------
+ 3 files changed, 29 deletions(-)
+
+commit a33678fe2832762c7a850784ccbedceff694cb1e
+Merge: 4305be9 19ea8be
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:55:40 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 4305be941ba2a305a8615ecef0a08a3a2ae41548
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:55:36 2017 -0500
+
+    Comment peer discoverer
+
+ peer_discovery.ml  |  10 +---------
+ peer_discovery.mli |  10 ++++++++++
+ submission.zip     | Bin 3519 -> 0 bytes
+ transfer.ml        |   0
+ transfer.mli       |   0
+ 5 files changed, 11 insertions(+), 9 deletions(-)
+
+commit 19ea8be01a0fd171d79e9788d4810875cca547c4
+Merge: aa01dc3 28a044d
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 14:50:11 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit aa01dc3bfcf6f696029a1fdfe784c271db7ec1e6
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 14:49:59 2017 -0500
+
+    State mli documentation
+
+ state.mli | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 28a044d44c42de1e04a07ff5edb6dd1d3ff524a5
+Merge: 90c9e27 aa48ba2
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Thu Dec 7 14:49:16 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit aa48ba2a2bd8039fec2ae6646b66b058a6fff735
+Merge: 708cc03 b5c0960
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:48:52 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 90c9e2724f0fc366e0b543c37b5b43fff6b6f4cc
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Thu Dec 7 14:48:46 2017 -0500
+
+    README
+
+ README.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+commit 708cc03818acf1aa95671650e92fcf8b19162812
+Merge: 1442262 08f3eaf
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:48:42 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 1442262b64b5f0b6ad76a26d33670876051ce278
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:48:39 2017 -0500
+
+    Remove long lines
+
+ config.ml |  3 ++-
+ main.ml   | 18 ++++++++++++------
+ 2 files changed, 14 insertions(+), 7 deletions(-)
+
+commit f0cc3b3fc1b9290661880b5497800ca461523579
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 14:47:19 2017 -0500
+
+    Comment code
+
+ communication.ml    | 52 +++++++++++++++++++++++-----------------------------
+ communication.mli   | 21 ++++++++++++++++++++-
+ main.ml             | 33 +++++++++++++++++++++++++++++----
+ test/config/.state  |  2 +-
+ test/config/peerkey |  2 +-
+ test/config/privkey |  2 +-
+ test/config/pubkey  |  2 +-
+ 7 files changed, 76 insertions(+), 38 deletions(-)
+
+commit b5c09606f6f6bd782244bdbd709c7f775ba541d6
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 14:46:56 2017 -0500
+
+    Documentation for state
+
+ state.ml | 41 +++++++++++++++++------------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
+
+commit 08f3eaf91a62dd14d9e89a7460b8c5ce7089d7d2
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 14:38:15 2017 -0500
+
+    Crypto documentation
+
+ crypto.ml      | 50 +++++++++++++++++++-------------------------------
+ crypto.mli     | 35 ++++++++++++-----------------------
+ crypto_test.ml |  2 +-
+ 3 files changed, 32 insertions(+), 55 deletions(-)
+
+commit 54d74f4f83e078acfe6ca3bf804d072c7729b037
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 13:58:52 2017 -0500
+
+    Add missing file
+
+ config.ml               |  60 ++++++++++++++++++++++++++++++++++++++++++++++++
+ test/.war_peace.txt.swp |   0
+ test/config/.state      |   1 +
+ test/config/peerkey     |   1 +
+ test/config/privkey     |   1 +
+ test/config/pubkey      |   1 +
+ test/fox.jpeg           | Bin 71424 -> 0 bytes
+ 7 files changed, 64 insertions(+)
+
+commit fec1253eda1a76212ec81fa761369b1771a378ff
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 13:58:25 2017 -0500
+
+    Add missing file
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f32df8296ce987659032caef4d984b43ad3e093f
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 13:55:11 2017 -0500
+
+    Lock file requests
+
+ config.ml     |  60 ----------------------------------------------------------
+ main.ml       |   7 +++++--
+ test/fox.jpeg | Bin 100534 -> 71424 bytes
+ 3 files changed, 5 insertions(+), 62 deletions(-)
+
+commit 41ea8b22e5e775798a1cc500cc8a470372d1a026
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 13:41:59 2017 -0500
+
+    revert crypto
+
+ crypto.ml | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+commit 3fa8ef3c1947073d42c9474f974657eeb054091e
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 13:33:59 2017 -0500
+
+    state fix
+
+ state.ml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit c6530601d3aaa0de10469a87c92bd6ba2cb10d43
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 13:24:24 2017 -0500
+
+    lock state during writes
+
+ communication.ml |   2 +-
+ main.ml          |  10 +++++++---
+ test/fox.jpeg    | Bin 0 -> 100534 bytes
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+commit 5b999f6df3e763bf81ccebc26586aa6b852b62c6
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 13:05:36 2017 -0500
+
+    Large chunk size test
+
+ crypto.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5360add26c0e13eadb2afe11226fa07bfd12d3e1
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:51:37 2017 -0500
+
+    Fix init state
+
+ main.ml       |   3 ++-
+ test/fox.jpeg | Bin 100534 -> 0 bytes
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+commit 73f22fccfc7b16ab38ab2111134852fba750ddb3
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:47:12 2017 -0500
+
+    add dirsep
+
+ communication.ml | 2 +-
+ main.ml          | 7 ++++---
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+commit 72adbd5c5052e919954d9a3dfd604e5e7c3f4c83
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:32:43 2017 -0500
+
+    caps error msgs
+
+ main.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a66274c8ad8fba09afa309129819e50c242f68cd
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:30:26 2017 -0500
+
+    Init to 0
+
+ filetransfer.ml    | 31 -------------------------------
+ filetransfer.mli   |  7 -------
+ main.ml            |  2 +-
+ net_test_client.ml | 26 --------------------------
+ net_test_server.ml | 21 ---------------------
+ 5 files changed, 1 insertion(+), 86 deletions(-)
+
+commit 4828db6200a9792758d52818ec105fb2707bb914
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 12:25:20 2017 -0500
+
+    Crypto optimization
+
+ crypto.ml      | 11 ++++++++---
+ crypto_test.ml |  5 ++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+commit 6bfe58fe1b4ff67c19fa0c0122b3d7abd8ffcd21
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:14:58 2017 -0500
+
+    Clean up printing
+
+ communication.ml |  8 +++-----
+ main.ml          | 29 +++++++++++++----------------
+ 2 files changed, 16 insertions(+), 21 deletions(-)
+
+commit 015514f212ec27b4b37e2ed1cce28db28f9aa6d6
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 12:01:28 2017 -0500
+
+    Correct crypto key
+
+ communication.ml  | 4 ++--
+ communication.mli | 2 +-
+ main.ml           | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 312e210400ea88884122729611d9fe03eb345201
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 11:52:14 2017 -0500
+
+    Hashmap back
+
+ config.ml |  2 +-
+ main.ml   | 24 +++++++++++++++++-------
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+commit 75b310697cb8f85b1dc01122b8f82393b9088de4
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 11:42:07 2017 -0500
+
+    Fixed string conversion
+
+ crypto.ml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit dea8ecb95bd60b94c0a4eea0c9090e418669127c
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 11:31:04 2017 -0500
+
+    Close file
+
+ config.ml           |  10 +++++-----
+ main.ml             |   2 +-
+ test/.config/.state |   1 -
+ test/coq.txt        |   1 -
+ test/ydf.mp4        | Bin 40378865 -> 0 bytes
+ 5 files changed, 6 insertions(+), 8 deletions(-)
+
+commit c2a663ae399e4864c80297a9d37bf45ce3636770
+Merge: b0b2e4e b568b30
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 11:21:09 2017 -0500
+
+    fix merge
+
+commit b0b2e4eef2b43390fc6fb557235fe87612ffdd35
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 11:20:00 2017 -0500
+
+    Load crypto keys
+
+ communication.ml  | 18 +++++++++---------
+ communication.mli |  4 ++--
+ config.ml         |  3 +++
+ config.mli        |  4 ++++
+ main.ml           | 46 ++++++++++++++++++++++++++++++++++++----------
+ 5 files changed, 54 insertions(+), 21 deletions(-)
+
+commit b568b30568987fc9d4f95f9a41a72b670fa01994
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 11:16:25 2017 -0500
+
+    Added path input
+
+ main.ml | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+commit e7b331970db8896411b1d896b1504d1c488aba00
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 11:05:42 2017 -0500
+
+    temp
+
+ main.ml | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+commit f6071208e1a5a62f2580113a9413332792c8831d
+Merge: 866915f 59f17d3
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 10:48:34 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 59f17d35f0eb27bdb4669f29d75dd244be601f85
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 10:46:25 2017 -0500
+
+    small changes
+
+ config.ml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 866915f9f68fa0beadb11bbe755420d6dea6ae88
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 10:33:59 2017 -0500
+
+    more repl additions
+
+ main.ml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit bcb3ecb8d16bff0f48311a7b7b539d674dadf19e
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 10:28:20 2017 -0500
+
+    repl changes
+
+ config.ml  |  2 ++
+ config.mli |  2 ++
+ main.ml    | 28 +++++++++++++++-------------
+ 3 files changed, 19 insertions(+), 13 deletions(-)
+
+commit 794cfdd672f788286e0de8de8d84f7a466bc35d7
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 10:00:31 2017 -0500
+
+    repl reworking
+
+ main.ml | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+commit 7343cdaa1ff2915f8a9d268e59923ae17db748d6
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 09:40:27 2017 -0500
+
+    some repl revisions
+
+ config.ml |  3 +++
+ main.ml   | 47 +++++++++++++++++------------------------------
+ 2 files changed, 20 insertions(+), 30 deletions(-)
+
+commit 29fdf8b4e791d44817fb50bda0f0ab2ce9508c4a
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 09:20:11 2017 -0500
+
+    config.mli file
+
+ Makefile            |     2 +-
+ config.ml           |     2 +-
+ config.mli          |    34 +
+ files/war_peace.txt | 15069 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ main.ml             |     4 +-
+ test/fox.jpeg       |   Bin 0 -> 100534 bytes
+ test/ydf.mp4        |   Bin 0 -> 40378865 bytes
+ 7 files changed, 15107 insertions(+), 4 deletions(-)
+
+commit 0702925f2e5dbbf4b86b024fa1d4f5c83c61c88e
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 08:56:35 2017 -0500
+
+    Set buffer age limit
+
+ communication.ml |  1 +
+ config.ml        |  3 ---
+ load.ml          | 32 --------------------------------
+ 3 files changed, 1 insertion(+), 35 deletions(-)
+
+commit 15d7d06346c1cd0c3248a4751c48019ddbd1e23c
+Merge: 3f3da2a 20dc5d8
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 08:34:28 2017 -0500
+
+    Merge Charles' branch
+
+commit 20dc5d89d534db25ba3914fffcb84299365b1442
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 08:28:39 2017 -0500
+
+    cleanup
+
+ communication.ml | 11 +++--------
+ main.ml          |  4 ++--
+ 2 files changed, 5 insertions(+), 10 deletions(-)
+
+commit 6f2dfb523a63d9bac9921a157f12eb38d89f1c5b
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 08:26:24 2017 -0500
+
+    Final crypto fix
+
+ crypto.ml | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 93b6552932299ae4ec09d58f2397902bc2f3af16
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 08:09:45 2017 -0500
+
+    n
+
+ communication.ml | 2 +-
+ main.ml          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit c4b0117372dce2859126362c78524877696c0678
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 08:07:08 2017 -0500
+
+    Crypto back
+
+ communication.ml | 34 +++++++++++++---------------------
+ main.ml          |  4 ++--
+ 2 files changed, 15 insertions(+), 23 deletions(-)
+
+commit e071c4f063888e69c419a78e0d3541e19fceb2ad
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 07:58:06 2017 -0500
+
+    Stupid idiot
+
+ communication.ml | 2 +-
+ main.ml          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit ce6a6a3ee9e77332476919f875fbcab0ff197c92
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 07:55:31 2017 -0500
+
+    test flish
+
+ communication.ml | 2 +-
+ main.ml          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit cddb0733c22fd6f33c725eb393656fa60d3822f8
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 07:53:14 2017 -0500
+
+    print last payload
+
+ communication.ml | 2 +-
+ main.ml          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 2479757eb29c770aed9e2ce35bd8ed1a3e002cc5
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 07:24:28 2017 -0500
+
+    Super flush
+
+ communication.ml | 16 ++++++++++------
+ main.ml          |  4 ++--
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+commit fe3f92f6a0fc6c365683c826501c4c64e631650f
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 06:39:27 2017 -0500
+
+    close fd
+
+ communication.ml | 2 +-
+ main.ml          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 1d40445b8c23db14cedcc584ee17ea35551b3583
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 06:13:07 2017 -0500
+
+    dummy stall
+
+ communication.ml | 6 ++++--
+ main.ml          | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+commit 05c39df1ee5dcab26092ae5b251a7cf0a359d8c4
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 05:54:37 2017 -0500
+
+    Agressive flushing
+
+ communication.ml | 4 ++--
+ main.ml          | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+commit ec1db270852106d224bd1b8a1993221e8448bc44
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 05:33:08 2017 -0500
+
+    nocrypt
+
+ communication.ml | 8 ++++----
+ main.ml          | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 69f353b0081d1e19498426176de1fb913375c7b9
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 05:10:10 2017 -0500
+
+    change pos args
+
+ communication.ml | 10 +++++-----
+ main.ml          |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+commit 669e3fa07c8499ee0737adb53a6233e1f219923e
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:47:28 2017 -0500
+
+    Cryptography implemented
+
+ crypto.ml | 35 ++---------------------------------
+ 1 file changed, 2 insertions(+), 33 deletions(-)
+
+commit 4b28cf1d326579d8c8c69790c0f0d22f282bf6e8
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 04:46:22 2017 -0500
+
+    remove crazy prints
+
+ communication.ml | 2 --
+ main.ml          | 4 ++--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+commit 3f3da2ad3c5fcbd33d19c29573c2eb5cc7ac5d1f
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Thu Dec 7 04:44:27 2017 -0500
+
+    Loading support
+
+ Makefile            |  2 +-
+ config.ml           | 54 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ main.ml             | 26 +++++++++++++-------------
+ state.ml            |  8 +++++---
+ test/.config/.state |  1 +
+ test/coq.txt        |  1 +
+ 6 files changed, 75 insertions(+), 17 deletions(-)
+
+commit 674f107bbad27b4a8ec62ac7dbe67053c6c10973
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:43:21 2017 -0500
+
+    Debugged
+
+ communication.ml |  6 ++----
+ crypto.ml        |  2 +-
+ crypto.mli       |  2 ++
+ crypto_test.ml   | 10 +++++-----
+ 4 files changed, 10 insertions(+), 10 deletions(-)
+
+commit 47f6cf2f4d2543803f5f5f3c3569a6a229a5b6e7
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:22:22 2017 -0500
+
+    Debugging
+
+ crypto.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1126658166a93c8381552307725063ee36c59925
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:21:43 2017 -0500
+
+    Debugging
+
+ crypto.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c792ffee9e7c0fe0b34bd8a3b2b7226c7f4691af
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 04:21:23 2017 -0500
+
+    printing crap
+
+ communication.ml                  | 4 +++-
+ main.ml                           | 4 ++--
+ test/.CLiCk_Me_4_G00dP0rN.vrs.swp | 0
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+commit de4b1353196471a4c02e7861acdc07113a976f2c
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:14:59 2017 -0500
+
+    Pushed
+
+ crypto.ml      | 13 ++++++-------
+ crypto_test.ml |  6 +++---
+ 2 files changed, 9 insertions(+), 10 deletions(-)
+
+commit ea36ba17c191bae8e9c86a47018ec32d5664d6c4
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 04:04:01 2017 -0500
+
+    More
+
+ crypto.ml | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+commit ecf2bfe28dc8eccfb57a83be7780db5592335a37
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 03:50:49 2017 -0500
+
+    Crypto changes
+
+ crypto.ml | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+commit 84faeb54e3746eec688f554037e3cded622895fd
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 03:47:36 2017 -0500
+
+    Fix chunk handling
+
+ communication.ml | 6 +++---
+ main.ml          | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit fdd6a6acf9f9cb26655a0592306ffd4a7becda8e
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 03:40:21 2017 -0500
+
+    Incorporate encrypt
+
+ communication.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit ed548e53a903367dd738dfc64b690ac24e5470f7
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 03:37:08 2017 -0500
+
+    Print wrong size
+
+ communication.ml | 12 ++++++------
+ main.ml          |  4 ++--
+ test/small.txt   |  0
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+commit c4fd8112e50bab6dc831485b120e97959552afc1
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 03:33:55 2017 -0500
+
+    More crypto
+
+ crypto.ml      | 7 ++++++-
+ crypto.mli     | 4 ++++
+ crypto_test.ml | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
+commit 26043356aded31e2233b79c6ca26fe0842e21ae2
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 03:29:33 2017 -0500
+
+    Stupid string preallocate crap
+
+ communication.ml                                  |   4 ++--
+ files/camlcoq.jpg                                 | Bin 0 -> 52951 bytes
+ files/discount-camel.jpg                          | Bin 0 -> 59572 bytes
+ files/fox.jpeg                                    | Bin 0 -> 100534 bytes
+ files/stock-photo-size-penis-donkey-538567960.jpg | Bin 0 -> 52951 bytes
+ files/vid.mp4                                     | Bin 0 -> 31793465 bytes
+ files/ydf.mp4                                     | Bin 0 -> 40378865 bytes
+ main.ml                                           |   6 +++---
+ test/.CLiCk_Me_4_G00dP0rN.vrs.swp                 |   0
+ test/small.txt                                    |   0
+ 10 files changed, 5 insertions(+), 5 deletions(-)
+
+commit f2b1cd319d3ee9386ab87890b270f315ed436206
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 03:18:54 2017 -0500
+
+    Chunk reader
+
+ communication.ml | 27 ++++++++++++++++++---------
+ main.ml          |  6 +++---
+ 2 files changed, 21 insertions(+), 12 deletions(-)
+
+commit f9852c9cab2f9d7e00a844d4fa5bf7d7eb103bcb
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 02:31:29 2017 -0500
+
+    L
+
+ crypto.ml | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit d7de10ac146812ebd1384c5fbf405f67931f0f3d
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 02:23:29 2017 -0500
+
+    Fixed padding issue
+
+ crypto.ml | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 2d3a681dd920a43fa46c876f730ba339302a786b
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 02:10:15 2017 -0500
+
+    Keys
+
+ communication.ml | 8 --------
+ crypto.ml        | 2 ++
+ crypto.mli       | 4 ++++
+ 3 files changed, 6 insertions(+), 8 deletions(-)
+
+commit 4d1b5838550866bf44f5661395a0dc496d02c6b1
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 01:58:30 2017 -0500
+
+    First test at incorporating crypto
+
+ communication.ml | 35 +++++++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
+
+commit fbaa111d5a5320c6257df7156095ecb9eab8fa52
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 01:42:39 2017 -0500
+
+    superfunctor
+
+ communication.ml |  2 +-
+ main.ml          | 25 +++++++++++++++++--------
+ 2 files changed, 18 insertions(+), 9 deletions(-)
+
+commit 43dd3036916edcfce6554e986b6e65b9d9147083
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 01:38:43 2017 -0500
+
+    Hash for key type
+
+ Makefile   | 4 ++--
+ crypto.ml  | 4 ++++
+ crypto.mli | 7 ++++++-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+commit 661f544425ac559a9695251b9dd79fca57c3a819
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 01:29:00 2017 -0500
+
+    Exposed type
+
+ crypto.mli | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 177faea1020c831118ce8c03d55cf6cfc6e278c8
+Merge: 5662c61 f5c41ff
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 01:04:51 2017 -0500
+
+    Unscrew merge
+
+commit f5c41ff95292b0fdda53e914ba1ee08d8bee2c5b
+Author: Aaron <daw268@cornell.edu>
+Date:   Thu Dec 7 00:51:35 2017 -0500
+
+    Stuff
+
+ main.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit a05ecfb08a03cfaecd10713c0f0e97014aa64c1f
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Thu Dec 7 00:21:59 2017 -0500
+
+    quick fix to state
+
+ state.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 74b169ec917ea601923c884b400c47ca81cb886e
+Merge: bf0a694 d8c0b9f
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Thu Dec 7 00:07:35 2017 -0500
+
+    Merge branch 'MockCrypto' of https://github.com/wizard97/Hump-Drive into MockCrypto
+
+commit bf0a694296106d6a05aca639173afba16de06976
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Thu Dec 7 00:05:12 2017 -0500
+
+    Removed update queue in state.ml
+
+ state.ml | 52 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+commit d8c0b9f19d02f6cfd4f856ff8d5e5d674446d073
+Merge: 47524b8 40183c7
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Dec 6 23:53:32 2017 -0500
+
+    Merge branch 'MockCrypto' of https://github.com/wizard97/Hump-Drive into MockCrypto
+
+commit 47524b81309eec5f8382ae655c0ba16ea33dd691
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Dec 6 23:53:20 2017 -0500
+
+    deleted random files
+
+ fox.jpeg           |   Bin 100534 -> 0 bytes
+ fox_orig.jpeg      |   Bin 100534 -> 0 bytes
+ gui.ml             |     0
+ mp.txt             |     1 -
+ nl.txt             |     3 -
+ recv.txt           |     3 -
+ submission/gui.mli |    20 -
+ test.txt           |     3 -
+ test/fox.jpeg      |   Bin 100534 -> 0 bytes
+ test/test.txt      |     1 -
+ test/vid.mp4       |   Bin 544448 -> 0 bytes
+ vid.mp4            |   Bin 31793465 -> 0 bytes
+ war_peace.txt      | 15069 ---------------------------------------------------
+ ydf.mp4            |   Bin 40378865 -> 0 bytes
+ 14 files changed, 15100 deletions(-)
+
+commit 40183c72efd283da428d2d14dae903b20f955c7a
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 23:06:30 2017 -0500
+
+    no update in thing
+
+ communication.ml |   2 +-
+ main.ml          |   9 ++++-----
+ test/vid.mp4     | Bin 31793465 -> 0 bytes
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+commit 44027d2b4b42ba1fb4188a280fbe002cb743cbe1
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 23:01:34 2017 -0500
+
+    state update before send state
+
+ main.ml       |  15 ++++-----------
+ test/test.txt |   1 -
+ test/vid.mp4  | Bin 544448 -> 31793465 bytes
+ 3 files changed, 4 insertions(+), 12 deletions(-)
+
+commit d3dbec74710cef5c288a3bf91406beed2c89a9f9
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 21:13:41 2017 -0500
+
+    state stuff
+
+ state.ml | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+commit a6ba1b4c2d5a68392d3f9467645d28ee709fb213
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 20:24:03 2017 -0500
+
+    flags
+
+ state.ml | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+commit 35a8a95c30a78002162f116df3cde142bab457ea
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 20:17:40 2017 -0500
+
+    trying compat32
+
+ state.ml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit ad93cad04f0f6c4667e9b09a6be177beeb8441d0
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 19:54:21 2017 -0500
+
+    print hash
+
+ main.ml      |   8 ++++----
+ test/vid.mp4 | Bin 31793465 -> 544448 bytes
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 536d249ad75dcc9aad26d2369ba8d76a776503f8
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 19:49:02 2017 -0500
+
+    fix newline string stuff
+
+ state.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 92214c0526ccb45d45597eae98eb3f2ac83c99c2
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 19:37:58 2017 -0500
+
+    String length
+
+ main.ml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 3820546bfed5a8476de5e01d99fca19a9bcab87e
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 19:34:21 2017 -0500
+
+    Print hash
+
+ main.ml       |   6 ++++--
+ test/fox.jpeg | Bin 0 -> 100534 bytes
+ test/test.txt |   1 +
+ test/vid.mp4  | Bin 0 -> 31793465 bytes
+ 4 files changed, 5 insertions(+), 2 deletions(-)
+
+commit 9723d74edcf3d47855b9acfa3783092aef44b73c
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 19:02:21 2017 -0500
+
+    Dont delete root directory
+
+ main.ml   | 7 ++++---
+ state.ml  | 3 +++
+ state.mli | 3 +++
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+commit 78e05160cce5bb6d64e8c5200421665cb9f62361
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 18:52:25 2017 -0500
+
+    Working somewhat
+
+ communication.ml |  2 +-
+ gui.mli          | 22 ----------------------
+ main.ml          | 14 ++++++++------
+ transfer.mli     | 28 ----------------------------
+ 4 files changed, 9 insertions(+), 57 deletions(-)
+
+commit 5662c61ae637512b3ec922f08c0a32e49cd12300
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 18:13:51 2017 -0500
+
+    Crypto chunks fully working
+
+ crypto.ml      | 6 +++---
+ crypto.mli     | 2 +-
+ crypto_test.ml | 9 +++++----
+ 3 files changed, 9 insertions(+), 8 deletions(-)
+
+commit 13895d5ba04827635b42cff9b8d7bba5c938260a
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 18:07:58 2017 -0500
+
+    Unsegfault ocaml
+
+ main.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f9b36f414ece0d3592cba4efa2b31c5eecd473e9
+Author: Aaron <daw268@cornell.edu>
+Date:   Wed Dec 6 18:07:36 2017 -0500
+
+    Unsegfault ocaml
+
+ communication.ml   |  3 ++-
+ main.ml            | 53 +++++++++++++++++++++++++++++++++++------------------
+ net_test_server.ml |  2 +-
+ 3 files changed, 38 insertions(+), 20 deletions(-)
+
+commit 84fb58d6d427639d78600e688b695258a2872ba8
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 17:41:21 2017 -0500
+
+    Fixed prime generation edge case
+
+ crypto.ml      | 29 +++++++++++++++++++++--------
+ crypto.mli     |  2 +-
+ crypto_test.ml |  7 +++++--
+ 3 files changed, 27 insertions(+), 11 deletions(-)
+
+commit 4f35bf6bb405a292d51d9fb494e1ef0f07c7d03b
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 17:03:50 2017 -0500
+
+    Working chunk encryption
+
+ crypto.ml      | 11 +++++++----
+ crypto_test.ml |  4 ++--
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+commit 2d5a301de53726ebd370506b65cab8c260d9ac77
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 16:10:52 2017 -0500
+
+    Decrypting chunks
+
+ crypto.ml | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit a24a97521fb0b678e048472f285033bdec60d5b7
+Merge: 244f1fa fe1be49
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 16:03:36 2017 -0500
+
+    Merge branch 'incorp_crypto'
+
+commit fe1be49722a4d1b3b4c011ffd0f8d477ef3f37c5
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Wed Dec 6 16:02:35 2017 -0500
+
+    Message chunking
+
+ crypto.ml  | 37 +++++++++++++++++++++++++++++++++++--
+ crypto.mli |  8 ++++++++
+ 2 files changed, 43 insertions(+), 2 deletions(-)
+
+commit b2e253c44d6e2ba0fa4f800907f2b05528ad339a
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 02:20:48 2017 -0500
+
+    added crap
+
+ crypto.ml | 2 +-
+ main.ml   | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit a77a2b0c9e37cb150020c198276d7e17622fe1ab
+Merge: 7a62460 244f1fa
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 02:14:11 2017 -0500
+
+    Merge branch 'master' into MockCrypto
+
+commit 244f1fa26bd098b259eca92cf7dbe67c29ba280f
+Merge: a62f75f 0da2405
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 02:13:04 2017 -0500
+
+    Split port hack
+
+commit 7a62460cc6c253881fa1b10ac50858d9761cf7a3
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Dec 5 02:07:24 2017 -0500
+
+    mock crypto
+
+ crypto.ml | 159 +++-----------------------------------------------------------
+ 1 file changed, 7 insertions(+), 152 deletions(-)
+
+commit 0da2405cddf8b1eaa086d2a596ea0cc3a72a7a3f
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Dec 5 01:43:56 2017 -0500
+
+    changed name of database to state
+
+ Makefile     |   6 +--
+ database.ml  | 155 -----------------------------------------------------------
+ database.mli |  31 ------------
+ main.ml      |   6 +--
+ state.ml     | 155 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ state.mli    |  32 ++++++++++++
+ 6 files changed, 193 insertions(+), 192 deletions(-)
+
+commit a62f75ff5df56be40d0da4d1cf92127df445b6ef
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 01:39:20 2017 -0500
+
+    Work on type checking
+
+ main.ml | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+commit 8818dded4bd65331ecf7b5be92f5a3ce1ca21f7e
+Merge: 5905956 9c10bdc
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 01:23:21 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 9c10bdc960789e9fa751572a986e1af5f27223c1
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Dec 5 01:23:01 2017 -0500
+
+    key compare
+
+ crypto.ml  | 3 +++
+ crypto.mli | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+commit 5905956bd9f5145996ee859e778d670bb1d16fbc
+Merge: f6a5405 8adc551
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 01:22:58 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit f6a54055fb85fc617919ea194244defdceab559f
+Author: Aaron <daw268@cornell.edu>
+Date:   Tue Dec 5 01:22:54 2017 -0500
+
+    Hopefully working implementation
+
+ main.ml | 40 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
+
+commit 8adc551de2a6e2644b320274a5a91a7f628a94cf
+Merge: c3e40d6 d93ccf8
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Dec 5 00:29:42 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit c3e40d6af2cae17713f5813f11fa3d31e8c1cfd9
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Dec 5 00:29:35 2017 -0500
+
+    database.ml comment updates
+
+ database.ml | 63 +++++++++++++++----------------------------------------------
+ 1 file changed, 15 insertions(+), 48 deletions(-)
+
+commit d93ccf8fb5b6148613cd3224bdda6e23ac0b63f9
+Merge: 45c83ba 38e7d6a
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Dec 5 00:24:38 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 45c83ba4e199638d650a767be71a874ada1ff98f
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Dec 5 00:24:35 2017 -0500
+
+    Updates to cryptography
+
+ crypto.ml      | 121 +++++++++++++++++++++------------------------------------
+ crypto.mli     |  31 +++++++--------
+ crypto_test.ml |   3 +-
+ 3 files changed, 61 insertions(+), 94 deletions(-)
+
+commit 38e7d6adbef0470afa797793952c665782826841
+Merge: 5d0926e 46ecab6
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Tue Dec 5 00:05:43 2017 -0500
+
+    merges
+
+commit 5d0926e72a2c1efea7ba94315d53c8f81159bfc3
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Tue Dec 5 00:04:23 2017 -0500
+
+    comments for database
+
+ database.ml | 45 +++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 41 insertions(+), 4 deletions(-)
+
+commit 46ecab66342951e8fbdf79677fa94862c39d3b43
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 23:54:17 2017 -0500
+
+    database.mli comments
+
+ database.mli | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit e904107dd4c545f7c8149c49a6fe16335b16f686
+Merge: 127eb07 21ba48e
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 23:38:25 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 21ba48e52d4ba27334f061e03d19fab13b62cffe
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 23:38:10 2017 -0500
+
+    prints
+
+ database.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 127eb079551ac2d0667809c8bf83d3b9b5a4a335
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 23:37:44 2017 -0500
+
+    comments for db.mli
+
+ database.mli | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit fd85e8206b65a9a90085165fa631f812ee4f7b7a
+Merge: 9296bbb b376e8b
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 23:34:15 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 9296bbbafbf6306e59da019d12f1058eebd0be08
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 23:33:58 2017 -0500
+
+    Incorporated db stuff
+
+ Makefile          |  2 +-
+ communication.ml  |  5 +++--
+ communication.mli |  3 ++-
+ database.mli      |  2 +-
+ main.ml           | 24 ++++++++++++++----------
+ 5 files changed, 21 insertions(+), 15 deletions(-)
+
+commit b376e8bd929b65ae3c57dfdf0a8253eb989e469c
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 23:20:22 2017 -0500
+
+    fixed merlin database.mli recongition
+
+ database.ml  |  3 +--
+ database.mli | 11 +++++------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+commit dc7ba057cc3e6b177cf0272ae571854625d6a8e8
+Merge: 838b09c d0df0ea
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 23:13:51 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit d0df0eae4d549c23285d8b6e786265336cfc1ac5
+Merge: 07ca5b0 fe37d6d
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 23:01:33 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 07ca5b05d204f03c83412b6fb58b3b0d0f8a2ccf
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 23:01:31 2017 -0500
+
+    Get state of files
+
+ Makefile     | 2 +-
+ database.ml  | 2 +-
+ database.mli | 5 +++--
+ main.ml      | 6 ++++--
+ 4 files changed, 9 insertions(+), 6 deletions(-)
+
+commit 838b09c45c49d4d0236f6882255ef0389585ad77
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 22:57:37 2017 -0500
+
+    Working cryptography
+
+ crypto.ml | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+commit fe37d6db8de64f21048e60f7a4ea3f576c49633a
+Merge: e5faa65 e71f59b
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 22:57:20 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit e5faa658c01322e87834153b02426fffe0688449
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 22:57:17 2017 -0500
+
+    config loading module
+
+ load.ml | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+commit e71f59bcc9fc08a2da2859cab57572259fcdf4a2
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 22:28:43 2017 -0500
+
+    Peer discovery termination
+
+ communication.ml |  2 +-
+ main.ml          | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+commit ae98d6fb6afc8ddef0edcac4e21800e6d20a881c
+Merge: dc507dd a776199
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 20:43:58 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit dc507dd520bbb51ae83b40f851ce3a8072b7c57f
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 20:43:42 2017 -0500
+
+    print_addr
+
+ main.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit cdd2f2f24b0e9b133034c6200912e7cebd434b1b
+Merge: 3991ca7 5bb1942
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 20:40:21 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 3991ca70b7ee6829f687123fc117e87a41450599
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 20:40:15 2017 -0500
+
+    Work on main
+
+ main.ml | 41 ++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 7 deletions(-)
+
+commit a7761998867f1bb78b5b578a6b1789eb2b7da28e
+Merge: 0f95120 cdd2f2f
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 20:29:30 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 0f95120380e4807f803ca11eccbccaf66b530b2e
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 20:29:27 2017 -0500
+
+    More crypto
+
+ crypto.ml      | 4 ++--
+ crypto_test.ml | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 5bb19427f5cbceaa62d324af6c6d945270ee3a7d
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 20:02:55 2017 -0500
+
+    Bug fixes
+
+ crypto.ml      | 42 ++++++++++++++++++++++++++++++++++++++++--
+ crypto.mli     |  4 ++++
+ crypto_test.ml |  2 +-
+ 3 files changed, 45 insertions(+), 3 deletions(-)
+
+commit 3ecf892d4a39cb5155443f8b211824d63605c02a
+Merge: a11e9e3 9b41a7b
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 19:40:40 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit a11e9e3233d8ca57f17ac61d2036a5ce94b8b573
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 19:40:25 2017 -0500
+
+    Tested crypto successfully
+
+ crypto_test.ml | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+commit 9b41a7b038d5d8016f8358bdbcf282dbaba85671
+Merge: cde7c7f 3c21df4
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 19:40:14 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit cde7c7f21b9fe4e2445192246e9e42bce5f98daf
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 19:40:04 2017 -0500
+
+    two background servers
+
+ main.ml | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+commit 3c21df4d0429f8d3b2a0ede114e7aa2acde6076c
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 19:27:30 2017 -0500
+
+    Support for very large keys
+
+ crypto.ml  | 122 ++++++++++++++++++++++++++++++++++++++++++++++---------------
+ crypto.mli |  12 +++++-
+ 2 files changed, 103 insertions(+), 31 deletions(-)
+
+commit bfb3b9fbb727f73f099d68c6cbf154b184bf5deb
+Merge: b635ba0 0ceb68e
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 18:22:43 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit b635ba0c4851f72958fca7981cf7379a1936824a
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 18:22:38 2017 -0500
+
+    Work on main
+
+ main.ml           | 15 ++++++++++-----
+ peer_discovery.ml |  8 ++++----
+ 2 files changed, 14 insertions(+), 9 deletions(-)
+
+commit 0ceb68eb501d462e6104dfedc8eb4a7db787973d
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 17:17:47 2017 -0500
+
+    acknowledge file recpt function
+
+ database.ml  | 27 ++++++++++++++-------------
+ database.mli |  4 +++-
+ 2 files changed, 17 insertions(+), 14 deletions(-)
+
+commit 10cbd63dc3b8e6422a9cbcbd5c4947f5311dd73d
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:52:45 2017 -0500
+
+    Discovery
+
+ main.ml | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+commit 3206698b857c4e9ff322515cd0b1ce7b9b730c3c
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:51:01 2017 -0500
+
+    Work on main
+
+ main.ml | 42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
+
+commit b6b5b131ac96b2cebd99826b29cf639a4dbf609e
+Merge: 2384c69 0af09e8
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:37:58 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 2384c69a5f89a94e6d8b48f4d6ec570c3fd3cbbd
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:37:47 2017 -0500
+
+    setbroadcast true before connect
+
+ discover_listen.ml |  2 +-
+ discovery_test.ml  |  7 +------
+ peer_discovery.ml  | 17 ++---------------
+ peer_discovery.mli |  2 +-
+ 4 files changed, 5 insertions(+), 23 deletions(-)
+
+commit 0af09e8074d3b1be04e278949c968cb5b9df523b
+Merge: f4330ab 08140f7
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Mon Dec 4 16:14:24 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit f4330ab47058cccccbafec01da7d4f3f8c0f7893
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Mon Dec 4 16:13:39 2017 -0500
+
+    files to be requested
+
+ database.ml  | 15 +++++++++++++++
+ database.mli |  5 +++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+
+commit 08140f728a5a6b2e89cb7ae1ee479d6cda879ad8
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:10:48 2017 -0500
+
+    setbroadcast true before connect
+
+ peer_discovery.ml | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit 6ea6b5b623f11d67ee8e7fca870dfb321ab0cc96
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 16:08:14 2017 -0500
+
+    setbroadcast true before connect
+
+ peer_discovery.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 485958fe289ac2567dea8f85382bcba068ffb7ee
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 15:57:27 2017 -0500
+
+    Cleaned up discovery interface
+
+ discover_listen.ml |  5 ++++-
+ peer_discovery.ml  | 30 +++++++++++++++---------------
+ peer_discovery.mli |  6 +++++-
+ 3 files changed, 24 insertions(+), 17 deletions(-)
+
+commit fa659c5746d6ffea391e3f50d5736ed123c1a236
+Merge: 28cfc09 f84110b
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 15:13:42 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 28cfc0985782a5f5c80f72f95ba01335d866589c
+Author: Aaron <daw268@cornell.edu>
+Date:   Mon Dec 4 15:13:03 2017 -0500
+
+    Use 255.255.255.255
+
+ peer_discovery.ml | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit f84110b77453c3be8a29fabdfd83d4cd5c3157b1
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Mon Dec 4 14:48:24 2017 -0500
+
+    added just_synced
+
+ database.ml | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit 0196ccae467dd2e4834949448d655f9012efa7e6
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 14:17:56 2017 -0500
+
+    Fixed database
+
+ database.mli | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 592b68cba39a3b166f14d7a99c20fe975c9af02d
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Dec 4 13:38:55 2017 -0500
+
+    working with broadcast
+
+ peer_discovery.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit a42f3cdcd86e38dc8d7d2a9d70781718bda0ab4f
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Dec 4 13:28:54 2017 -0500
+
+    working
+
+ discover_listen.ml | 2 +-
+ peer_discovery.ml  | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+commit bc136f732e8afc9918e4d833573083a341d4567b
+Merge: 3e4e873 9934cc3
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Dec 4 13:07:49 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 9934cc3bb0d2ff0520fabdd094b336215d42dda1
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 06:29:52 2017 -0500
+
+    more Udp
+
+ peer_discovery.ml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 3e4e873448328ffa04694d048f216da9e3d1f294
+Merge: 7becbc4 d69286f
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Dec 4 05:52:46 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit d69286f0a56907c2e10c2c1f81a7d8f059a7ea96
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 05:52:39 2017 -0500
+
+    udp
+
+ peer_discovery.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7becbc4d6e8166e1e372a31c2f88d01cde55e618
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Dec 4 05:52:31 2017 -0500
+
+    test
+
+ discover_listen.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 712ab4dba2f88552e47773e68e52bf17edf57634
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 04:43:34 2017 -0500
+
+    More database
+
+ Makefile     |  2 ++
+ database.ml  |  4 ++--
+ database.mli | 26 --------------------------
+ 3 files changed, 4 insertions(+), 28 deletions(-)
+
+commit c5a39a7974b2ebba5a48a825229fcc7da7f910c7
+Merge: 7a0756c ebac535
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 04:38:00 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 7a0756c631ce0eb7cbee50bd6a7d3acf1ea04135
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 04:37:56 2017 -0500
+
+    Database
+
+ database.ml  |  3 ++-
+ database.mli | 40 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+
+commit ebac5357188b29868c9ec360079804ac205bf680
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 04:35:38 2017 -0500
+
+    tidying up code
+
+ database.ml | 74 ++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 37 insertions(+), 37 deletions(-)
+
+commit ad95370fc05bff6d9e4d801c21b34d6abaee87e1
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 04:08:37 2017 -0500
+
+    asynch'd database!
+
+ database.ml       | 54 ++++++++++++++++++++++++++++++++----------------------
+ peer_discovery.ml |  8 ++++----
+ 2 files changed, 36 insertions(+), 26 deletions(-)
+
+commit 812589bebf7c7163743d6f5921c2a1ebe4706509
+Merge: 64456df c6921d3
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 01:59:45 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 64456dfbdd94e82909036c3e5802f4093c466867
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Mon Dec 4 01:59:35 2017 -0500
+
+    some async ports
+
+ database.ml | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+commit c6921d36eb5c0ba2942d4033945a35ecf50df682
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Dec 4 00:31:59 2017 -0500
+
+    Updated to repl
+
+ communication.ml   |  3 +--
+ discovery_test.ml  |  2 +-
+ main.ml            | 51 +++++++++++++++++++++++----------------------------
+ peer_discovery.mli |  2 +-
+ 4 files changed, 26 insertions(+), 32 deletions(-)
+
+commit c2120f2a965522c3a5a624e41ddd5ac0913c311e
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 23:55:23 2017 -0500
+
+    Repl
+
+ Makefile |  2 +-
+ main.ml  | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+commit 4cecc7ea3d65097c7962dcb85c68284aacc4122a
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 23:53:49 2017 -0500
+
+    More peer
+
+ peer_discovery.ml | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit 3d1af0e1805c3cf1fc2df8fa26522d86bacfd2b2
+Merge: 96245f1 36ff9be
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Sun Dec 3 19:23:20 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 96245f1a1c40ea22f1bcd11f7abbb9d1a31228ae
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Sun Dec 3 19:23:13 2017 -0500
+
+    commented out test repl in main
+
+ Makefile     |  2 ++
+ database.ml  |  2 --
+ database.mli | 26 +-------------------------
+ main.ml      | 20 ++++++++++++++++++--
+ 4 files changed, 21 insertions(+), 29 deletions(-)
+
+commit 36ff9be7ad5c83870b174561caa470afc742c843
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 19:20:54 2017 -0500
+
+    Kill useless files
+
+ Makefile         |  2 +-
+ communicator.ml  | 23 -----------------------
+ communicator.mli | 33 ---------------------------------
+ 3 files changed, 1 insertion(+), 57 deletions(-)
+
+commit 335e64bd98140c1ccaf510dfab50474a00b2a92f
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 19:18:48 2017 -0500
+
+    Working request and transfer
+
+ net_test_client.ml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit e204d1dea8f42ce63bc89595c549be67160bcd4d
+Merge: 0a2caab 7d4e13b
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 19:07:21 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 0a2caab995111b45c479197ba3c72999cbaf9705
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 19:07:17 2017 -0500
+
+    Request file transfer
+
+ communication.ml   | 80 ++++++++++++++++++++++++++++++++++++++++--------------
+ communication.mli  | 14 ++++++++--
+ filetransfer.ml    |  1 +
+ net_test_client.ml | 14 ++++------
+ net_test_server.ml |  8 ++----
+ recv.txt           |  3 ++
+ 6 files changed, 84 insertions(+), 36 deletions(-)
+
+commit 7d4e13b0107bac9078bcc7aed660f842a2ebb926
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 18:10:23 2017 -0500
+
+    Udp peer discovery and testing
+
+ Makefile           |  4 ++++
+ discover_listen.ml |  8 ++++++++
+ discovery_test.ml  | 13 +++++++++++++
+ peer_discovery.ml  | 54 ++++++++++++++++++++++++++++++++++++++++--------------
+ peer_discovery.mli |  6 ++++++
+ 5 files changed, 71 insertions(+), 14 deletions(-)
+
+commit ab164c273f98e380aadf8fb93ef5fe8bd2c38041
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 16:50:46 2017 -0500
+
+    Send state updates
+
+ communication.ml   |  4 ++--
+ net_test_client.ml | 23 ++++++++++++++++++++---
+ net_test_server.ml | 22 +++++++++++++++++++---
+ 3 files changed, 41 insertions(+), 8 deletions(-)
+
+commit b6e5876ae4a1810dc541a43b8ac73ab68a67f3b5
+Merge: b47176d 7b1d977
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 16:39:10 2017 -0500
+
+    merge conflict
+
+commit b47176d8aa738f789dc022144ab09ebceb118917
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 16:37:44 2017 -0500
+
+    pretty printing
+
+ communication.ml  |  5 +++--
+ communication.mli |  2 +-
+ main.ml           | 19 +++++++++++++++++++
+ 3 files changed, 23 insertions(+), 3 deletions(-)
+
+commit 7b1d977d7c1d6e277508fcc830d980243199ca51
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 16:14:31 2017 -0500
+
+    Update makefile
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 280a89445f2ab6a76bd28378ff8ce570ed469c4d
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 15:40:22 2017 -0500
+
+    Cleanup filetransfer
+
+ filetransfer.ml | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
+
+commit d27d30e489365b0fb3bdcb42574d0e784c03cfc5
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Sun Dec 3 15:14:25 2017 -0500
+
+    state to_string dumps and imports
+
+ database.ml | 13 +++----------
+ main.ml     | 14 ++++++++++++++
+ 2 files changed, 17 insertions(+), 10 deletions(-)
+
+commit 4f875ed19930eacc45cf5afa6c042ad89a697c9d
+Merge: 2f35311 6333004
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 15:13:23 2017 -0500
+
+    Merge branch 'master' of github.com:wizard97/Hump-Drive
+
+commit 2f35311fb5b7329097eb67bb7dd4c9581e3cf9bc
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sun Dec 3 15:13:06 2017 -0500
+
+    Sending UDP packets
+
+ peer_discovery.ml | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+commit 6333004b201c5ed5519cbe38fc0b35525c68b111
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 02:31:58 2017 -0500
+
+    nl
+
+ communication.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c027e19efabcac7ce607870a8ef9f5ab63293bdf
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sun Dec 3 02:30:58 2017 -0500
+
+    communication.ml
+
+ Makefile           |   3 ++-
+ communication.ml   |  76 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ communication.mli  |  20 ++++++++++++++
+ filetransfer.ml    |  13 +++------
+ net_test_server.ml |   2 +-
+ ydf.mp4            | Bin 0 -> 40378865 bytes
+ 6 files changed, 103 insertions(+), 11 deletions(-)
+
+commit 0e5f6c6be427f343f17cf7e8a0d4498ef92e4e3a
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 23:46:36 2017 -0500
+
+    Use tcp instead
+
+ filetransfer.ml    | 66 ++++++++++++++----------------------------------------
+ filetransfer.mli   | 22 +++---------------
+ net_test.byte      |  1 -
+ net_test_client.ml |  7 +-----
+ net_test_server.ml |  6 +----
+ 5 files changed, 22 insertions(+), 80 deletions(-)
+
+commit 992accebba6390f4e9d6417412054e3dcf827eda
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:59:02 2017 -0500
+
+    Add nl
+
+ filetransfer.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ce049ef1a1a63179c6d286a16cace039f53e3e28
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:54:55 2017 -0500
+
+    Fix infinite loop
+
+ filetransfer.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 90d28336a776f0140b6289871e56237a3ff90959
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 21:50:36 2017 -0500
+
+    F
+
+ filetransfer.ml | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit 1fdd30c779864676d30553c7fa0a0ff87d0d52c9
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 21:48:37 2017 -0500
+
+    Fixed again
+
+ filetransfer.ml | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+commit f70f8b8074b3d60b387b55f5f86b887e4bc049a3
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 21:39:53 2017 -0500
+
+    Fixed aaron's crap
+
+ filetransfer.ml | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit 9cdbe9a8145d400909e3dfb1848b0a275a6fa49f
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:32:59 2017 -0500
+
+    this sucks
+
+ filetransfer.ml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit ecd33ccd57722237f511b3b0bb2bccb74f498456
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:06:48 2017 -0500
+
+    fox_orig
+
+ fox_orig.jpeg | Bin 0 -> 100534 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 4d6063f54a117e982498ca212344cfe1bec88d77
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:05:17 2017 -0500
+
+    nl.txt
+
+ net_test_server.ml | 2 +-
+ nl.txt             | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit 4c21544480e522e178bf568f79551fba4b036b77
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 21:02:00 2017 -0500
+
+    Move append nl
+
+ filetransfer.ml    | 8 ++++----
+ net_test_server.ml | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 4772b4f62c87111317dab9e246c19b7b93176700
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 20:35:08 2017 -0500
+
+    Video and fox
+
+ filetransfer.ml    |   7 +++++--
+ fox.jpeg           | Bin 0 -> 100534 bytes
+ net_test_server.ml |   2 +-
+ vid.mp4            | Bin 0 -> 31793465 bytes
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+commit 4e6e82ba0db26a25dba72037507b8bad9086d427
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 20:24:39 2017 -0500
+
+    Stupid hack
+
+ filetransfer.ml    | 4 ++--
+ net_test_server.ml | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 741da5fdf2d034989f29355c05eab8dc8b8637c3
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 20:15:33 2017 -0500
+
+    overwrite=true
+
+ filetransfer.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 1be1aa082b81a00b1a72cabaa584c33c45f2bbc6
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 20:14:12 2017 -0500
+
+    overwrite=true
+
+ filetransfer.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0ec58ad450851397df719db144d49be1ccfc11b8
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:48:32 2017 -0500
+
+    to_string on error
+
+ net_test_client.ml | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit 72eebaf436ef4888366e9ed4ce5c900cbf2c280e
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:48:01 2017 -0500
+
+    to_string on error
+
+ net_test.ml        | 15 ---------------
+ net_test_client.ml | 15 +++++++++++++++
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+commit 94e755d88fbf0c62ec0f4b8d35dd452dd5cd5a31
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:46:30 2017 -0500
+
+    to_string on error
+
+ Makefile           | 4 ++--
+ filetransfer.ml    | 2 +-
+ match              | 0
+ net_test_server.ml | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 2164d1047aeb6bb049ef220d27c1310221b47e23
+Merge: ab301a7 a4e5239
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:41:35 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit ab301a7a9769ec256e2a1a78484e65fa8647c798
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:41:32 2017 -0500
+
+    net-test-server
+
+ Makefile           |  4 +++-
+ net_test_server.ml | 11 +++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+commit a4e52394723c3028f56d308e82cd69111762191d
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 19:41:04 2017 -0500
+
+    Larg one line received file
+
+ mp.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d1506c3454e6c83c6a14fd654918c0d8867a9101
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:15:09 2017 -0500
+
+    ignore binaries
+
+ .gitignore                   | 1 +
+ Async_extra.Import.Pipe.read | 0
+ 2 files changed, 1 insertion(+)
+
+commit d5ae524a329f2bc6495c28191d22f83ef35617f9
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:14:12 2017 -0500
+
+    war_peace
+
+ filetransfer.ml |     1 +
+ net_test.byte   |     1 +
+ net_test.ml     |     4 +-
+ war_peace.txt   | 15069 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 15074 insertions(+), 1 deletion(-)
+
+commit f5cc2e788a8a98dec7dd90f8fb5a5e33dcee5b6e
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:04:31 2017 -0500
+
+    Fix mli
+
+ net_test.ml | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+commit d498414ec76a695fdf73c499441672674137c35a
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 19:03:55 2017 -0500
+
+    Fix mli
+
+ =                | 0
+ Makefile         | 4 ++--
+ filetransfer.ml  | 2 ++
+ filetransfer.mli | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
+
+commit 84735819898e1ed4b930693cf584f38b50d8a5e5
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 18:54:47 2017 -0500
+
+    Fix makefile
+
+ Makefile         |  4 +++-
+ filetransfer.mli | 23 +++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+commit c47d2501a36208fcace07e473641b3af0e47b1be
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 18:41:15 2017 -0500
+
+    Testing file
+
+ net_test.ml | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+commit 2f1ac1701d6eba7c63adf9764da56c6d09c57108
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 18:35:41 2017 -0500
+
+    Read entire file
+
+ filetransfer.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit b1b26526d21c98b623587d9b61256ead5e1255d2
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 18:30:16 2017 -0500
+
+    Read entire file
+
+ filetransfer.ml | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
+
+commit 1ec7e8562b41d0690611cd8249bf8b3306912582
+Merge: 4e6103b 27e6209
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 18:01:55 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 4e6103bf6f45f5cd316965d2dec29f2f5170749e
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 18:01:53 2017 -0500
+
+    no magic types
+
+ filetransfer.ml | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit 27e62099858ad42febbf7f4966cb3dee2db767f7
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 17:57:03 2017 -0500
+
+    Files write
+
+ filetransfer.ml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 94bece0a81131813dffda8c0193c527e4ed4ab8a
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 17:48:06 2017 -0500
+
+    Work on client recving file
+
+ filetransfer.ml | 18 +++++++++++-------
+ test.txt        |  4 +++-
+ 2 files changed, 14 insertions(+), 8 deletions(-)
+
+commit 7e54ab1ee598f9e15f0f81e5e06244c0db15259d
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 17:25:39 2017 -0500
+
+    It works
+
+ filetransfer.ml | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+commit 6d8e5efca197abbb470727fa0b3f8c738a5ae09b
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Sat Dec 2 17:09:35 2017 -0500
+
+    Work on tcp file transfer
+
+ .merlin                      |   1 +
+ =                            |   0
+ Async_extra.Import.Pipe.read |   0
+ filetransfer.ml              |  36 ++++++++++++++++++++++++++++++++++++
+ match                        |   0
+ submission.zip               | Bin 0 -> 3519 bytes
+ submission/communicator.mli  |  33 +++++++++++++++++++++++++++++++++
+ submission/crypto.mli        |  31 +++++++++++++++++++++++++++++++
+ submission/database.mli      |  26 ++++++++++++++++++++++++++
+ submission/gui.mli           |  20 ++++++++++++++++++++
+ submission/transfer.mli      |  28 ++++++++++++++++++++++++++++
+ test.txt                     |   1 +
+ 12 files changed, 176 insertions(+)
+
+commit ba9045d6052977e9bc6d8aeb9ef4a45e7fd0c482
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Sat Dec 2 16:08:23 2017 -0500
+
+    Update done
+
+ database.ml | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+commit 5977536539ffaa3cc054d268ec23f0aeaf1c097b
+Merge: 17e399f 23d263b
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Sat Dec 2 15:46:19 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 17e399f4d0c4e351dba5139a71c98eef3f3de3e6
+Author: Zack Brienza <zb43@cornell.edu>
+Date:   Sat Dec 2 15:45:48 2017 -0500
+
+    Updated changes to state functions
+
+ database.ml | 67 ++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 53 insertions(+), 14 deletions(-)
+
+commit 23d263bfed24b9ec00a7906ae47b566d1472a4f6
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Sat Dec 2 14:33:56 2017 -0500
+
+    Crypto test and makefile
+
+ Makefile        |  3 ++-
+ communicator.ml | 23 +++++++++++++++++++++++
+ crypto.ml       |  8 ++++++--
+ crypto.mli      | 13 +++++++------
+ crypto_test.ml  | 17 +++++++++++++++++
+ gui.mli         |  4 +++-
+ 6 files changed, 58 insertions(+), 10 deletions(-)
+
+commit 3c3af60deed59c0ce0eca8f768d5403e896202ee
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Sat Dec 2 13:40:08 2017 -0500
+
+    hashcode implemented
+
+ database.ml | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+commit f50cc0802c6f0f81c91df166112225b793a7ce66
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Nov 29 18:49:32 2017 -0500
+
+    updates for database init
+
+ database.ml | 46 +++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 13 deletions(-)
+
+commit 93b64c0c0e423337aea0cad703c65c16d4c68199
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Nov 29 17:47:01 2017 -0500
+
+    some representation changes
+
+ database.ml | 41 ++++++++++++++---------------------------
+ 1 file changed, 14 insertions(+), 27 deletions(-)
+
+commit ba27567c276be9263b476f9ff20fdd0cf8bc2b14
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Nov 29 17:16:46 2017 -0500
+
+    some changes
+
+ database.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 236d33082e0c0fa2b19a92070171f4b6c547e7e2
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Wed Nov 29 01:58:19 2017 -0500
+
+    File detection for db and initial pass at data struct
+
+ database.ml  | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ database.mli |  6 +++---
+ 2 files changed, 57 insertions(+), 3 deletions(-)
+
+commit ef6732d168fa0cdfa65e088bd752f1c4c660cb57
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Nov 28 03:11:40 2017 -0500
+
+    Modular inverse
+
+ crypto.ml | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+commit b9fcf1440c88ef565fbb0eefed0f6fda2c7cbeec
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Nov 28 00:35:53 2017 -0500
+
+    public and private keys and string representations
+
+ crypto.ml | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+commit d39ea56717907bf049186c7f11d83826f6f3b15e
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Mon Nov 27 22:22:02 2017 -0500
+
+    Key generation
+
+ crypto.ml | 44 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 40 insertions(+), 4 deletions(-)
+
+commit 719e6daa3ff3c4a84ffb60edd2b573f21f8f22e3
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Tue Nov 14 18:57:45 2017 -0500
+
+    Fix build errors
+
+ _tags            | 2 ++
+ communicator.mli | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+commit d2cd2a25ba6621ec9fc7700891b26922842fe368
+Author: sdd48 <sdd48@cornell.edu>
+Date:   Tue Nov 14 01:21:16 2017 -0500
+
+    Started crypto
+
+ crypto.ml  | 21 +++++++++++++++++++++
+ crypto.mli | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+commit 4ba4c5bc659b8a09ee5ec75d921edfd93bff6250
+Merge: b821c36 9200974
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Tue Nov 14 01:14:09 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit b821c36ce24b351db40fddf6b5b3ea6b7243e56b
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Tue Nov 14 01:13:48 2017 -0500
+
+    Work on transfer and communicator
+
+ .gitignore       |  2 ++
+ communicator.mli |  2 ++
+ transfer.mli     | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 32 insertions(+)
+
+commit 92009744c5564e3ee2d9633005eac04059bc3d4e
+Merge: 29d1e12 cd3b861
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Nov 14 01:03:30 2017 -0500
+
+    Merge branch 'master' of https://github.com/wizard97/Hump-Drive
+
+commit 29d1e1285749e263314aa7d58d56dc66611f42c9
+Author: Charles Yu <charles.yu108@gmail.com>
+Date:   Tue Nov 14 01:03:24 2017 -0500
+
+    method stubs for database and gui
+
+ database.ml  |  0
+ database.mli | 26 ++++++++++++++++++++++++++
+ gui.mli      | 20 ++++++++++++++++++++
+ main.ml      |  7 +++++++
+ 4 files changed, 53 insertions(+)
+
+commit cd3b8615f96504d31fdd3911af9d4084cfefe58b
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Tue Nov 14 00:53:24 2017 -0500
+
+    Work on communicator
+
+ .merlin          |  4 ++--
+ communicator.mli | 15 +++++++++++++--
+ 2 files changed, 15 insertions(+), 4 deletions(-)
+
+commit c1bf1d26fc1d78a9b77371336bfcebd780872cab
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Tue Nov 14 00:28:17 2017 -0500
+
+    Added merlin
+
+ .merlin          |  4 ++++
+ communicator.mli | 20 ++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+commit 6d6233b10b84315b9a5903a1c1b83613322673e8
+Author: Aaron Wisner <daw268@cornell.edu>
+Date:   Mon Nov 13 23:54:04 2017 -0500
+
+    Make modules and makefile
+
+ Makefile         | 5 +++++
+ communicator.ml  | 0
+ communicator.mli | 0
+ crypto.ml        | 0
+ crypto.mli       | 0
+ gui.ml           | 0
+ gui.mli          | 0
+ main.ml          | 0
+ transfer.ml      | 0
+ transfer.mli     | 0
+ 10 files changed, 5 insertions(+)
