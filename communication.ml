@@ -92,9 +92,8 @@ let start_server hookup peerpub =
   let server_callback addr read write =
     Writer.set_buffer_age_limit write Writer.(`Unlimited);
     let (cs:conn_state) = (addr,read,write) in
-    print_string "Got Client!";
     let saddr = Socket.Address.Inet.addr addr |> Unix.Inet_addr.to_string in
-    saddr |> print_string;
+    print_endline ("Peer sent notification: "^saddr);
     read_until read (`Char '\n') ~keep_delim:(false) >>= fun r ->
     match (r) with
     | `Ok s ->
@@ -105,7 +104,7 @@ let start_server hookup peerpub =
       print_endline ("Invalid command: "^s);
       Writer.close write
     | `Eof ->
-      print_string "Closed connection!";
+      print_endline "Closed connection!";
       Writer.close write
   in
   Server.create (on_port port) server_callback
@@ -116,7 +115,7 @@ let send_message peer msg =
   let thp : Async_extra.Import.Socket.Address.Inet.t where_to_connect = to_host_and_port peer.ip port in
   Tcp.connect thp >>= fun (sock, read, write) ->
   let cstate : conn_state = (Async_extra.Import.Socket.getpeername sock, read, write) in
-  print_endline "Connected to server to send notification!";
+  print_endline "Connected to peer to send notification!";
   let smesg = msg_to_string msg in
   Writer.write write smesg;
   Writer.flushed write >>= fun () ->
@@ -133,6 +132,5 @@ let request_file cr peer fname fdest =
 
 
 let send_state peer state =
-  print_string ("send_state: "^peer.ip);
   send_message peer (State state) >>= fun (addr, read, write) ->
   Writer.close write

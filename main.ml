@@ -28,6 +28,8 @@ end
 module KeyHashtbl = Hashtbl.Make(KeyHash)
 
 
+let exit_graceful = fun () -> upon (exit 0) (fun _ -> ())
+
 
 let compute_hash s =
   let hash = ref 0 in
@@ -58,24 +60,21 @@ let to_unit d = upon d (fun _ -> ())
 
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
-       print_string "In peer syncer";
   if KeyHashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
     let (name,pinfo) = KeyHashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     let _ = Config.save_st_string strs (State.root_dir !st) in
-    print_string "Send: "; print_int (compute_hash strs); print_endline "";
     Communication.send_state pinfo strs
-  else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
+  else Deferred.return ()) (fun () -> peer_syncer peers mypeer st)
 
 
 let peer_discovered peers addr msg  =
-  print_string "Peer discovered";
   match (string_bcast_msg msg) with
   | Some (name, key) ->
     KeyHashtbl.add peers key (name,{ip=addr; key=key});
-    print_endline ("Found peer: "^name^" "^addr)
+    print_endline ("Found my peer: "^name^" "^addr)
   | None -> print_string "Garbage!"
 
 
@@ -83,7 +82,7 @@ let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
   let recf st f :state_info Deferred.t = (Communication.request_file pubpriv pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
-    print_endline ("Recvd file:"^f);
+    print_endline ("Recvd file :"^f);
     (State.acknowledge_file_recpt st' f)
   in
   List.fold_left recf (Deferred.return currstate) ups
@@ -93,29 +92,28 @@ let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
-      print_string "Got: "; print_int (compute_hash s); print_endline "";
       begin
-        print_string "Got state update!";
+        print_endline "Received state update from peer!";
         let rst = State.from_string s in
         match !rset with
         | None -> rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
           let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
           Deferred.return (rset := None)
-        | _ -> Deferred.return (print_endline "Pending update!") (* Ignore if already being processed*)
+        | _ -> Deferred.return () (* Ignore if already being processed*)
       end
     | Filerequest f ->
-      print_string "Got request for file!";
+      print_endline ("Incoming file request for: "^f);
       Communication.transfer_file mypeer ((State.root_dir !currstate)^f) cstate
   in
-  print_string "Running Server\n";
+  print_endline "Starting incoming request server";
   Communication.start_server notify_callback mypeer
 
 
 let rec peer_broadcaster msg =
   upon(after (Core.sec bcast_interval) >>= fun () ->
                           Peer_discovery.broadcast msg )
-    (fun () -> print_endline "sent bcast"; peer_broadcaster msg)
+    (fun () -> print_endline "Sending discover packet"; peer_broadcaster msg)
 
 
 
@@ -140,7 +138,8 @@ let load_peerkey rdir =
     Config.load_peerkey rdir >>= fun pk ->
     Deferred.return (Crypto.of_string pk)
   with exn ->
-    let _ = failwith "Please add peerkey to contain peer public key" in
+    print_endline "Please add your peers peerkey to file peerkey!";
+    exit_graceful ();
     Deferred.return (Crypto.of_string "")
 
 
@@ -172,8 +171,6 @@ let launch_synch rdir =
   Config.save_state sinfo rdir >>= fun _ -> Deferred.return (print_endline "Init complete!")
 
 
-let exit_graceful = fun () -> upon (exit 0) (fun _ -> ())
-
 (* Given an input string from the repl, handle the command *)
 let process_input = function
 | "about" -> print_endline "*****Version 1.0****"
@@ -182,7 +179,7 @@ let process_input = function
 |_ -> print_endline "Invalid Command!"
 
 let rec loop () =
-  print_string " >>> ";
+  print_string ">>> ";
   (Reader.stdin |> Lazy.force |> Reader.read_line |> upon)
     begin fun r ->
       match r with
