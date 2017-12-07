@@ -157,26 +157,26 @@ let get_dir_path () =
   print_endline "Please type in the directory path you wish to sync.";
   (Reader.stdin |> Lazy.force |> Reader.read_line) >>= fun r ->
     match r with
-    | `Ok s -> Deferred.return (Config.path_ok s)
+    | `Ok s -> begin
+      try let p = (Config.path_ok s) in Deferred.return p
+      with exn -> print_endline "That is not a valid path!"; exit_graceful(); Deferred.return ("Oops")
+    end
     | `Eof ->  exit_graceful(); Deferred.return("Oops")
 
 (* Repl for filesyncing interface *)
 let repl () =
   let _ = print_string "\n\nWelcome to Hump-Drive Version 1.0!\nMake sure you have configured everything correctly.\nConsult the report for configuration details if needed.\nType <start> to begin. Type <quit> or <exit> at any point to exit gracefully.\n\n";
   print_string " >>> " in
-  upon (Reader.stdin |> Lazy.force |> Reader.read_line)
-  begin
-    fun r ->
-      match r with
-      | `Ok s ->
-        if s = "start" then
-          (get_dir_path ()) >>= fun dpath ->
-          (launch_synch dpath) >>= fun _ ->
-          loop(); Deferred.return ()
+  (Reader.stdin |> Lazy.force |> Reader.read_line) >>= fun r ->
+    match r with
+    | `Ok s ->
+      if s = "start" then
+        (get_dir_path ()) >>= fun dpath ->
+        (launch_synch dpath) >>= fun _ ->
+        loop(); Deferred.return ()
+      else Deferred.return (exit_graceful ())
+    | `Eof -> Deferred.return (exit_graceful ())
 
-        else exit_graceful ()
-      | `Eof -> exit_graceful ()
-  end
 
 let main () =
   let _ = repl () in
