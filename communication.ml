@@ -47,7 +47,7 @@ let transfer_file fname (addr,read,write) =
 
 let transfer_file fname (addr,read,write) =
   Reader.open_file fname >>= fun r ->
-    let buf = "" in
+    let buf = Core.String.create Crypto.chunk_size in
     let rec rp () = Reader.really_read r ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
     match res with
     | `Ok -> Writer.write write buf; print_string buf; rp ()
@@ -67,7 +67,7 @@ let recv_file fdest (addr,read,write) =
 
 let recv_file fdest (addr,read,write) =
   Writer.open_file fdest >>= fun fw ->
-  let buf = "" in
+  let buf = Core.String.create Crypto.chunk_size in
   let rec rp () =  Reader.really_read read ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
   | `Ok -> Writer.write fw buf; print_string buf; rp ()

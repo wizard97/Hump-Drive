@@ -122,8 +122,8 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
   State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
@@ -135,7 +135,7 @@ let launch_synch () =
   peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
-  let _ = peer_syncer discovered_peers mypeer currstate in 
+  let _ = peer_syncer discovered_peers mypeer currstate in
   Deferred.return (print_string "Init complete")
 
     (*
