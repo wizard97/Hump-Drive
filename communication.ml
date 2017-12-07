@@ -18,7 +18,7 @@ type server = (Socket.Address.Inet.t, int) Async_extra.Tcp.Server.t
 type conn_state = Socket.Address.Inet.t*Reader.t*Writer.t
 
 
-let port = 13348
+let port = 31120
 
 
 let cmp_sub s cmd =

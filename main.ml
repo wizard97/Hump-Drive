@@ -89,7 +89,7 @@ let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   List.fold_left recf (Deferred.return currstate) ups
 
 
-let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we think it is*)
+let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer is who we think it is*)
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
@@ -97,9 +97,12 @@ let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we
         print_endline "Received state update from peer!";
         let rst = State.from_string s in
         match !rset with
-        | None -> rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
+        | None when (not !lockstate)->
+          lockstate := true;
+          rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
           let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
+          lockstate := false;
           Deferred.return (rset := None)
         | _ -> Deferred.return () (* Ignore if already being processed*)
       end
@@ -161,10 +164,11 @@ let launch_synch rdir =
   st >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
+  let lockstate = ref false in
   State.update_state sinfo >>= fun cs ->
   let currstate = ref cs in
   let discovered_peers = KeyHashtbl.create 5 in
-  comm_server (pub,priv) currstate rstate peerkey >>= fun _ ->
+  comm_server (pub,priv) currstate lockstate rstate peerkey >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", pub));
   print_endline "Starting discovery server";
