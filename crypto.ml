@@ -31,6 +31,7 @@ let even b = eq (bMod b (Big_int.big_int_of_int 2)) zero
 let of_int = Big_int.big_int_of_int
 let to_int = Big_int.int_of_big_int
 let of_string = Big_int.big_int_of_string
+let to_string = Big_int.string_of_big_int
 
 
 let b = of_int 256
@@ -116,9 +117,9 @@ let rec large_int_to_string' n s=
 let large_int_to_string n = large_int_to_string' n ""
 
 
-let string_from_key = large_int_to_string
+let string_from_key = to_string
 
-let key_from_string = string_to_large_int
+let key_from_string = of_string
 
 (***** END HELPERS *****)
 
