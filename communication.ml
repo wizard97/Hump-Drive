@@ -85,7 +85,7 @@ let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Asy
     let cmd = String.sub s ssl (slen-ssl) in
     hookup cstate pr (Filerequest cmd)
   else
-    Deferred.return ()
+    Deferred.return (print_endline "Invalid request!")
 
 
 let start_server hookup peerpub =

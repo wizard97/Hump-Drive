@@ -61,7 +61,7 @@ let to_unit d = upon d (fun _ -> ())
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
   if KeyHashtbl.mem peers mypeer then
-    let _ = print_endline "Attempting to sync" in
+    let _ = print_endline "Sending state update" in
     let (name,pinfo) = KeyHashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
@@ -81,7 +81,8 @@ let peer_discovered peers addr msg  =
 let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
-  let recf st f :state_info Deferred.t = (Communication.request_file pubpriv pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
+  let recf st f = (Communication.request_file pubpriv pr f
+                     ((State.root_dir currstate)^Filename.dir_sep^f)) >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file :"^f);
     (State.acknowledge_file_recpt st' f)
   in
@@ -104,7 +105,7 @@ let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we
       end
     | Filerequest f ->
       print_endline ("Incoming file request for: "^f);
-      Communication.transfer_file mypeer ((State.root_dir !currstate)^f) cstate
+      Communication.transfer_file mypeer ((State.root_dir !currstate)^Filename.dir_sep^f) cstate
   in
   print_endline "Starting incoming request server";
   Communication.start_server notify_callback mypeer
