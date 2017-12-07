@@ -140,7 +140,7 @@ let load_peerkey rdir =
   with exn ->
     print_endline "Please add your peers peerkey to file peerkey!";
     exit_graceful ();
-    Deferred.return (Crypto.of_string "")
+    Deferred.return (Crypto.of_string "0")
 
 
 (* Initializes all servers and returns the ref of the current state. *)
