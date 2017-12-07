@@ -138,7 +138,7 @@ let load_peerkey rdir =
     Config.load_peerkey rdir >>= fun pk ->
     Deferred.return (Crypto.of_string pk)
   with exn ->
-    print_endline "Please add your peers peerkey to file peerkey!";
+    print_endline "PLEASE ADD YOUR PEERS PUBLIC KEY TO peerkey!";
     exit_graceful ();
     Deferred.return (Crypto.of_string "0")
 
