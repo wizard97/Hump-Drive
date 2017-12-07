@@ -53,7 +53,7 @@ let transfer_file fname (addr,read,write) =
     | `Eof n -> Writer.write write (String.sub buf 0 n); Writer.flushed write
     in
     rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.flushed write >>=
-    fun () ->  after(Core.sec 2.0) >>= fun a ->Reader.close r
+    fun () ->  after(Core.sec 2.0) >>= fun a -> Reader.close r >>= fun a -> Writer.close write
 
 
 (*
