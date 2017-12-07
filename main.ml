@@ -13,15 +13,7 @@ open Peer_discovery
 
 let bcast_interval = 5.
 
-
-module DiscoveredPeers = struct
-  type t = string*Communication.peer
-
-  let compare (_,p1) (_,p2)  =
-    Pervasives.compare p1.key p2.key
-end
-
-module PeerSet = Set.Make(DiscoveredPeers)
+type locked_state = Locked of State.state_info | Unlocked of State.state_info
 
 (* Name, pubkey*)
 type disc_peer = string*Communication.peer
@@ -63,6 +55,7 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   if Hashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
     let (name,pinfo) = Hashtbl.find peers mypeer in
+    let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     print_string "Send: "; print_int (compute_hash strs); print_endline "";
     Communication.send_state pinfo strs
@@ -81,14 +74,13 @@ let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
 
 
 let proc_state_update currstate rs pr :state_info Deferred.t  =
-  State.update_state currstate >>= fun nstate ->
-  let ups = State.files_to_request nstate rs in
+  let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
   let recf st f :state_info Deferred.t = (Communication.request_file pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file:"^f);
     (State.acknowledge_file_recpt st' f)
   in
-  List.fold_left recf (Deferred.return nstate) ups
+  List.fold_left recf (Deferred.return currstate) ups
 
 
 let comm_server currstate rset mypeer = (* TODO make sure peer is who we think it is*)
