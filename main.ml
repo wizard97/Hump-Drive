@@ -64,7 +64,7 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
     let _ = print_endline "Attempting to sync" in
     let (name,pinfo) = Hashtbl.find peers mypeer in
     let strs = State.to_string !st in
-    print_string "Send: "; print_int (String.length strs); print_endline "";
+    print_string "Send: "; print_int (compute_hash strs); print_endline "";
     Communication.send_state pinfo strs
   else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
 
@@ -95,7 +95,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
-      print_string "Got: "; print_int (String.length s); print_endline "";
+      print_string "Got: "; print_int (compute_hash s); print_endline "";
       begin
         print_string "Got state update!";
         let rst = State.from_string s in
@@ -121,8 +121,8 @@ let rec peer_broadcaster msg =
 
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
   State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
