@@ -153,6 +153,6 @@ let acknowledge_file_recpt st fname =
                     files_to_info = filemap;
                     last_modified = dir_lastmodtime}
 
-let to_string (st : state_info) = Marshal.to_string st []
+let to_string (st : state_info) = Marshal.to_string st [] |> String.escaped
 
-let from_string (s : string) : state_info = Marshal.from_string s 0
+let from_string (s : string) : state_info = Scanf.unescaped |> Marshal.from_string s 0
