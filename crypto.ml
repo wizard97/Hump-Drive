@@ -9,7 +9,7 @@ open String
 (* Number base for the string form of the keys *)
 type key = Big_int.big_int
 
-let chunk_size = 255
+let chunk_size = 128
 let key_size = 200
 let max_length = 2*key_size + 1
 let output_chunk_size = max_length + 1
@@ -151,9 +151,7 @@ let generate_key =
 let generate_public_private ()=
   let x = generate_key () in
   let y = generate_key () in
-   (* (mult x y ,x) *)
-   (mult x y, modinv exp (mult (decr x) (decr y)))
-
+   (mult x y ,x)
 
 
 (* Pad to make sure length = max_length *)
@@ -161,11 +159,10 @@ let encrypt_line s pu =
   mod_exp (string_to_large_int s) exp pu |> large_int_to_string
 
 let decrypt_line s pu pr =
-(*  let pr' = div pu pr in
+  let pr' = div pu pr in
   let k' = modinv exp (mult (decr pr') (decr pr)) in
   let s' = string_to_large_int s in
-  mod_exp s' k' pu |> large_int_to_string *)
-  mod_exp (string_to_large_int s) pr pu |> large_int_to_string
+  mod_exp s' k' pu |> large_int_to_string
 
 
 
