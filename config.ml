@@ -29,7 +29,8 @@ let load_file fname dir_path =
     let _ = path_ok fpath in
     Reader.file_contents fpath
   with OUnix.Unix_error _ ->
-    raise (NoSuchFile("Error loading config file of name: " ^fname ^". Please make sure that file exists."))
+    raise (NoSuchFile("Error loading config file of name: " ^fname ^
+                            ". Please make sure that file exists."))
 
 let write_file s fname dir_path =
   let config_path = config_ok dir_path in
