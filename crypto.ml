@@ -184,48 +184,17 @@ let rec strip_to s l =
   else s
 
 
+(* INVARIANT Lend s = *)
 let encrypt_and_chunk s pu =
-  print_int (String.length s); print_endline "";
-  assert ((String.length s) <= chunk_size);
-  if String.length s <= chunk_size then
     let enc = zero_pad (encrypt_line s pu) max_length in
-    assert((String.length enc) = 401);
     (chunk_size_char)^enc
-  else failwith "Encrypt chunk wrong size"
-(*
-
-    let s1 = chunk_size_char ^ enc in
-    let s2 = (s |> remaining |> encrypt_and_chunk) pu in s1^s2
-  else (String.length s |> Char.chr |> String.make 1)^
-    zero_pad (encrypt_line s pu) max_length
-*)
 
 
+(* INVARIANT : *)
 let decrypt_chunked s pu pr =
-  print_int (String.length s); print_endline "";
-  assert ((String.length s) = output_chunk_size);
   let size = Char.code s.[0] in
   let dec = decrypt_line (String.sub s 1 (String.length s - 1)) pu pr in
   strip_to dec size
-
-
-  (*
-  let size = Char.code s.[0] in
-  let dec = decrypt_line (String.sub s 1 (String.length s  - 1)) pu pr in
-    strip_to dec size *)
-
- (*   if size <> String.length dec then zero_pad dec size else dec *)
-
-
-(*
-
-let rec test_modinv n =
-  if n = 0 then print_endline "NICE" else
-  let (pu,pr) = generate_public_private () in
-  let pr2 = div pu pr in
-    let x = modinv (of_int 17) (mult (decr pr2) (decr pr)) in
-    test_modinv (n-1)
-*)
 
 
 (*
