@@ -19,6 +19,16 @@ type disc_peer = string*Communication.peer
 type bcast_msg = string*Crypto.key
 
 
+module KeyHash = struct
+  type t = Crypto.key
+  let equal k1 k2 = Crypto.key_equal k1 k2
+  let hash k = Crypto.key_hash k
+end
+
+module KeyHashtbl = Hashtbl.Make(KeyHash)
+
+
+
 let compute_hash s =
   let hash = ref 0 in
   let update_hash c =
@@ -49,9 +59,9 @@ let to_unit d = upon d (fun _ -> ())
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
        print_string "In peer syncer";
-  if Hashtbl.mem peers mypeer then
+  if KeyHashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
-    let (name,pinfo) = Hashtbl.find peers mypeer in
+    let (name,pinfo) = KeyHashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     let _ = Config.save_st_string strs (State.root_dir !st) in
@@ -60,12 +70,12 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
 
 
-let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
+let peer_discovered peers addr msg  =
   print_string "Peer discovered";
   match (string_bcast_msg msg) with
   | Some (name, key) ->
-    Hashtbl.add peers key (name,{ip=addr; key=key});
-    print_endline ("Found peer: "^name^" "^addr^": "^(Crypto.string_from_key key))
+    KeyHashtbl.add peers key (name,{ip=addr; key=key});
+    print_endline ("Found peer: "^name^" "^addr)
   | None -> print_string "Garbage!"
 
 
@@ -114,7 +124,7 @@ let load_keys rdir =
   try
     Config.load_pubkey rdir >>= fun pub ->
     Config.load_privkey rdir >>= fun priv ->
-    Deferred.return (Crypto.of_string pub, Crypto.of_string priv)
+    Deferred.return (Crypto.key_from_string pub, Crypto.key_from_string priv)
   with exn ->
     let _ = print_string "Creating new keys.\n" in
     let (pub, priv) = Crypto.generate_public_private () in
@@ -152,7 +162,7 @@ let launch_synch rdir =
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
   let currstate = ref sinfo in
-  let discovered_peers : ((Crypto.key, disc_peer) Hashtbl.t) = Hashtbl.create 5 in
+  let discovered_peers = KeyHashtbl.create 5 in
   comm_server (pub,priv) currstate rstate peerkey >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", pub));

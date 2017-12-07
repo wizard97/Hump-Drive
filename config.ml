@@ -40,7 +40,7 @@ let write_file s fname dir_path =
 (* <==== Declare filename constants here ====> *)
 let fname_PUBKEY = "pubkey"
 let fname_PRIVKEY = "privkey"
-let fname_PEERS = "peers"
+let fname_PEERS = "peerkey"
 let fname_STORED_STATE = ".state"
 
 (* <==== Declare load files here ====> *)
