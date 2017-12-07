@@ -7,7 +7,7 @@ open Async_extra.Import.Writer
 
 exception NoSuchFile of string
 
-let dir_CONFIG = ".config"
+let dir_CONFIG = "config"
 
 (* Checks that file or directory denoted by path is valid. Returns path if ok. *)
 let path_ok path = OUnix.access path [F_OK]; path
@@ -40,6 +40,7 @@ let write_file s fname dir_path =
 (* <==== Declare filename constants here ====> *)
 let fname_PUBKEY = ".pubkey"
 let fname_PRIVKEY = ".privkey"
+let fname_PEERS = ".peers"
 let fname_STORED_STATE = ".state"
 
 (* <==== Declare load files here ====> *)
@@ -52,3 +53,5 @@ let load_state dir =
 let save_state st dir_path =
   let s = State.to_string st in
   write_file s fname_STORED_STATE dir_path
+
+let save_st_string s dir_path = write_file s fname_STORED_STATE dir_path
