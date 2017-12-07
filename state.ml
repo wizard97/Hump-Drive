@@ -153,11 +153,6 @@ let acknowledge_file_recpt st fname =
                     files_to_info = filemap;
                     last_modified = dir_lastmodtime}
 
-let to_string (st : state_info) = Marshal.to_string st [] |> String.escaped
+let to_string (st : state_info) = Marshal.to_string st [Compat_32; Closures; No_sharing] |> String.escaped
 
 let from_string (s : string) : state_info = Scanf.unescaped |> Marshal.from_string s 0
-
-let check_to_string (st : state_info) =
-  let s1 = Marshal.to_string st [] in
-  let s2 = Marshal.to_string st [] |> String.escaped |> Scanf.unescaped in
-  if s1 = s2 then print_endline "This confirms s1 and s2 are the same" else print_endline "FUCKFUCKFUCKFUCKFUCKFUCK"
