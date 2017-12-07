@@ -130,7 +130,7 @@ let load_peerkey rdir =
     Config.load_peerkey rdir >>= fun pk ->
     Deferred.return (Crypto.of_string pk)
   with exn ->
-    let _ = failwith "Please update: "^(Config.fname_PEERS)^" to contain peer public key" in
+    let _ = failwith "Please add peerkey to contain peer public key" in
     Deferred.return (Crypto.of_string "")
 
 

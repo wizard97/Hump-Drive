@@ -28,19 +28,19 @@ let load_file fname dir_path =
    try
      let _ = path_ok fpath in
      Reader.file_contents fpath
-
    with OUnix.Unix_error _ ->
      raise (NoSuchFile("Error loading config file of name: " ^fname ^". Please make sure that file exists."))
 
 let write_file s fname dir_path =
   let config_path = config_ok dir_path in
   let fpath = config_path^Filename.dir_sep^fname in
-  Writer.open_file fpath >>= fun fd -> write fd s; Deferred.return ()
+  Writer.open_file fpath >>= fun fd -> write fd s;
+  Writer.close fd
 
 (* <==== Declare filename constants here ====> *)
-let fname_PUBKEY = ".pubkey"
-let fname_PRIVKEY = ".privkey"
-let fname_PEERS = ".peers"
+let fname_PUBKEY = "pubkey"
+let fname_PRIVKEY = "privkey"
+let fname_PEERS = "peers"
 let fname_STORED_STATE = ".state"
 
 (* <==== Declare load files here ====> *)
