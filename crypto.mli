@@ -55,6 +55,8 @@ val encrypt_and_chunk : string -> key -> string
  * original message. *)
 val decrypt_chunked : string -> key -> key -> string
 
+val is_prime : key -> bool
+
 (*
 val test_modinv : int -> unit
 
