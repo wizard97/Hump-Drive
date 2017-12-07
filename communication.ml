@@ -18,7 +18,7 @@ type server = (Socket.Address.Inet.t, int) Async_extra.Tcp.Server.t
 type conn_state = Socket.Address.Inet.t*Reader.t*Writer.t
 
 
-let port = 13347
+let port = 13348
 
 
 let cmp_sub s cmd =
@@ -46,9 +46,9 @@ let transfer_file fname (addr,read,write) =
 let transfer_file fname (addr,read,write) =
   Reader.open_file fname >>= fun r ->
     let buf = Core.String.create Crypto.chunk_size in
-    let rec rp () = Reader.really_read r ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
+    let rec rp () = Reader.really_read r ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
     match res with
-    | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); rp ()
+    | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); Writer.flushed write >>= fun () -> rp ()
     | `Eof 0-> Writer.flushed write
     | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 (n-1)) pu); Writer.flushed write
     in
@@ -66,9 +66,9 @@ let recv_file fdest (addr,read,write) =
 let recv_file fdest (addr,read,write) =
   Writer.open_file fdest >>= fun fw ->
   let buf = Core.String.create Crypto.output_chunk_size in
-  let rec rp () =  Reader.really_read read ~pos:(0) ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
+  let rec rp () =  Reader.really_read read ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
-  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); rp ()
+  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); Writer.flushed write >>= fun () -> rp ()
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> failwith ("Wrong length read: "^(string_of_int n))
   in
