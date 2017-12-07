@@ -15,7 +15,7 @@ type server = (Socket.Address.Inet.t, int) Async_extra.Tcp.Server.t
 type conn_state = Socket.Address.Inet.t*Reader.t*Writer.t
 
 
-let port = 31101
+let port = 12348
 
 
 let cmp_sub s cmd =
@@ -113,5 +113,6 @@ let request_file peer fname fdest =
 
 
 let send_state peer state =
+  print_string ("send_state: "^peer.ip);
   send_message peer (State state) >>= fun (addr, read, write) ->
   Writer.close write

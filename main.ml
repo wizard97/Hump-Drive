@@ -13,7 +13,10 @@ open Peer_discovery
 
 let bcast_interval = 5.
 
+type locked_state = Locked of State.state_info | Unlocked of State.state_info
+
 (* Name, pubkey*)
+type disc_peer = string*Communication.peer
 type bcast_msg = string*Crypto.key
 
 let compute_hash s =
@@ -25,7 +28,7 @@ let compute_hash s =
   in String.iter (update_hash) s; !hash
 
 
-let bcastmsg_to_string m : string =
+let bcastmsg_to_string (m:bcast_msg) : string =
   let data = Marshal.to_string m [] in
   let payload = (string_of_int (compute_hash data), data) in
   Marshal.to_string payload []
@@ -45,37 +48,46 @@ let string_bcast_msg s : bcast_msg option =
 let to_unit d = upon d (fun _ -> ())
 
 
-let peer_discovered mypeer foundpeer myst addr msg  =
+
+let rec peer_syncer peers (mypeer:Crypto.key) st =
+  upon(after (Core.sec bcast_interval) >>= fun () ->
+       print_string "In peer syncer";
+  if Hashtbl.mem peers mypeer then
+    let _ = print_endline "Attempting to sync" in
+    let (name,pinfo) = Hashtbl.find peers mypeer in
+    let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
+    let strs = State.to_string !st in
+    print_string "Send: "; print_int (compute_hash strs); print_endline "";
+    Communication.send_state pinfo strs
+  else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
+
+
+
+let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
   print_string "Peer discovered";
   match (string_bcast_msg msg) with
-  | Some (name, pubkey) when not !foundpeer->
-    if (Crypto.compare mypeer pubkey) then
-      let _ = print_endline ("Found peer: "^name^" "^addr) in
-      let stpick = State.to_string myst in
-      let pr : peer = {ip=addr; key=pubkey} in
-      foundpeer := true;
-      let _ = Communication.send_state pr stpick in
-      foundpeer := false
-    else
-      print_endline ("Found different peer: "^name^": "^addr)
-  | Some _ -> ()
+  | Some (name, key) ->
+    Hashtbl.add peers key (name,{ip=addr; key=key});
+    print_endline ("Found peer: "^name^" "^addr^": "^(Crypto.string_from_key key))
   | None -> print_string "Garbage!"
 
 
 
 let proc_state_update currstate rs pr :state_info Deferred.t  =
-  State.update_state currstate >>= fun nstate ->
-  let ups = State.files_to_request nstate rs in
-  let recf st f :state_info Deferred.t = (Communication.request_file pr f f) >>= fun () -> st >>= fun st' ->
+  let ups = State.files_to_request currstate rs in
+  print_endline (string_of_int (List.length ups)^" files");
+  let recf st f :state_info Deferred.t = (Communication.request_file pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
+    print_endline ("Recvd file:"^f);
     (State.acknowledge_file_recpt st' f)
   in
-  List.fold_left recf (Deferred.return nstate) ups
+  List.fold_left recf (Deferred.return currstate) ups
 
 
 let comm_server currstate rset mypeer = (* TODO make sure peer is who we think it is*)
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
+      print_string "Got: "; print_int (compute_hash s); print_endline "";
       begin
         print_string "Got state update!";
         let rst = State.from_string s in
@@ -83,11 +95,11 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
         | None -> rset := Some rst; proc_state_update (!currstate) rst pr >>= fun ns ->
           currstate := ns;
           Deferred.return (rset := None)
-        | _ -> Deferred.return ()
+        | _ -> Deferred.return (print_endline "Pending update!") (* Ignore if already being processed*)
       end
     | Filerequest f ->
       print_string "Got request for file!";
-      Communication.transfer_file f cstate
+      Communication.transfer_file ((State.root_dir !currstate)^f) cstate
   in
   print_string "Running Server\n";
   Communication.start_server notify_callback
@@ -100,19 +112,21 @@ let rec peer_broadcaster msg =
 
 
 let launch_synch () =
-  let mypeer = Crypto.key_from_string "" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "" in (* TODO fix this*)
+  let rdir = "test/" in
+  let mypeer = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  let mypub = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let _ = print_endline "Scanning directory" in
-  State.state_for_dir "submission/" >>= fun sinfo ->
+  State.state_for_dir rdir >>= fun sinfo ->
   let _ = print_endline "Starting comm server" in
-  let rstate = ref (Some sinfo) in
+  let rstate = ref None in
   let currstate = ref sinfo in
+  let discovered_peers : ((Crypto.key, disc_peer) Hashtbl.t) = Hashtbl.create 5 in
   comm_server currstate rstate mypeer >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
   print_endline "Starting discovery server";
-  let foundpeer = ref false in
-  let _ = Peer_discovery.listen (peer_discovered mypeer foundpeer sinfo) in
+  let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
+  let _ = peer_syncer discovered_peers mypeer currstate in
   Deferred.return (print_string "Init complete")
 
     (*
