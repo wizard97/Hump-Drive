@@ -141,9 +141,9 @@ let exit_graceful = fun () -> upon (exit 0) (fun _ -> ())
 (* Given an input string from the repl, handle the command *)
 let process_input = function
 | "about" -> print_endline "*****Version 1.0****"
-| "quit" -> print_endline "Exiting gracefully..."; exit_graceful ()
+| "quit" | "exit" -> print_endline "Exiting gracefully..."; exit_graceful ()
+| "help" -> print_endline "Stuck? Type <quit> or <exit> at any point to exit gracefully."
 |_ -> print_endline "Invalid Command!"
-
 
 let rec loop () =
   print_string " >>> ";
@@ -156,7 +156,7 @@ let rec loop () =
 
 (* Repl for filesyncing interface *)
 let repl () =
-  let _ = print_string "\n\nWelcome to Hump-Drive Version 1.0!\nMake sure you have configured everything correctly.\nConsult report for configuration. Type <start> to begin.\n";
+  let _ = print_string "\n\nWelcome to Hump-Drive Version 1.0!\nMake sure you have configured everything correctly.\nConsult the report for configuration details if needed.\nType <start> to begin. Type <quit> or <exit> at any point to exit gracefully.\n\n";
   print_string " >>> " in
   upon (Reader.stdin |> Lazy.force |> Reader.read_line)
   begin
