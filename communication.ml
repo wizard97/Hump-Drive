@@ -78,7 +78,7 @@ let recv_file fdest (addr,read,write) =
   rp () >>= fun () -> print_endline "Finished receiving!";
   let p = (Reader.pipe read) in
   Pipe.upstream_flushed p >>= fun _ -> Pipe.downstream_flushed p >>= fun _ ->
-  Writer.close fw
+  Writer.flushed fw >>= fun () -> Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
