@@ -45,6 +45,9 @@ let fname_STORED_STATE = ".state"
 
 (* <==== Declare load files here ====> *)
 let load_pubkey = load_file fname_PUBKEY
+let load_privkey = load_file fname_PRIVKEY
+let load_peerkey = load_file fname_PEERS
+
 let load_state dir =
   load_file fname_STORED_STATE dir >>= fun s ->
   Deferred.return (State.from_string s)

@@ -4,10 +4,10 @@ open Async_extra.Import.Reader
 open Async_extra.Import.Writer
 open Crypto
 
-
+  (*
 let pu = of_string "371231380513840174425645412377223429621325167085653107566134660546088480210237155858539524043527005322034361505765820564154683030558303344226815372571949747793522185924674417872780071492929729165727870590934771223134363607914632879286523420851703728462705568934768942031062709035994744032500160448359337994020732662070606000346629729130536739490941894427609496909410526964662159120133362021593735851"
 let pr = of_string "9499797956224051813010422366384444205472597967599260452101133929924446975107426183598141074532212097605489756758113451373599490276191190211067292650467286484856886681775881130162455448352098352597201"
-
+*)
 type message = State of string | Filerequest of string
 
 (* ip, key *)
@@ -43,14 +43,14 @@ let transfer_file fname (addr,read,write) =
   Reader.close fd   *)
 
 
-  let transfer_file fname (addr,read,write) =
+  let transfer_file peerpub fname (addr,read,write) =
     Reader.open_file fname >>= fun r ->
       let buf = Core.String.create Crypto.chunk_size in
       let rec rp () = Reader.really_read r ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
       match res with
-      | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); Writer.flushed write >>= fun () -> rp ()
+      | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf peerpub); Writer.flushed write >>= fun () -> rp ()
       | `Eof 0-> Writer.flushed write
-      | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 n) pu); Writer.flushed write
+      | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 n) peerpub); Writer.flushed write
       in
       rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.close write >>= fun () -> Reader.close r
 
@@ -61,12 +61,12 @@ let recv_file fdest (addr,read,write) =
   Reader.transfer read (Writer.pipe fd) >>= fun () ->
   print_string "Finished receiving!";
   Writer.close fd *)
-let recv_file fdest (addr,read,write) =
+let recv_file (pub,priv) fdest (addr,read,write) =
   Writer.open_file fdest >>= fun fw ->
   let buf = Core.String.create Crypto.output_chunk_size in
   let rec rp () =  Reader.really_read read ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
-  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); Writer.flushed fw >>= fun () -> rp ()
+  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pub priv); Writer.flushed fw >>= fun () -> rp ()
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> failwith ("Wrong length read: "^(string_of_int n))
   in
@@ -124,9 +124,9 @@ let send_message peer msg =
 
 
 
-let request_file peer fname fdest =
+let request_file cr peer fname fdest =
   send_message peer (Filerequest fname) >>= fun cstate ->
-  recv_file fdest cstate >>= fun () ->
+  recv_file cr fdest cstate >>= fun () ->
   let (_, _, write) = cstate in
   Writer.close write
 

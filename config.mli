@@ -21,11 +21,15 @@ val write_file : string -> string -> string -> unit Deferred.t
 
 val fname_PUBKEY : string
 val fname_PRIVKEY : string
+val fname_PEERS : string
 val fname_STORED_STATE : string
 
 
 (* <==== Declare load files here ====> *)
 val load_pubkey : string ->  string Deferred.t
+val load_privkey : string ->  string Deferred.t
+val load_peerkey : string ->  string Deferred.t
+
 val load_state : string -> State.state_info Deferred.t
 
 

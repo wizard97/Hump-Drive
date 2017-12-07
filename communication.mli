@@ -20,10 +20,10 @@ val port : int
 val start_server : (conn_state -> peer -> message -> unit Deferred.t) -> server Async.Deferred.t
 
 
-val request_file : peer -> string -> string -> unit Async.Deferred.t
+val request_file : (Crypto.key*Crypto.key) -> peer -> string -> string -> unit Async.Deferred.t
 
 
 val send_state : peer -> string -> unit Async.Deferred.t
 
 
-val transfer_file : string -> conn_state -> unit Async.Deferred.t
+val transfer_file : Crypto.key -> string -> conn_state -> unit Async.Deferred.t

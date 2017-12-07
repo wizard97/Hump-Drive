@@ -69,17 +69,17 @@ let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
   | None -> print_string "Garbage!"
 
 
-let proc_state_update currstate rs pr :state_info Deferred.t  =
+let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
-  let recf st f :state_info Deferred.t = (Communication.request_file pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
+  let recf st f :state_info Deferred.t = (Communication.request_file pubpriv pr f ((State.root_dir currstate)^f)) >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file:"^f);
     (State.acknowledge_file_recpt st' f)
   in
   List.fold_left recf (Deferred.return currstate) ups
 
 
-let comm_server currstate rset mypeer = (* TODO make sure peer is who we think it is*)
+let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we think it is*)
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
@@ -88,7 +88,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
         print_string "Got state update!";
         let rst = State.from_string s in
         match !rset with
-        | None -> rset := Some rst; proc_state_update (!currstate) rst pr >>= fun ns ->
+        | None -> rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
           let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
           Deferred.return (rset := None)
@@ -96,7 +96,7 @@ let comm_server currstate rset mypeer = (* TODO make sure peer is who we think i
       end
     | Filerequest f ->
       print_string "Got request for file!";
-      Communication.transfer_file ((State.root_dir !currstate)^f) cstate
+      Communication.transfer_file mypeer ((State.root_dir !currstate)^f) cstate
   in
   print_string "Running Server\n";
   Communication.start_server notify_callback
@@ -107,11 +107,37 @@ let rec peer_broadcaster msg =
                           Peer_discovery.broadcast msg )
     (fun () -> print_endline "sent bcast"; peer_broadcaster msg)
 
+
+
+let load_keys rdir =
+  print_endline "Looking for keys...";
+  try
+    Config.load_pubkey rdir >>= fun pub ->
+    Config.load_privkey rdir >>= fun priv ->
+    Deferred.return (Crypto.of_string pub, Crypto.of_string priv)
+  with exn ->
+    let _ = print_string "Creating new keys.\n" in
+    let (pub, priv) = Crypto.generate_public_private () in
+    let (pubs, privs) = (Crypto.string_from_key pub), (Crypto.string_from_key priv) in
+    Config.write_file pubs Config.fname_PUBKEY rdir >>= fun () ->
+    Config.write_file privs Config.fname_PRIVKEY rdir >>= fun () ->
+    Async.return (pub,priv)
+
+
+let load_peerkey rdir =
+  print_endline "Looking for peer keys...";
+  try
+    Config.load_peerkey rdir >>= fun pk ->
+    Deferred.return (Crypto.of_string pk)
+  with exn ->
+    let _ = failwith "Please update: "^(Config.fname_PEERS)^" to contain peer public key" in
+    Deferred.return (Crypto.of_string "")
+
+
 (* Initializes all servers and returns the ref of the current state. *)
 let launch_synch () =
   let rdir = "test/" in
-  let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
-  let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
+  load_keys rdir >>= fun (pub,priv) -> load_peerkey rdir >>= fun peerkey ->
   let _ = print_endline "Scanning directory..." in
   let st =
     print_endline "Looking for saved states...";
@@ -127,12 +153,12 @@ let launch_synch () =
   let rstate = ref None in
   let currstate = ref sinfo in
   let discovered_peers : ((Crypto.key, disc_peer) Hashtbl.t) = Hashtbl.create 5 in
-  comm_server currstate rstate mypeer >>= fun _ ->
+  comm_server (pub,priv) currstate rstate peerkey >>= fun _ ->
   print_endline "Starting discovery broadcaster";
-  peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
+  peer_broadcaster (bcastmsg_to_string ("Computer A", pub));
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
-  let _ = peer_syncer discovered_peers mypeer currstate in
+  let _ = peer_syncer discovered_peers peerkey currstate in
   Config.save_state sinfo rdir >>= fun _ -> Deferred.return (print_endline "Init complete!")
 
 
