@@ -27,11 +27,16 @@ let to_int = Big_int.int_of_big_int
 (*End functions  *)
 
 let test () =
-  let (pu,pr) = Crypto.generate_public_private () in
-  let l1 = encrypt_line "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" pu in
+  (* let (pu,pr) = Crypto.generate_public_private () in *)
+
+(*  let l1 = encrypt_and_chunk "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" pu in
+*)  let l1 = encrypt_and_chunk "two words" pu in
+
   "After encryption: "^l1 |> print_endline;
-  let l2 = decrypt_line l1 pu pr in
-  "After Decryption: "^l2 |> print_endline
+  print_string "Length is: "; print_int (String.length l1);
+  let l2 = decrypt_chunked l1 pu pr in
+  "After Decryption: "^l2 |> print_endline;
+  print_string "Length is: "; print_int (String.length l2)
 (*
 
 let rec test_string_to_key n =

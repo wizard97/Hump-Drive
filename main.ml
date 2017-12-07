@@ -16,6 +16,15 @@ let bcast_interval = 5.
 
 type locked_state = Locked of State.state_info | Unlocked of State.state_info
 
+
+module KeyHash = struct
+  type t = Crypto.key
+  let equal k1 k2 = Crypto.key_equal k1 k2
+  let hash k = Crypto.key_hash k
+end
+
+module KeyHashtbl = Hashtbl.Make(KeyHash)
+
 (* Name, pubkey*)
 type disc_peer = string*Communication.peer
 type bcast_msg = string*Crypto.key
@@ -53,9 +62,9 @@ let to_unit d = upon d (fun _ -> ())
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
        print_string "In peer syncer";
-  if Hashtbl.mem peers mypeer then
+  if KeyHashtbl.mem peers mypeer then
     let _ = print_endline "Attempting to sync" in
-    let (name,pinfo) = Hashtbl.find peers mypeer in
+    let (name,pinfo) = KeyHashtbl.find peers mypeer in
     let _ = State.update_state !st >>= fun ns -> st := ns; Deferred.return () in
     let strs = State.to_string !st in
     print_string "Send: "; print_int (compute_hash strs); print_endline "";
@@ -63,11 +72,13 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   else Deferred.return (print_endline "No peer found")) (fun () -> peer_syncer peers mypeer st)
 
 
-let peer_discovered (peers: ((Crypto.key, disc_peer) Hashtbl.t)) addr msg  =
+
+
+let peer_discovered peers addr msg  =
   print_string "Peer discovered";
   match (string_bcast_msg msg) with
   | Some (name, key) ->
-    Hashtbl.add peers key (name,{ip=addr; key=key});
+    KeyHashtbl.add peers key (name,{ip=addr; key=key});
     print_endline ("Found peer: "^name^" "^addr^": "^(Crypto.string_from_key key))
   | None -> print_string "Garbage!"
 
@@ -128,7 +139,7 @@ let launch_synch () =
   let _ = print_endline "Starting comm server" in
   let rstate = ref None in
   let currstate = ref sinfo in
-  let discovered_peers : ((Crypto.key, disc_peer) Hashtbl.t) = Hashtbl.create 5 in
+  let discovered_peers  = KeyHashtbl.create 5 in
   comm_server currstate rstate mypeer >>= fun _ ->
   print_endline "Starting discovery broadcaster";
   peer_broadcaster (bcastmsg_to_string ("Computer A", mypub));
@@ -136,6 +147,7 @@ let launch_synch () =
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
   let _ = peer_syncer discovered_peers mypeer currstate in
   (print_endline "Init complete!"); Config.save_state sinfo rdir
+
 
 (* Given an input string from the repl, handle the command *)
 let process_input = function
