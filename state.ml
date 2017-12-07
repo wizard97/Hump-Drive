@@ -60,6 +60,8 @@ let is_reg_file fpath =
     stats.st_kind = S_REG
   with _ -> false
 
+let is_not_hid fname = String.get fname 0 <> '.'
+
 (* Returns the last modified time of the file denoted by [path] *)
 let last_modtime path =
   let fdesc = OUnix.openfile path [O_RDONLY; O_NONBLOCK] 644 in
@@ -70,7 +72,7 @@ let last_modtime path =
 let files_in_dir dir_path =
   let handle = OUnix.opendir dir_path in
   get_dir_contents [] handle >>= fun lst ->
-  Deferred.return (List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f)) lst)
+  Deferred.return (List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f) && (is_not_hid f)) lst)
 
 let state_for_dir dir_path =
   (files_in_dir dir_path) >>=
