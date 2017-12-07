@@ -2,7 +2,7 @@ open Unix
 module OUnix = Unix
 open Async
 
-(* Modules used to maintain our files_to_info and update_queue structures *)
+(* Module used to maintain our files_to_info and update_queue structures *)
 (* module StringSet = Set.Make(String) *)
 module FileMap = Map.Make(String)
 
@@ -23,17 +23,18 @@ let compute_hash s =
     hash := h' land h'
   in String.iter (update_hash) s; !hash
 
-(* Internal state *)
+(* Record representing internal state of the system *)
 type state_info = {dir_path : dir_path;
                    files_to_info : files_to_info;
                    last_modified : last_modified;}
 
 
+(* Directory that contains this file *)
 let root_dir s =
   s.dir_path
 
-(* [get_dir_contents acc h] returns a list of contents contained in the directory
- * specified by [h] *)
+(* [get_dir_contents acc h] returns a list of contents contained in
+ * the directory specified by [h] *)
 let rec get_dir_contents acc h =
   Async.Unix.readdir_opt h >>= (fun s ->
     match s with
@@ -60,20 +61,21 @@ let is_reg_file fpath =
     stats.st_kind = S_REG
   with _ -> false
 
-let is_not_hid fname = String.get fname 0 <> '.'
-
 (* Returns the last modified time of the file denoted by [path] *)
 let last_modtime path =
   let fdesc = OUnix.openfile path [O_RDONLY; O_NONBLOCK] 644 in
   let stats = OUnix.fstat fdesc in
   stats.st_mtime
 
-(* Gets a list of only the regular files in the directory [dir_path] *)
+(* Gets a list of only the regular files in the directory [dir_path], that
+ * is a list that ignores directories within this directory *)
 let files_in_dir dir_path =
   let handle = OUnix.opendir dir_path in
   get_dir_contents [] handle >>= fun lst ->
-  Deferred.return (List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f) && (is_not_hid f)) lst)
+  Deferred.return (List.filter (fun f -> is_reg_file (dir_path^Filename.dir_sep^f)) lst)
 
+(* Given a path to a directory returns a [state] record
+ * representing its current status at this time *)
 let state_for_dir dir_path =
   (files_in_dir dir_path) >>=
   fun filenames ->
@@ -98,9 +100,8 @@ let changed_files dir_path acc (fname, modtime) =
   try
     let _, stored_modtime = FileMap.find fname file_map in
     if modtime <> stored_modtime then
-      hash_file (dir_path^Filename.dir_sep^fname) >>=
-      fun new_hash -> Deferred.return
-      (FileMap.add fname (new_hash, modtime) file_map)
+      hash_file (dir_path^Filename.dir_sep^fname) >>= fun new_hash ->
+      Deferred.return (FileMap.add fname (new_hash, modtime) file_map)
     else Deferred.return (file_map)
   with Not_found ->
     hash_file (dir_path^Filename.dir_sep^fname) >>=
@@ -117,6 +118,7 @@ let update_file_info st =
   List.fold_left (fun acc x -> changed_files dir_path acc x)
         (Deferred.return file_binds) fnames_to_modtimes
 
+(* Given a st update it by looking at the current directory *)
 let update_state st =
   let dir_path = st.dir_path in
   let new_modtime = last_modtime dir_path in
@@ -135,6 +137,8 @@ let cmp_file_versions st1 st2 f =
   let h2,t2 = lookup_file f st2 in
   (t2 > t1) && (h2 <> h1)
 
+(* Determines which files to request from another device by comparing
+ * the hashes of files in this directory with the expected hashes*)
 let files_to_request st_curr st_inc =
   let curr_binds = st_curr.files_to_info in
   let inc_binds = st_inc.files_to_info in
@@ -143,11 +147,8 @@ let files_to_request st_curr st_inc =
       else if (cmp_file_versions st_curr st_inc k)
       then k::acc else acc) inc_binds []
 
-  (* let files_to_add = StringSet.diff st_inc.update_queue st_curr.update_queue in
-  let conflict_files = (StringSet.inter st_curr.update_queue st_inc.update_queue) in
-  let poss_ups = StringSet.filter (cmp_file_versions st_curr st_inc) conflict_files in
-  StringSet.union poss_ups files_to_add |> StringSet.elements *)
-
+(* When a file is transfered to this device externally from another
+ * device use this function to given an ack of it*)
 let acknowledge_file_recpt st fname =
   let fpath = st.dir_path ^ Filename.dir_sep ^ fname in
   let modtime = last_modtime fpath in
@@ -162,11 +163,3 @@ let to_string (st : state_info) = Marshal.to_string st [] |> String.escaped
 
 let from_string (s : string) : state_info = Marshal.from_string (Scanf.unescaped s) 0
 
-
-(*  let to_string (st : state_info) = Core.Bigstring_marshal.marshal st |> Bigstring.to_string |> String.escaped
-
-let from_string (s : string) : state_info =  Scanf.unescaped |> Bigstring.from_string |> Core.Bigstring_marshal.unmarshal
-
-
- Scanf.unescaped s |> Marshal.from_string s 0
- *)

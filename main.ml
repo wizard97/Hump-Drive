@@ -18,19 +18,21 @@ let bcast_interval = 5.
 type disc_peer = string*Communication.peer
 type bcast_msg = string*Crypto.key
 
-
+(* Hashtbl to map public keys to peers*)
 module KeyHash = struct
   type t = Crypto.key
   let equal k1 k2 = Crypto.key_equal k1 k2
   let hash k = Crypto.key_hash k
 end
 
+
 module KeyHashtbl = Hashtbl.Make(KeyHash)
 
-
+(* Helper to exit gracefully from Async*)
 let exit_graceful = fun () -> upon (exit 0) (fun _ -> ())
 
 
+(* Hash s =, used to checksum in UDP discover packet*)
 let compute_hash s =
   let hash = ref 0 in
   let update_hash c =
@@ -40,12 +42,15 @@ let compute_hash s =
   in String.iter (update_hash) s; !hash
 
 
+(* convert a bcast_msg to its string representation for UDP packet*)
 let bcastmsg_to_string (m:bcast_msg) : string =
   let data = Marshal.to_string m [] in
   let payload = (string_of_int (compute_hash data), data) in
   Marshal.to_string payload []
 
 
+
+(* Convert a received UDP packets contents back into its bcase type*)
 let string_bcast_msg s : bcast_msg option =
   let (hash, buf) : (string*string) = Marshal.from_string s 0 in
   let data : bcast_msg = Marshal.from_string buf 0 in
@@ -58,6 +63,7 @@ let string_bcast_msg s : bcast_msg option =
 (* Empty function for converting deferred to unit *)
 let to_unit d = upon d (fun _ -> ())
 
+(* Called periodically to notify the other peer of the state (if known)*)
 let rec peer_syncer peers (mypeer:Crypto.key) st =
   upon(after (Core.sec bcast_interval) >>= fun () ->
   if KeyHashtbl.mem peers mypeer then
@@ -70,6 +76,7 @@ let rec peer_syncer peers (mypeer:Crypto.key) st =
   else Deferred.return ()) (fun () -> peer_syncer peers mypeer st)
 
 
+(* Callback function when a peer is dicovered via UDP broadcast *)
 let peer_discovered peers addr msg  =
   match (string_bcast_msg msg) with
   | Some (name, key) ->
@@ -78,18 +85,24 @@ let peer_discovered peers addr msg  =
   | None -> print_string "Garbage!"
 
 
+(* Upon receiving a state update, request files from that peer if neccisary*)
 let proc_state_update pubpriv currstate rs pr :state_info Deferred.t  =
   let ups = State.files_to_request currstate rs in
   print_endline (string_of_int (List.length ups)^" files");
   let recf st f = (Communication.request_file pubpriv pr f
-                     ((State.root_dir currstate)^Filename.dir_sep^f)) >>= fun () -> st >>= fun st' ->
+                     ((State.root_dir currstate)^Filename.dir_sep^f))
+                                              >>= fun () -> st >>= fun st' ->
     print_endline ("Recvd file :"^f);
     (State.acknowledge_file_recpt st' f)
   in
   List.fold_left recf (Deferred.return currstate) ups
 
 
-let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer is who we think it is*)
+
+(* The listening TCP server for incoming requests.
+ * Upon receiving a request, will decrypt message and handle request
+*)
+let comm_server pubpriv currstate lockstate rset mypeer =
   let notify_callback cstate pr msg =
     match msg with
     | State s ->
@@ -99,7 +112,8 @@ let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer
         match !rset with
         | None when (not !lockstate)->
           lockstate := true;
-          rset := Some rst; proc_state_update pubpriv (!currstate) rst pr >>= fun ns ->
+          rset := Some rst; proc_state_update pubpriv
+                                        (!currstate) rst pr >>= fun ns ->
           let _  = Config.save_state ns (State.root_dir ns) in
           currstate := ns;
           lockstate := false;
@@ -109,7 +123,8 @@ let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer
     | Filerequest f when (not !lockstate) ->
       print_endline ("Incoming file request for: "^f);
       lockstate := true;
-      Communication.transfer_file mypeer ((State.root_dir !currstate)^Filename.dir_sep^f) cstate >>= fun () ->
+      Communication.transfer_file mypeer
+        ((State.root_dir !currstate)^Filename.dir_sep^f) cstate >>= fun () ->
       Deferred.return (lockstate := false)
     | _ -> Deferred.return (())
   in
@@ -117,13 +132,18 @@ let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer
   Communication.start_server notify_callback mypeer
 
 
+
+(* Called periodically to send a discovery broadcast UDP packet onto network *)
 let rec peer_broadcaster msg =
   upon(after (Core.sec bcast_interval) >>= fun () ->
                           Peer_discovery.broadcast msg )
     (fun () -> print_endline "Sending discover packet"; peer_broadcaster msg)
 
 
-
+(* [rdir] is the path to the root directory, calling this function will
+ * try and load the public and private keeys from the config directory
+ * If none exist, they will be created and saved
+*)
 let load_keys rdir =
   print_endline "Looking for keys...";
   try
@@ -139,6 +159,9 @@ let load_keys rdir =
     Async.return (pub,priv)
 
 
+(* [rdir] is the path to the root directory, calling this function will
+ * try and load the peer public key, upon failure, the program will exit with a message
+*)
 let load_peerkey rdir =
   print_endline "Looking for peer keys...";
   try
@@ -160,7 +183,8 @@ let launch_synch rdir =
     try
       Config.load_state rdir
     with exn ->
-      print_string "Could not find a saved state. Either no saved state or corrupt...\nEstablishing new state.\n";
+      print_string
+        "Could not find a saved state. Either no saved state or corrupt...\nEstablishing new state.\n";
       State.state_for_dir rdir
   in
   print_endline "State successfully loaded!";
@@ -177,7 +201,8 @@ let launch_synch rdir =
   print_endline "Starting discovery server";
   let _ = Peer_discovery.listen (peer_discovered discovered_peers) in
   let _ = peer_syncer discovered_peers peerkey currstate in
-  Config.save_state sinfo rdir >>= fun _ -> Deferred.return (print_endline "Init complete!")
+  Config.save_state sinfo rdir >>= fun _ ->
+  Deferred.return (print_endline "Init complete!")
 
 
 (* Given an input string from the repl, handle the command *)
@@ -187,6 +212,8 @@ let process_input = function
 | "help" -> print_endline "Stuck? Type <quit> or <exit> at any point to exit gracefully."
 |_ -> print_endline "Invalid Command!"
 
+
+(* Async loop to evaluate input commands from stdin when availible *)
 let rec loop () =
   print_string ">>> ";
   (Reader.stdin |> Lazy.force |> Reader.read_line |> upon)
@@ -196,13 +223,16 @@ let rec loop () =
       | `Eof ->  print_endline "What happened"; exit_graceful ()
     end
 
+
+(* Read directory path from REPL, when prompted for selection of root directory*)
 let get_dir_path () =
   print_endline "Please type in the directory path you wish to sync.";
   (Reader.stdin |> Lazy.force |> Reader.read_line) >>= fun r ->
     match r with
     | `Ok s -> begin
       try let p = (Config.path_ok s) in Deferred.return p
-      with exn -> print_endline "That is not a valid path!"; exit_graceful(); Deferred.return ("Oops")
+      with exn -> print_endline "That is not a valid path!";
+        exit_graceful(); Deferred.return ("Oops")
     end
     | `Eof ->  exit_graceful(); Deferred.return("Oops")
 
@@ -221,6 +251,7 @@ let repl () =
     | `Eof -> Deferred.return (exit_graceful ())
 
 
+(* Launch all the Async stuff *)
 let main () =
   let _ = repl () in
   Scheduler.go ()
