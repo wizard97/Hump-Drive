@@ -17,7 +17,7 @@ type conn_state
 val port : int
 
 
-val start_server : (conn_state -> peer -> message -> unit Deferred.t) -> server Async.Deferred.t
+val start_server : (conn_state -> peer -> message -> unit Deferred.t) -> Crypto.key -> server Async.Deferred.t
 
 
 val request_file : (Crypto.key*Crypto.key) -> peer -> string -> string -> unit Async.Deferred.t

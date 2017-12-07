@@ -88,7 +88,7 @@ let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Asy
     Deferred.return ()
 
 
-let start_server hookup =
+let start_server hookup peerpub =
   let server_callback addr read write =
     Writer.set_buffer_age_limit write Writer.(`Unlimited);
     let (cs:conn_state) = (addr,read,write) in
@@ -98,7 +98,7 @@ let start_server hookup =
     read_until read (`Char '\n') ~keep_delim:(false) >>= fun r ->
     match (r) with
     | `Ok s ->
-      let pr = {ip=saddr; key=(Crypto.key_from_string s)} in
+      let pr = {ip=saddr; key=peerpub} in
       process_cmd s cs pr hookup >>= fun () ->
       Writer.close write
     | `Eof_without_delim s ->

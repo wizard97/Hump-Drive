@@ -109,7 +109,7 @@ let comm_server pubpriv currstate rset mypeer = (* TODO make sure peer is who we
       Communication.transfer_file mypeer ((State.root_dir !currstate)^f) cstate
   in
   print_string "Running Server\n";
-  Communication.start_server notify_callback
+  Communication.start_server notify_callback mypeer
 
 
 let rec peer_broadcaster msg =
