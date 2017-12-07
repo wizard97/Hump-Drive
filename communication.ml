@@ -42,11 +42,11 @@ let transfer_file fname (addr,read,write) =
   Reader.close fd
 
 let transfer_file_crypt fname (addr,read,write) =
-  Reader.open_file fname >>= fun fd ->
-    let prd = Reader.pipe fd in
-    read prd >>= fun a -> match a with
+  Reader.open_file fname >>= fun r ->
+    let prd = Reader.pipe r in
+    Pipe.read prd >>= fun a -> match a with
       | `Ok s -> Crypto.encrypt_and_chunk s pu |> Writer.write write |> return
-      | `Eof -> Reader.close fd
+      | `Eof -> Reader.close r
 
 
 
@@ -60,8 +60,12 @@ let recv_file fdest (addr,read,write) =
   Writer.close fd
 
 
-let recv_file crypt fdest (addr,read,write) =
-  Writer.open_file fdest >>= fun fd ->
+let recv_file_crypt fdest (addr,read,write) =
+  Writer.open_file fdest >>= fun w ->
+  let prd = Reader.pipe read in
+  Pipe.read prd >>= fun a -> match a with
+    | `Ok s -> Crypto.decrypt_chunked s pu pr |> Writer.write w |> return
+    | `Eof -> Writer.close w
 
 
 
