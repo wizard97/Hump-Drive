@@ -52,7 +52,8 @@ let transfer_file fname (addr,read,write) =
     | `Eof 0-> Writer.flushed write
     | `Eof n -> Writer.write write (String.sub buf 0 n); Writer.flushed write
     in
-    rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.flushed write >>= fun () ->  Reader.close r
+    rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.flushed write >>=
+    fun () ->  after(Core.sec 2.0) >>= fun a ->Reader.close r
 
 
 (*
@@ -72,7 +73,8 @@ let recv_file fdest (addr,read,write) =
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> Writer.write write (String.sub buf 0 n); Writer.flushed write
   in
-  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.flushed fw >>= fun () -> Writer.close fw
+  rp () >>= fun () -> print_endline "Finished receiving!"; Writer.flushed fw >>= fun () ->
+  after(Core.sec 2.0) >>= fun a -> Writer.close fw
 
 
 let process_cmd s cstate pr (hookup : (conn_state -> peer -> message -> unit Async.Deferred.t)) =
