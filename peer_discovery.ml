@@ -30,12 +30,8 @@ let broadcast msg =
 
 
 (*
-  Core.Or_error.ok_exn;
-  Core.IoBuff.of_string;
-  Socket.fd (socket)
+* Remove the annoying ::port thing at the end of ip addresses in string representation
 *)
-
-
 let split_port s =
   let idx = String.index_from s 0 ':' in
   String.sub s 0 idx
@@ -52,7 +48,3 @@ let listen dcallback =
       dcallback (split_port adrs) (Core.Iobuf.to_string buf)
     in
     Udp.recvfrom_loop fd callback >>= fun () -> Deferred.return fd
-
-
- (* Udp.bind addr >>= Async_extra.Import.Socket.listen
-   Socket.connect s >>= fun s1 -> *)
