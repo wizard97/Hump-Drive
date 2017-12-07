@@ -108,8 +108,7 @@ let rec peer_broadcaster msg =
     (fun () -> print_endline "sent bcast"; peer_broadcaster msg)
 
 (* Initializes all servers and returns the ref of the current state. *)
-let launch_synch () =
-  let rdir = "test/" in
+let launch_synch rdir =
   let mypeer = Crypto.key_from_string "peer2" in (* TODO fix this*)
   let mypub = Crypto.key_from_string "peer1" in (* TODO fix this*)
   let _ = print_endline "Scanning directory..." in
@@ -154,6 +153,13 @@ let rec loop () =
       | `Eof ->  print_endline "What happened"; exit_graceful ()
     end
 
+let get_dir_path () =
+  print_endline "Please type in the directory path you wish to sync.";
+  (Reader.stdin |> Lazy.force |> Reader.read_line) >>= fun r ->
+    match r with
+    | `Ok s -> Deferred.return (Config.path_ok s)
+    | `Eof ->  exit_graceful(); Deferred.return("Oops")
+
 (* Repl for filesyncing interface *)
 let repl () =
   let _ = print_string "\n\nWelcome to Hump-Drive Version 1.0!\nMake sure you have configured everything correctly.\nConsult the report for configuration details if needed.\nType <start> to begin. Type <quit> or <exit> at any point to exit gracefully.\n\n";
@@ -162,7 +168,13 @@ let repl () =
   begin
     fun r ->
       match r with
-      | `Ok s -> if (s = "start") then upon (launch_synch()) (fun _ -> loop()) else exit_graceful ()
+      | `Ok s ->
+        if s = "start" then
+          (get_dir_path ()) >>= fun dpath ->
+          (launch_synch dpath) >>= fun _ ->
+          loop(); Deferred.return ()
+
+        else exit_graceful ()
       | `Eof -> exit_graceful ()
   end
 
