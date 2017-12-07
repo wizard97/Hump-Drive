@@ -7,9 +7,14 @@
 
 (* The key type is an enormous prime number ht be used
  * in securing message in a fasion similar to the RSA protocol. *)
-type key = Big_int.big_int
+type key
 
 val chunk_size : int
+
+(* true if key1 = key2 *)
+val key_equal : key -> key -> bool
+
+val key_hash : key -> int
 
 (* Given a short cypher phrase generate a much larger key
  * treat the string as an integer in base 62 with A-0,B-1, ... ,8-60,9-61 *)

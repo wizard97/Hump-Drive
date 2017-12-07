@@ -33,6 +33,10 @@ let to_int = Big_int.int_of_big_int
 let b = of_int 256
 let exp = of_int 17
 
+(* hashing stuff *)
+let key_equal = eq
+let key_hash k = bMod k (of_int max_int) |> to_int
+
 
 (***** HELPERS *****)
 
