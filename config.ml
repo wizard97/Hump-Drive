@@ -17,6 +17,9 @@ let config_ok dir_path =
   let path = dir_path^Filename.dir_sep^dir_CONFIG in
   try path_ok path
   with OUnix.Unix_error _ ->
+    (* let uid = getuid() in
+    let gid = getgid() in *)
+    (* OUnix.mkdir path 0; chown path uid gid; path *)
     OUnix.mkdir path 0o777 ;path
 
 let load_file fname dir_path =
