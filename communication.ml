@@ -50,7 +50,7 @@ let transfer_file fname (addr,read,write) =
     let buf = Core.String.create Crypto.chunk_size in
     let rec rp () = Reader.really_read r ~pos:(0) ~len:(Crypto.chunk_size) buf >>= fun res -> (*TODO crypto input chunk size*)
     match res with
-    | `Ok -> Writer.write write buf; rp ()
+    | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); rp ()
     | `Eof 0-> Writer.flushed write
     | `Eof n -> failwith ("Wrong length read"^(string_of_int n))
     in
@@ -70,7 +70,7 @@ let recv_file fdest (addr,read,write) =
   let buf = Core.String.create Crypto.output_chunk_size in
   let rec rp () =  Reader.really_read read ~pos:(0) ~len:(Crypto.output_chunk_size) buf >>= fun res -> (*TODO crypto output chunk size*)
   match res with
-  | `Ok -> Writer.write fw buf; rp ()
+  | `Ok -> Writer.write fw (Crypto.decrypt_chunked buf pu pr); rp ()
   | `Eof 0-> Writer.flushed fw
   | `Eof n -> failwith ("Wrong length read"^(string_of_int n))
   in
