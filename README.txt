@@ -4,7 +4,10 @@ Note: This requires Async, and will only run on Linux (Async does not support UD
 
 1) To start the program, type make repl.
 
-2) Select a directory to sync after being prompted to do so.
+2) Select a directory you wish to keep in sync with the other computer.
+  Note, we recommend only using it for small files and pictures as the encryption
+  is really slow (The RSA public key is a 400 digit number!).
+  
 
 3) After selection, the chosen directory will automatically be populated with a
    config directory (this directory will not be synced nor will any
@@ -23,5 +26,3 @@ Note: This requires Async, and will only run on Linux (Async does not support UD
    broadcast address (eduroam and redrover do), the two peers should quickly be
    able to find eachother and start syncing, and now the machines will be
    in sync with any files that are added to either directory!
-   Note, we recommend only using it for small files and pictures as the encryption
-   is really slow (The RSA public key is a 400 digit number!).
