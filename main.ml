@@ -106,9 +106,12 @@ let comm_server pubpriv currstate lockstate rset mypeer = (* TODO make sure peer
           Deferred.return (rset := None)
         | _ -> Deferred.return () (* Ignore if already being processed*)
       end
-    | Filerequest f ->
+    | Filerequest f when (not !lockstate) ->
       print_endline ("Incoming file request for: "^f);
-      Communication.transfer_file mypeer ((State.root_dir !currstate)^Filename.dir_sep^f) cstate
+      lockstate := true;
+      Communication.transfer_file mypeer ((State.root_dir !currstate)^Filename.dir_sep^f) cstate >>= fun () ->
+      Deferred.return (lockstate := false)
+    | _ -> Deferred.return (())
   in
   print_endline "Starting incoming request server";
   Communication.start_server notify_callback mypeer
