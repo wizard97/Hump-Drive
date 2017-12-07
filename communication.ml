@@ -50,7 +50,7 @@ let transfer_file fname (addr,read,write) =
       match res with
       | `Ok -> Writer.write write (Crypto.encrypt_and_chunk buf pu); Writer.flushed write >>= fun () -> rp ()
       | `Eof 0-> Writer.flushed write
-      | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 (n-1)) pu); Writer.flushed write
+      | `Eof n -> Writer.write write (Crypto.encrypt_and_chunk (String.sub buf 0 n) pu); Writer.flushed write
       in
       rp () >>= fun () -> print_endline "Finished Transferring!"; Writer.close write >>= fun () -> Reader.close r
 
