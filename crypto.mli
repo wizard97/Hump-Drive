@@ -5,31 +5,35 @@
 *)
 
 
-(* The key type is an enormous prime number ht be used
+(* The key type is an enormous prime number to be used
  * in securing message in a fasion similar to the RSA protocol. *)
 type key
 
-(* Size of each read chunk *)
+(* Size of each the chunks to be read from files to be sent  *)
 val chunk_size : int
 
-(* Size of read chunks to decrypt *)
+(* Size of the chunks to be read from a sent file transmission
+ * to be decrypted and the stored *)
 val output_chunk_size : int
 
-(* true if key1 = key2 *)
+(* true if key1 ~ key2 *)
 val key_equal : key -> key -> bool
 
+(* Given a key return a hash *)
 val key_hash : key -> int
 
 (* Works as expected *)
 val of_string : string -> key
 
 
-(* Given a short cypher phrase generate a much larger key
- * treat the string as an integer in base 62 with A-0,B-1, ... ,8-60,9-61 *)
+(* Given a short cypher phrase of ascii characters,
+ * treat the string as an integer in base 256 and return the value
+ * of the string under that interpretation. *)
 val key_from_string : string -> key
 
-(* Given a large integer that is the key, return a string serving
- * as the compressed format of that key for easy transmission. *)
+(* Given a key, return a string serving representing its base 256 value
+ * for transmission across the network.
+ *)
 val string_from_key : key -> string
 
 (* Generates a random public, private key pair to be used with the
@@ -45,9 +49,6 @@ val encrypt_line : string -> key ->  string
  * and the sending device's public key return the decrypted message *)
 val decrypt_line : string -> key -> key -> string
 
-(* Determine whether two keys are equal *)
-val compare : key -> key -> bool
-
 (* Given a large string generate the encrypted message padded by the chunk size *)
 val encrypt_and_chunk : string -> key -> string
 
@@ -55,16 +56,4 @@ val encrypt_and_chunk : string -> key -> string
  * original message. *)
 val decrypt_chunked : string -> key -> key -> string
 
-val is_prime : key -> bool
 
-(*
-val test_modinv : int -> unit
-
-val modinv : key -> key -> key
-
-val mod_exp : key -> key -> key -> key
-
-val large_int_to_string : key -> string
-
-val string_to_large_int : string -> key
-*)
