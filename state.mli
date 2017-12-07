@@ -31,5 +31,5 @@ val to_string : state_info -> string
 (* Imports a string representing a state_info as a state_info *)
 val from_string : string -> state_info
 
-
+(* Returns the root directory that this system with search for files from *)
 val root_dir : state_info -> string
